@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markodough — Doughs</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F5EFE0;
+    --parchment-mid: #EDE3CE;
+    --parchment-dark: #DDD0B8;
+    --brown-dark: #3B2A1A;
+    --brown-mid: #4A3A22;
+    --brown-light: #6B5A42;
+    --orange: #C8622A;
+    --orange-light: #F5E8DF;
+    --green: #5E8A42;
+    --green-light: #EFF6E8;
+    --border: #C8B898;
+    --border-light: #A8B898;
+    --text-dark: #2C1F0E;
+    --text-mid: #4A3A22;
+    --text-muted: #8A7A6A;
+    --disabled-bg: #C8B898;
+    --disabled-text: #8A7A6A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #E8E0CC;
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--brown-dark);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--orange);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--parchment);
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--orange); }
+
+  .nav-links { display: flex; gap: 20px; }
+  .nav-links a {
+    font-size: 12px;
+    color: var(--orange);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 0.75; }
+  .nav-links a.nav-active { color: var(--parchment); opacity: 1; }
+
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--orange);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* ── PAGE ── */
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--parchment-mid);
+    border-radius: 0 0 12px 12px;
+    padding: 36px 32px 32px;
+    margin-bottom: 32px;
+    border: 0.5px solid var(--border);
+    border-top: none;
+  }
+
+  .hero-tag {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--orange);
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  /* ── CATEGORY FILTER ── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--parchment);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .filter-btn:hover { border-color: var(--orange); color: var(--text-dark); }
+  .filter-btn.active { background: var(--orange); border-color: var(--orange); color: var(--text-dark); }
+
+  /* ── DOUGH GRID ── */
+  .dough-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── DOUGH CARD ── */
+  .dough-card {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .dough-card:not(.coming-soon):hover {
+    border-color: var(--orange);
+    box-shadow: 0 4px 16px rgba(200, 98, 42, 0.12);
+  }
+
+  .dough-card.coming-soon { opacity: 0.72; }
+
+  .dough-card-header {
+    padding: 20px 22px 16px;
+    border-bottom: 1px solid var(--border);
+    flex: 1;
+  }
+
+  .dough-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .dough-category-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 9px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .badge-pizza { background: var(--orange-light); color: var(--orange); }
+  .badge-bread { background: var(--green-light); color: var(--green); }
+
+  .dough-status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .status-available { background: var(--green-light); color: var(--green); }
+  .status-coming { background: var(--parchment-dark); color: var(--text-muted); }
+
+  .dough-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .dough-card-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  /* ── SPEC ROW ── */
+  .dough-specs {
+    display: flex;
+    gap: 0;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .dough-spec {
+    flex: 1;
+    padding: 10px 12px;
+    text-align: center;
+    border-right: 0.5px solid var(--border);
+  }
+
+  .dough-spec:last-child { border-right: none; }
+
+  .dough-spec-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .dough-spec-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.3;
+  }
+
+  /* ── CARD FOOTER ── */
+  .dough-card-footer {
+    padding: 14px 22px;
+  }
+
+  .dough-card-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-family: 'Source Sans 3', sans-serif;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    cursor: pointer;
+  }
+
+  .dough-card-btn.available {
+    background: var(--orange);
+    color: var(--text-dark);
+  }
+
+  .dough-card-btn.available:hover { opacity: 0.88; }
+
+  .dough-card-btn.unavailable {
+    background: var(--disabled-bg);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--brown-dark);
+    border-top: 2px solid var(--orange);
+    padding: 32px 20px;
+    margin-top: 48px;
+  }
+
+  footer .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  footer .footer-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  footer .footer-cols {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  footer .footer-col-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+
+  footer .footer-col-links {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  footer .footer-col-links a {
+    font-size: 13px;
+    color: #A8B898;
+    text-decoration: none;
+  }
+
+  footer .footer-bottom {
+    border-top: 1px solid var(--brown-light);
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  footer .footer-bottom span {
+    font-size: 11px;
+    color: #6B5A42;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 767px) {
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--brown-dark);
+      border-bottom: 2px solid var(--orange);
+      flex-direction: column;
+      gap: 0;
+      z-index: 99;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--brown-light);
+      font-size: 13px;
+    }
+    .nav-links a:last-child { border-bottom: none; }
+    .nav-hamburger { display: flex; }
+
+    .page { padding: 0 16px 60px; }
+
+    .hero { padding: 22px 16px 20px; }
+    .hero h1 { font-size: 28px; }
+
+    .dough-grid { grid-template-columns: 1fr; gap: 14px; }
+
+    .dough-specs { flex-wrap: wrap; }
+    .dough-spec { min-width: 33%; }
+
+    footer .footer-top { flex-direction: column; }
+    footer .footer-cols { flex-direction: column; gap: 20px; }
+  }
+
+  @media (min-width: 768px) {
+    .nav-hamburger { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Marko<span>dough</span></a>
+  <div class="nav-links" id="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="index.html" class="nav-active">Doughs</a>
+    <a href="../recipes/index.html">Recipes</a>
+    <a href="../calculators/index.html">Calculators</a>
+    <a href="../learn/index.html">Learn</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Guided Recipes</div>
+    <h1>Choose Your Dough</h1>
+    <p>Each recipe walks you through the full process — ingredients scaled to your setup, step-by-step method, and baking instructions built around your equipment. Select a dough to get started.</p>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+    <button class="filter-btn" onclick="filterCards('pizza', this)">Pizza</button>
+    <button class="filter-btn" onclick="filterCards('bread', this)">Bread &amp; Rolls</button>
+  </div>
+
+  <!-- DOUGH GRID -->
+  <div class="dough-grid" id="dough-grid">
+
+    <!-- NY STYLE PIZZA — AVAILABLE -->
+    <div class="dough-card" data-category="pizza">
+      <div class="dough-card-header">
+        <div class="dough-card-top">
+          <span class="dough-category-badge badge-pizza">Pizza</span>
+          <span class="dough-status-badge status-available">Available</span>
+        </div>
+        <div class="dough-card-name">New York Style</div>
+        <p class="dough-card-desc">The classic New York slice. Thin, foldable, slightly chewy with a crispy undercarriage. Built around a long cold ferment and a poolish or sourdough starter discard for depth of flavor you can't get same-day.</p>
+        <div class="dough-specs">
+          <div class="dough-spec">
+            <div class="dough-spec-label">Hydration</div>
+            <div class="dough-spec-value">62–68%</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Ferment</div>
+            <div class="dough-spec-value">48–72 hrs cold</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Difficulty</div>
+            <div class="dough-spec-value">Beginner friendly</div>
+          </div>
+        </div>
+      </div>
+      <div class="dough-card-footer">
+        <a href="ny-style.html" class="dough-card-btn available">Start Calculator →</a>
+      </div>
+    </div>
+
+    <!-- NEAPOLITAN — AVAILABLE -->
+    <div class="dough-card" data-category="pizza">
+      <div class="dough-card-header">
+        <div class="dough-card-top">
+          <span class="dough-category-badge badge-pizza">Pizza</span>
+          <span class="dough-status-badge status-available">Available</span>
+        </div>
+        <div class="dough-card-name">Neapolitan</div>
+        <p class="dough-card-desc">The original pizza. Soft, blistered crust with a charred cornicione and a slightly wet center. Cooked at 900°F+ in 60–90 seconds. Supports the traditional direct method, poolish, and biga. Home oven path included.</p>
+        <div class="dough-specs">
+          <div class="dough-spec">
+            <div class="dough-spec-label">Hydration</div>
+            <div class="dough-spec-value">60–67%</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Ferment</div>
+            <div class="dough-spec-value">8 hrs–48 hrs</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Difficulty</div>
+            <div class="dough-spec-value">Intermediate</div>
+          </div>
+        </div>
+      </div>
+      <div class="dough-card-footer">
+        <a href="neapolitan.html" class="dough-card-btn available">Start Calculator →</a>
+      </div>
+    </div>
+
+    <!-- SICILIAN — COMING SOON -->
+    <div class="dough-card coming-soon" data-category="pizza">
+      <div class="dough-card-header">
+        <div class="dough-card-top">
+          <span class="dough-category-badge badge-pizza">Pizza</span>
+          <span class="dough-status-badge status-coming">Coming Soon</span>
+        </div>
+        <div class="dough-card-name">Sicilian</div>
+        <p class="dough-card-desc">Thick, focaccia-style pizza baked in an oiled pan. Crispy, almost fried bottom with an open, airy crumb and a generous topping surface. A higher-hydration dough that rewards patience.</p>
+        <div class="dough-specs">
+          <div class="dough-spec">
+            <div class="dough-spec-label">Hydration</div>
+            <div class="dough-spec-value">70–80%</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Ferment</div>
+            <div class="dough-spec-value">24–48 hrs cold</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Difficulty</div>
+            <div class="dough-spec-value">Intermediate</div>
+          </div>
+        </div>
+      </div>
+      <div class="dough-card-footer">
+        <button class="dough-card-btn unavailable" disabled>Coming Soon</button>
+      </div>
+    </div>
+
+    <!-- DETROIT — COMING SOON -->
+    <div class="dough-card coming-soon" data-category="pizza">
+      <div class="dough-card-header">
+        <div class="dough-card-top">
+          <span class="dough-category-badge badge-pizza">Pizza</span>
+          <span class="dough-status-badge status-coming">Coming Soon</span>
+        </div>
+        <div class="dough-card-name">Detroit Style</div>
+        <p class="dough-card-desc">Rectangular, pan-baked with caramelized cheese edges and sauce ladled on top. Deeply crispy bottom, thick and pillowy interior. One of the most approachable pan pizzas to get right at home.</p>
+        <div class="dough-specs">
+          <div class="dough-spec">
+            <div class="dough-spec-label">Hydration</div>
+            <div class="dough-spec-value">65–75%</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Ferment</div>
+            <div class="dough-spec-value">24–48 hrs cold</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Difficulty</div>
+            <div class="dough-spec-value">Beginner friendly</div>
+          </div>
+        </div>
+      </div>
+      <div class="dough-card-footer">
+        <button class="dough-card-btn unavailable" disabled>Coming Soon</button>
+      </div>
+    </div>
+
+    <!-- HOAGIE ROLL — COMING SOON -->
+    <div class="dough-card coming-soon" data-category="bread">
+      <div class="dough-card-header">
+        <div class="dough-card-top">
+          <span class="dough-category-badge badge-bread">Bread &amp; Rolls</span>
+          <span class="dough-status-badge status-coming">Coming Soon</span>
+        </div>
+        <div class="dough-card-name">Hoagie Roll</div>
+        <p class="dough-card-desc">The classic hoagie roll. Soft, slightly chewy interior with a thin crispy crust that gives way cleanly. Built for cheesesteaks, Italian hoagies, and everything in between. Not something you get from a grocery store.</p>
+        <div class="dough-specs">
+          <div class="dough-spec">
+            <div class="dough-spec-label">Hydration</div>
+            <div class="dough-spec-value">60–65%</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Ferment</div>
+            <div class="dough-spec-value">1–12 hrs</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Difficulty</div>
+            <div class="dough-spec-value">Intermediate</div>
+          </div>
+        </div>
+      </div>
+      <div class="dough-card-footer">
+        <button class="dough-card-btn unavailable" disabled>Coming Soon</button>
+      </div>
+    </div>
+
+    <!-- SESAME ROLL — COMING SOON -->
+    <div class="dough-card coming-soon" data-category="bread">
+      <div class="dough-card-header">
+        <div class="dough-card-top">
+          <span class="dough-category-badge badge-bread">Bread &amp; Rolls</span>
+          <span class="dough-status-badge status-coming">Coming Soon</span>
+        </div>
+        <div class="dough-card-name">Sesame Roll</div>
+        <p class="dough-card-desc">The classic sesame seeded roll. Soft crumb, slightly chewy bite, and sesame seeds toasted into the crust during baking. A staple of delis and corner stores for generations.</p>
+        <div class="dough-specs">
+          <div class="dough-spec">
+            <div class="dough-spec-label">Hydration</div>
+            <div class="dough-spec-value">58–62%</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Ferment</div>
+            <div class="dough-spec-value">1–8 hrs</div>
+          </div>
+          <div class="dough-spec">
+            <div class="dough-spec-label">Difficulty</div>
+            <div class="dough-spec-value">Beginner friendly</div>
+          </div>
+        </div>
+      </div>
+      <div class="dough-card-footer">
+        <button class="dough-card-btn unavailable" disabled>Coming Soon</button>
+      </div>
+    </div>
+
+  </div><!-- end dough-grid -->
+
+</div><!-- end page -->
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--parchment);">Marko<span style="color:var(--orange);">dough</span></div>
+        <p style="font-size:13px;color:#A8B898;margin-top:6px;line-height:1.6;max-width:280px;">Serious dough for serious pizza.</p>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <div class="footer-col-label">Navigate</div>
+          <div class="footer-col-links">
+            <a href="../index.html">Home</a>
+            <a href="index.html">Doughs</a>
+            <a href="../recipes/index.html">Recipes</a>
+            <a href="../calculators/index.html">Calculators</a>
+            <a href="../learn/index.html">Learn</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-label">About</div>
+          <p style="font-size:13px;color:#A8B898;line-height:1.6;max-width:220px;">Markodough is a passion project for people who take dough seriously. Recipes, calculators, and technique from first ferment to finished pie.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Markodough. All rights reserved.</span>
+      <span>Made with care.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleNav() {
+  const links = document.getElementById('nav-links');
+  const btn = document.getElementById('nav-hamburger');
+  links.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function filterCards(category, btn) {
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Show/hide cards
+  document.querySelectorAll('.dough-card').forEach(card => {
+    if (category === 'all' || card.dataset.category === category) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>

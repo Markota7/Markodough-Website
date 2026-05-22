@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markodough — Calculators</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--parchment:#F5EFE0;--parchment-mid:#EDE3CE;--brown-dark:#3B2A1A;--brown-light:#6B5A42;--orange:#C8622A;--green:#5E8A42;--border:#C8B898;--text-dark:#2C1F0E;--text-mid:#4A3A22;--text-muted:#8A7A6A;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:#E8E0CC;color:var(--text-dark);min-height:100vh;}
+  nav{background:var(--brown-dark);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--orange);}
+  .logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--parchment);letter-spacing:.01em;text-decoration:none;}
+  .logo span{color:var(--orange);}
+  .nav-links{display:flex;gap:20px;}
+  .nav-links a{font-size:12px;color:var(--orange);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;font-weight:600;transition:opacity .2s;}
+  .nav-links a:hover{opacity:.75;}
+  .nav-links a.nav-active{color:var(--parchment);opacity:1;}
+  .nav-hamburger{display:none;flex-direction:column;justify-content:space-between;width:24px;height:18px;background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;}
+  .nav-hamburger span{display:block;width:100%;height:2px;background:var(--orange);border-radius:2px;transition:all .2s;}
+  .nav-hamburger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  .nav-hamburger.open span:nth-child(2){opacity:0;}
+  .nav-hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+  .page{max-width:1200px;margin:0 auto;padding:0 24px 80px;}
+  .hero{background:var(--parchment-mid);border-radius:0 0 12px 12px;padding:36px 32px 32px;margin-bottom:32px;border:.5px solid var(--border);border-top:none;}
+  .hero-tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:8px;}
+  .hero h1{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--orange);line-height:1.15;margin-bottom:12px;}
+  .hero p{font-size:15px;color:var(--text-mid);line-height:1.7;max-width:560px;}
+  .placeholder-card{background:var(--parchment);border-radius:12px;border:.5px solid var(--border);padding:48px 32px;text-align:center;}
+  .placeholder-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:10px;}
+  .placeholder-card p{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:20px;}
+  .placeholder-link{display:inline-block;padding:11px 24px;background:var(--orange);color:var(--text-dark);border-radius:8px;font-size:13px;font-weight:700;letter-spacing:.04em;text-decoration:none;transition:opacity .2s;}
+  .placeholder-link:hover{opacity:.88;}
+  footer{background:var(--brown-dark);border-top:2px solid var(--orange);padding:32px 20px;margin-top:48px;}
+  .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px;}
+  .footer-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+  .footer-cols{display:flex;gap:48px;flex-wrap:wrap;}
+  .footer-col-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:10px;}
+  .footer-col-links{display:flex;flex-direction:column;gap:7px;}
+  .footer-col-links a{font-size:13px;color:#A8B898;text-decoration:none;}
+  .footer-bottom{border-top:1px solid var(--brown-light);padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .footer-bottom span{font-size:11px;color:#6B5A42;}
+  @media(max-width:767px){
+    .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--brown-dark);border-bottom:2px solid var(--orange);flex-direction:column;gap:0;z-index:99;}
+    .nav-links.open{display:flex;}
+    .nav-links a{padding:14px 20px;border-bottom:1px solid var(--brown-light);font-size:13px;}
+    .nav-links a:last-child{border-bottom:none;}
+    .nav-hamburger{display:flex;}
+    .page{padding:0 16px 60px;}
+    .hero{padding:22px 16px 20px;}
+    .hero h1{font-size:28px;}
+    .footer-top{flex-direction:column;}
+    .footer-cols{flex-direction:column;gap:20px;}
+  }
+  @media(min-width:768px){.nav-hamburger{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="../index.html" class="logo">Marko<span>dough</span></a>
+  <div class="nav-links" id="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../doughs/index.html">Doughs</a>
+    <a href="../recipes/index.html">Recipes</a>
+    <a href="../calculators/index.html" class="nav-active">Calculators</a>
+    <a href="../learn/index.html">Learn</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="page">
+  <div class="hero">
+    <div class="hero-tag">Coming Soon</div>
+    <h1>Calculators</h1>
+    <p>Standalone calculators for power users. No hand-holding — just inputs and outputs. Every dough from the guided section lives here in clean calculator form.</p>
+  </div>
+  <div class="placeholder-card">
+    <div class="placeholder-title">Under Construction</div>
+    <p>Standalone calculators coming soon.</p>
+    <a href="../doughs/index.html" class="placeholder-link">Browse Doughs →</a>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--parchment);">Marko<span style="color:var(--orange);">dough</span></div>
+        <p style="font-size:13px;color:#A8B898;margin-top:6px;line-height:1.6;max-width:280px;">Serious dough for serious pizza.</p>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <div class="footer-col-label">Navigate</div>
+          <div class="footer-col-links">
+            <a href="../index.html">Home</a>
+            <a href="../doughs/index.html">Doughs</a>
+            <a href="../recipes/index.html">Recipes</a>
+            <a href="../calculators/index.html">Calculators</a>
+            <a href="../learn/index.html">Learn</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-label">About</div>
+          <p style="font-size:13px;color:#A8B898;line-height:1.6;max-width:220px;">Markodough is a passion project for people who take dough seriously. Recipes, calculators, and technique from first ferment to finished pie.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Markodough. All rights reserved.</span>
+      <span>Made with care.</span>
+    </div>
+  </div>
+</footer>
+<script>
+function toggleNav() {
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+</script>
+</body>
+</html>
