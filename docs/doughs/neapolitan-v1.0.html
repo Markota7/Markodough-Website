@@ -3098,7 +3098,7 @@ function completeStep(n) {
   if (n === 1) summary.textContent = mixerLabel() + ' · ' + surfaceLabel() + ' · ' + peelLabel();
   if (n === 2) summary.textContent = sel.pref === 'poolish' ? 'Poolish' : 'Sourdough Starter Discard';
   if (n === 3) {
-    const hLabel = HYDRATION_DATA['ny-style'][sel.hydration] ? HYDRATION_DATA['ny-style'][sel.hydration].label : '';
+    const hLabel = HYDRATION_DATA['neapolitan'][sel.hydration] ? HYDRATION_DATA['neapolitan'][sel.hydration].label : '';
     summary.textContent = sel.size + '" · ' + sel.balls + ' ball' + (parseInt(sel.balls) > 1 ? 's' : '') + ' · ' + crustLabel() + ' · ' + sel.ferm + ' hrs · ' + hLabel;
   }
   if (n === 4) {
@@ -3140,7 +3140,7 @@ function yeastLabel() { return sel.yeast === 'ady' ? 'Active Dry Yeast' : 'Insta
 
 // ── HYDRATION DATA ──
 const HYDRATION_DATA = {
-  'ny-style': {
+  'neapolitan': {
     low:    { pct: 0.60, label: 'Low (58–61%)', title: 'Low Hydration', bullets: [
       'Firm, non-sticky dough that is easiest to shape and handle',
       'Tight, dense crumb with a crispy, snappy bite',
@@ -3174,7 +3174,7 @@ function selectHydration(el, tier) {
   el.classList.add('sel');
   sel.hydration = tier;
 
-  const data = HYDRATION_DATA['ny-style'][tier];
+  const data = HYDRATION_DATA['neapolitan'][tier];
   selectedHydration = tier;
   selectedHydrationPct = data.pct;
 
@@ -3362,7 +3362,7 @@ function calculate() {
   renderOutput(d);
 
   // Build summary line for collapsed calculator
-  const hydLabel = HYDRATION_DATA['ny-style'][sel.hydration] ? HYDRATION_DATA['ny-style'][sel.hydration].label : '';
+  const hydLabel = HYDRATION_DATA['neapolitan'][sel.hydration] ? HYDRATION_DATA['neapolitan'][sel.hydration].label : '';
   const calcSummary = [
     mixerLabel(),
     surfaceLabel(),
@@ -3586,7 +3586,7 @@ function openMethodStep(num) {
 }
 
 // ── DOUGH TYPE — set per page ──
-const DOUGH_TYPE = 'ny-style';
+const DOUGH_TYPE = 'neapolitan';
 
 // ── RECIPE COMPATIBILITY — which recipe types are valid for each dough ──
 const RECIPE_COMPATIBILITY = {
@@ -4431,7 +4431,7 @@ function restoreSession() {
   renderOutput(lastCalcData);
 
   // Collapse calculator
-  const hydLabel = HYDRATION_DATA['ny-style'][sel.hydration] ? HYDRATION_DATA['ny-style'][sel.hydration].label : '';
+  const hydLabel = HYDRATION_DATA['neapolitan'][sel.hydration] ? HYDRATION_DATA['neapolitan'][sel.hydration].label : '';
   const calcSummary = [mixerLabel(), surfaceLabel(), sel.size + '"',
     lastCalcData.balls + ' ball' + (lastCalcData.balls > 1 ? 's' : ''),
     crustLabel(), sel.ferm + ' hrs', hydLabel].filter(Boolean).join(' · ');
@@ -4481,7 +4481,7 @@ function completeStepSilent(n) {
   if (n === 1 && summary) summary.textContent = mixerLabel() + ' · ' + surfaceLabel() + ' · ' + peelLabel();
   if (n === 2 && summary) summary.textContent = sel.pref === 'poolish' ? 'Poolish' : 'Sourdough Starter Discard';
   if (n === 3 && summary) {
-    const hLabel = HYDRATION_DATA['ny-style'][sel.hydration] ? HYDRATION_DATA['ny-style'][sel.hydration].label : '';
+    const hLabel = HYDRATION_DATA['neapolitan'][sel.hydration] ? HYDRATION_DATA['neapolitan'][sel.hydration].label : '';
     summary.textContent = sel.size + '" · ' + lastCalcData.balls + ' ball' + (lastCalcData.balls > 1 ? 's' : '') + ' · ' + crustLabel() + ' · ' + sel.ferm + ' hrs · ' + hLabel;
   }
   if (n === 4 && summary) summary.textContent = flourLabel() + ' · ' + yeastLabel() + ' · ' + (sel.sweet === 'sugar' ? 'Sugar' : 'Honey');
