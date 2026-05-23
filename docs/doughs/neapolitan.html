@@ -2430,6 +2430,7 @@
           <div class="subsection-title">Cheese</div>
           <div id="static-cheese-rows"></div>
           <div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:4px;">Pecorino Romano or Parmesan optional — to taste</div>
+          <button class="dough-next-btn" style="margin-top:16px;" onclick="openPizzaCard('prebake')">Go to Before You Start Cooking →</button>
         </div>
       </div>
 
@@ -3496,6 +3497,7 @@ function buildRecipe() {
   collapseSection('dough', 'Your dough recipe is ready — make this before baking');
   showSection('recipe');
   document.getElementById('pizza-output-section').style.display = 'block';
+  setTimeout(function() { scrollToEl(document.getElementById('pizza-ingredients-card')); }, 50);
   document.getElementById('jump-to-pizza-link').style.display = 'flex';
   var dlBtn = document.getElementById('download-pizza-btn');
   if (dlBtn) dlBtn.classList.add('visible');
