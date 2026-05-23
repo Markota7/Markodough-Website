@@ -2504,10 +2504,6 @@
           <div class="output-card-chevron" id="pizza-chev-cheese">›</div>
         </button>
         <div class="output-body output-card-body collapsed" id="pizza-body-cheese">
-          <div class="callout" style="margin-bottom:14px;">
-            <div class="callout-title">✓ Grate your own mozzarella</div>
-            <p>Pre-shredded mozzarella contains anti-caking agents that prevent proper melting and produce a greasy, uneven result. A box grater on the large holes works well. Grate cold — it shreds more cleanly.</p>
-          </div>
           <div id="cheese-ingredient-rows"></div>
           <div class="output-total-row" style="border-top:none;padding-top:8px;">
             <span style="font-size:12px;font-style:italic;color:var(--text-muted);">Pecorino Romano or Parmesan optional — to taste, applied before and after bake</span>
@@ -2781,8 +2777,10 @@ function collapseSection(id, summaryText) {
   var body = document.getElementById('body-section-' + id);
   var chev = document.getElementById('chev-section-' + id);
   var summary = document.getElementById(id === 'calculator' ? 'calculator-summary' : id + '-section-summary');
+  var outline = document.getElementById(id + '-mini-outline');
   if (body) body.classList.remove('open');
   if (chev) chev.classList.remove('open');
+  if (outline) outline.classList.add('visible');
   if (summary && summaryText) summary.textContent = summaryText;
 }
 
@@ -2790,9 +2788,11 @@ function showSection(id) {
   var section = document.getElementById('section-' + id);
   var body = document.getElementById('body-section-' + id);
   var chev = document.getElementById('chev-section-' + id);
+  var outline = document.getElementById(id + '-mini-outline');
   if (section) section.style.display = 'block';
   if (body) body.classList.add('open');
   if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
   setTimeout(function() { scrollToEl(section); }, 50);
 }
 
