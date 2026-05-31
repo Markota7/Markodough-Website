@@ -1,0 +1,3473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markodough — Sesame Hoagie Roll</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F5EFE0;
+    --parchment-mid: #EDE3CE;
+    --parchment-dark: #DDD0B8;
+    --brown-dark: #3B2A1A;
+    --brown-mid: #4A3A22;
+    --brown-light: #6B5A42;
+    --orange: #C8622A;
+    --orange-light: #F5E8DF;
+    --green: #5E8A42;
+    --green-light: #EFF6E8;
+    --border: #C8B898;
+    --border-light: #A8B898;
+    --text-dark: #2C1F0E;
+    --text-mid: #4A3A22;
+    --text-muted: #8A7A6A;
+    --disabled-bg: #C8B898;
+    --disabled-text: #8A7A6A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #E8E0CC;
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--brown-dark);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--orange);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--parchment);
+    letter-spacing: 0.01em;
+  }
+
+  .logo span { color: var(--orange); }
+
+  .nav-links { display: flex; gap: 20px; }
+  .nav-links a {
+    font-size: 12px;
+    color: var(--orange);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 0.75; }
+  .nav-links a.nav-active { color: var(--parchment); opacity: 1; }
+
+  /* ── PAGE WRAPPER ── */
+  .page { max-width: 680px; margin: 0 auto; padding: 0 16px 60px; }
+
+  /* ── DESKTOP TWO-COLUMN LAYOUT ── */
+  @media (min-width: 768px) {
+    .page { max-width: 100%; padding: 0 32px 60px; }
+
+    .hero-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      max-width: 100%;
+      margin: 0 0 0 0;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .two-col-wrap {
+      display: grid;
+      grid-template-columns: 38% minmax(0, 1fr);
+      gap: 24px;
+      max-width: 1200px;
+      margin: 20px auto 0;
+      align-items: start;
+    }
+
+    .col-left {
+      position: sticky;
+      top: 68px;
+      padding-right: 4px;
+    }
+
+    .col-right { min-width: 0; }
+
+    .col-left .section-card { margin-bottom: 0; }
+
+    /* Desktop: BYGS body scrollable independently */
+    #bygs-body {
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    #bygs-body::-webkit-scrollbar { width: 4px; }
+    #bygs-body::-webkit-scrollbar-track { background: transparent; }
+    #bygs-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--parchment-mid);
+    border-radius: 0 0 12px 12px;
+    padding: 28px 24px 24px;
+    margin-bottom: 20px;
+    border: 0.5px solid var(--border);
+    border-top: none;
+  }
+
+  .hero-tag {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--orange);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 16px 20px;
+    border-bottom: 2px solid var(--orange);
+  }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+
+  .section-body { padding: 18px 20px; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--green-light);
+  }
+
+  .callout-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin-bottom: 5px;
+  }
+
+  .callout p {
+    font-size: 14px;
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  .warning-callout {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--orange-light);
+  }
+
+  .warning-callout .callout-title { color: var(--orange); }
+  .warning-callout p { font-size: 14px; color: var(--text-dark); line-height: 1.6; }
+
+  /* ── INFO ROWS ── */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--orange);
+    gap: 12px;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+
+  .info-row-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+    flex: 1;
+  }
+
+  .info-row-detail {
+    font-size: 13px;
+    color: var(--green);
+    font-style: italic;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .info-row-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+
+  .subsection-title {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 700;
+    margin: 18px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .subsection-title:first-child { margin-top: 0; }
+
+  /* ── ACCORDION ── */
+  .accord {
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 16px;
+    background: var(--parchment);
+  }
+
+  .accord-item { border-bottom: 1px solid var(--border); }
+  .accord-item:last-child { border-bottom: none; }
+
+  .accord-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+
+  .accord-trigger:hover:not([disabled]) { background: var(--parchment-mid); }
+  .accord-trigger[disabled] { cursor: not-allowed; opacity: 0.55; }
+
+  .accord-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--border);
+    color: var(--text-muted);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .accord-num.active { background: var(--orange); color: var(--text-dark); }
+  .accord-num.done { background: var(--green); color: #fff; }
+
+  .accord-trigger-text { flex: 1; }
+  .accord-step-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); font-weight: 600; }
+  .accord-step-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--text-dark); }
+  .accord-step-summary { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+
+  .accord-chevron {
+    font-size: 20px;
+    color: var(--orange);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .accord-chevron.open { transform: rotate(90deg); }
+
+  .accord-body {
+    display: none;
+    padding: 16px;
+    background: var(--parchment-mid);
+    border-top: 1px solid var(--border);
+  }
+
+  .accord-body.open { display: block; }
+
+  /* ── FIELD LABELS ── */
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 7px;
+    margin-top: 14px;
+  }
+
+  .field-label:first-child { margin-top: 0; }
+
+  /* ── BUTTON GROUPS ── */
+  .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+
+  .btn-opt {
+    padding: 9px 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--parchment);
+    font-size: 13px;
+    color: var(--text-dark);
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 500;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .btn-opt:hover { border-color: var(--orange); }
+  .btn-opt.sel { background: var(--orange); color: var(--text-dark); border-color: var(--orange); font-weight: 700; }
+
+  /* ── PREFERMENT CARDS ── */
+  .pref-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .pref-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--parchment);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .pref-card:hover { border-color: var(--orange); }
+  .pref-card.sel { border-color: var(--orange); border-width: 2px; background: var(--orange-light); }
+
+  .pref-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+  }
+
+  .pref-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: 0.06em;
+    margin-bottom: 5px;
+  }
+
+  .pref-card p { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+  /* ── DROPDOWNS ── */
+  .styled-select {
+    width: 100%;
+    padding: 9px 32px 9px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--parchment);
+    font-size: 13px;
+    color: var(--text-dark);
+    font-family: 'Source Sans 3', sans-serif;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23C8622A' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    margin-bottom: 4px;
+    cursor: pointer;
+  }
+
+  /* ── DYNAMIC NOTE ── */
+  .dynamic-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    padding: 9px 12px;
+    background: var(--parchment);
+    border-radius: 6px;
+    border: 0.5px solid var(--border);
+    display: none;
+    line-height: 1.5;
+  }
+
+  .dynamic-note.visible { display: block; }
+
+  /* ── NEXT STEP BTN ── */
+  .next-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+  }
+
+  .next-btn:hover { opacity: 0.88; }
+  .next-btn.green { background: var(--green); color: #fff; }
+
+  /* ── CALCULATE BUTTON ── */
+  .calc-btn-wrap { margin-bottom: 16px; }
+
+  .calc-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+  }
+
+  .calc-btn:hover:not([disabled]) { opacity: 0.88; }
+  .calc-btn:disabled {
+    background: var(--disabled-bg);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+  }
+
+  /* ── OUTPUT TOGGLE BAR ── */
+  .output-toggle-bar {
+    background: var(--parchment);
+    border-radius: 10px;
+    border: 0.5px solid var(--border);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .output-toggle-bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    flex-shrink: 0;
+  }
+
+  .toggle-pair {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+
+  .toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .toggle-slider:before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+
+  .toggle input:checked + .toggle-slider { background: var(--orange); }
+  .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+  .toggle-pair-label { font-size: 12px; color: var(--text-muted); min-width: 90px; }
+
+  /* ── OUTPUT SECTION ── */
+  #output-section { display: block; }
+
+  .output-card {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .output-header {
+    padding: 14px 20px;
+    background: var(--brown-dark);
+    border-bottom: 2px solid var(--orange);
+  }
+
+  .output-header-tag { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); font-weight: 600; margin-bottom: 3px; }
+  .output-header-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--parchment); }
+
+  .output-body { padding: 16px 20px; }
+
+  .output-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--orange);
+    font-size: 14px;
+    gap: 12px;
+  }
+
+  .output-row:last-child { border-bottom: none; }
+  .output-row-label { color: var(--text-mid); font-weight: 500; }
+  .output-row-value { font-weight: 700; color: var(--text-dark); text-align: right; }
+  .output-row-value.highlight { color: var(--orange); font-size: 15px; }
+
+  .output-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0 4px;
+    font-size: 15px;
+    border-top: 2px solid var(--orange);
+    margin-top: 6px;
+    gap: 12px;
+  }
+
+  .output-total-label { font-weight: 700; color: var(--text-dark); }
+  .output-total-value { font-weight: 700; color: var(--orange); font-size: 18px; text-align: right; }
+
+  /* ── CALORIE GRID ── */
+  .calorie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+
+  .calorie-card {
+    background: var(--parchment-mid);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    border: 0.5px solid var(--border);
+  }
+
+  .calorie-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: var(--orange); }
+  .calorie-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ── FERMENTATION NOTE ── */
+  .ferm-note {
+    background: var(--parchment-mid);
+    border-radius: 8px;
+    padding: 14px;
+    border-left: 3px solid var(--orange);
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ── METHOD STEPS ── */
+  .method-step {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--orange);
+  }
+
+  .method-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .method-step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .method-step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .method-step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .method-step p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+
+  .before-step-callout {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+    background: var(--orange-light);
+  }
+
+  .before-step-callout .callout-title { color: var(--orange); font-size: 11px; margin-bottom: 3px; }
+  .before-step-callout p { font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+
+  .ingredient-callout {
+    border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+    background: var(--green-light);
+  }
+
+  .ingredient-callout .callout-title { color: var(--green); font-size: 11px; margin-bottom: 3px; }
+  .ingredient-callout p { font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+
+  .timer-badge {
+    display: inline-block;
+    background: var(--green-light);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+
+  /* ── PRINT BTN ── */
+  .print-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--brown-dark);
+    color: var(--parchment);
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+  }
+
+  .print-btn:hover { opacity: 0.85; }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    nav, .calc-btn-wrap, .print-btn, #calculator-section, .output-toggle-bar, .col-left { display: none !important; }
+    body { background: white; }
+    .page { max-width: 100%; padding: 0; }
+    .two-col-wrap { display: block !important; }
+    .col-right { display: block !important; width: 100% !important; }
+    .output-card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 12px; }
+    .method-step { break-inside: avoid; }
+    .hero { border: 1px solid #ccc; border-radius: 0; }
+    .hero-wrap { max-width: 100%; }
+    #output-section { display: block !important; }
+  }
+
+  .mt8 { margin-top: 8px; }
+
+  /* ── DOUGH INGREDIENTS LIST IN METHOD STEPS ── */
+  .dough-ing-section {
+    background: var(--parchment-mid);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 4px;
+    border: 0.5px solid var(--border);
+  }
+
+  .dough-ing-header {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .dough-ing-header-note {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+
+  .dough-ing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--orange);
+    font-size: 13px;
+  }
+
+  .dough-ing-row:last-of-type { border-bottom: none; }
+
+  .dough-ing-name { color: var(--text-mid); font-weight: 500; }
+  .dough-ing-val { font-weight: 700; color: var(--orange); }
+
+  .dough-ing-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0 2px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    border-top: 2px solid var(--orange);
+    margin-top: 4px;
+  }
+
+  .dough-ing-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* ── METHOD STEP ACCORDION ── */
+  .method-step-accord {
+    border-bottom: 1px solid var(--orange);
+    overflow: hidden;
+  }
+
+  .method-step-accord:last-child { border-bottom: none; }
+
+  .method-step-accord-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity 0.15s;
+  }
+
+  .method-step-accord-trigger:hover { opacity: 0.8; }
+
+  .method-step-accord-body {
+    display: none;
+    padding-bottom: 14px;
+  }
+
+  .method-step-accord-body.open { display: block; }
+
+  .method-step-accord-chevron {
+    font-size: 16px;
+    color: var(--orange);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .method-step-accord-chevron.open { transform: rotate(90deg); }
+
+  /* ── BAKING REMINDER CALLOUT ── */
+  .baking-reminder {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--orange-light);
+  }
+
+  .baking-reminder .callout-title { color: var(--orange); font-size: 12px; margin-bottom: 6px; }
+  .baking-reminder p { font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+  .hydration-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .hydration-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    line-height: 1.4;
+    position: relative;
+    min-width: 0;
+    font-size: 14px;
+  }
+
+  .hydration-range {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .btn-opt.sel .hydration-range { color: var(--text-dark); }
+
+  .hydration-rec-badge {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.02em;
+    margin-top: 3px;
+  }
+
+  .btn-opt.sel .hydration-rec-badge { color: var(--text-dark); }
+
+  .hydration-desc {
+    display: none;
+    background: var(--parchment);
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    padding: 10px 12px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  .hydration-desc.visible { display: block; }
+
+  .hydration-desc-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  .hydration-desc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hydration-desc ul li {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .hydration-desc ul li:before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  .hydration-warning {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    margin-top: 8px;
+    background: var(--orange-light);
+    font-size: 12px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    display: none;
+  }
+
+  .hydration-warning.visible { display: block; }
+  .hydration-warning strong { color: var(--orange); }
+  .output-card-header-btn {
+    width: 100%;
+    background: var(--brown-dark);
+    border: none;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .output-card-header-btn:hover { opacity: 0.92; }
+
+  .output-card-header-left { text-align: left; }
+  .output-card-chevron { font-size: 18px; color: var(--orange); transition: transform 0.25s; flex-shrink: 0; }
+  .output-card-chevron.open { transform: rotate(90deg); }
+  .output-card-body { display: block; }
+  .output-card-body.collapsed { display: none; }
+
+  /* ── SECTION MINI OUTLINE (Option C — accordion rows) ── */
+  .section-mini-outline {
+    display: none;
+    background: #F5EFE0;
+  }
+
+  .section-mini-outline.visible { display: block; }
+
+  .mini-outline-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid #C8B898;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .mini-outline-row:last-child { border-bottom: none; }
+  .mini-outline-row:hover { background: #EDE3CE; }
+
+  .mini-row-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: #C8B898;
+    color: #8A7A6A;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .mini-row-num.done { background: #5E8A42; color: #fff; }
+  .mini-row-num.active { background: #C8622A; color: #2C1F0E; }
+
+  .mini-row-text { flex: 1; }
+
+  .mini-row-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5E8A42;
+    font-weight: 600;
+    margin-bottom: 1px;
+  }
+
+  .mini-row-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2C1F0E;
+  }
+
+  .mini-row-summary {
+    font-size: 11px;
+    color: #8A7A6A;
+    font-style: italic;
+    margin-top: 1px;
+  }
+
+  .mini-row-summary.active { color: #C8622A; font-style: italic; }
+
+  .mini-row-chev {
+    font-size: 16px;
+    color: #C8622A;
+    flex-shrink: 0;
+  }
+
+  /* ── FLUSH INNER CARDS ── */
+  .inner-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px;
+  }
+
+  .inner-card-group .output-card {
+    border-radius: 0;
+    border-bottom-width: 0;
+    margin-bottom: 0;
+  }
+
+  .inner-card-group .output-card:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .inner-card-group .output-card:last-child {
+    border-radius: 0 0 8px 8px;
+    border-bottom-width: 0.5px;
+  }
+
+  .inner-card-group .output-card:only-child {
+    border-radius: 8px;
+    border-bottom-width: 0.5px;
+  }
+
+  /* ── DOUGH SECTION NEXT BTN ── */
+  .dough-next-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+    margin-top: 16px;
+  }
+
+  .dough-next-btn:hover { opacity: 0.88; }
+
+  /* ── TOP LEVEL SECTIONS ── */
+  .top-section {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .top-section-header {
+    width: 100%;
+    background: var(--brown-dark);
+    border: none;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .top-section-header:hover { opacity: 0.92; }
+
+  .top-section-header-left { flex: 1; }
+  .top-section-tag { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #C8922A; font-weight: 700; margin-bottom: 3px; }
+  .top-section-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--parchment); }
+  .top-section-summary { font-size: 11px; color: #A8B898; font-style: italic; margin-top: 3px; }
+  .top-section-chevron { font-size: 20px; color: var(--orange); transition: transform 0.25s; flex-shrink: 0; line-height: 1; }
+  .top-section-chevron.open { transform: rotate(90deg); }
+
+  .top-section-step-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--orange);
+    border: 2px solid #E8823A;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 900;
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .top-section-body { display: none; }
+  .top-section-body.open { display: block; }
+
+  /* ── BEFORE YOU GET STARTED TOGGLE ── */
+  .bygs-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .bygs-toggle:hover { opacity: 0.85; }
+
+  .bygs-chevron {
+    font-size: 20px;
+    color: var(--orange);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .bygs-chevron.open { transform: rotate(90deg); }
+
+  /* BYGS collapse utility */
+  .bygs-hidden { display: none !important; }
+
+  /* ── DOUGH SUMMARY BAR ── */
+  .dough-summary-bar {
+    background: var(--green);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: none;
+  }
+
+  .dough-summary-bar.visible { display: flex; }
+
+  .dough-summary-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .dough-summary-expand {
+    font-size: 12px;
+    color: #fff;
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+  }
+
+
+  .pizza-next-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+    margin-top: 16px;
+  }
+
+  .pizza-next-btn:hover { opacity: 0.88; }
+  .choose-recipe-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--brown-dark);
+    color: var(--parchment);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+  }
+
+  .choose-recipe-btn:hover { opacity: 0.85; }
+
+  /* ── VERSION CARDS ── */
+  .version-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-mid);
+    margin: 12px 0 8px;
+  }
+
+  .version-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .version-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: var(--parchment);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .version-card:hover { border-color: var(--orange); }
+
+  .version-card.sel-standard {
+    border-color: var(--orange);
+    border-width: 2px;
+    background: var(--orange-light);
+  }
+
+  .version-card.sel-healthier {
+    border-color: var(--green);
+    border-width: 2px;
+    background: var(--green-light);
+  }
+
+  .version-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .version-card.sel-standard .version-card-name { color: var(--orange); }
+  .version-card.sel-healthier .version-card-name { color: var(--green); }
+
+  .version-card-detail {
+    font-size: 11px;
+    color: var(--text-mid);
+    line-height: 1.4;
+  }
+
+  .version-card-savings {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--green);
+    margin-top: 5px;
+  }
+
+  /* ── RECIPE CARD ── */
+  .recipe-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--parchment-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 8px;
+  }
+
+  .recipe-card:hover { border-color: var(--orange); }
+  .recipe-card.sel { border-color: var(--orange); border-width: 2px; background: var(--orange-light); }
+
+  .recipe-card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .recipe-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .recipe-card-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .recipe-card-time {
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .recipe-card-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .recipe-card.sel .recipe-card-check { display: flex; }
+
+  /* ── PIZZA OUTPUT ── */
+  .subsection-title { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); font-weight: 700; margin: 18px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border-light); }
+  .method-step-p { font-size: 14px; color: var(--text-mid); line-height: 1.6; margin-left: 40px; }
+
+  /* ── NUTRITION CARD ── */
+  .nutrition-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .nutrition-tog-group { display: flex; gap: 6px; }
+  .nutrition-tog-btn { padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--parchment); color: var(--text-dark); cursor: pointer; font-family: 'Source Sans 3', sans-serif; transition: all 0.15s; }
+  .nutrition-tog-btn.active-orange { background: var(--orange); color: var(--text-dark); border-color: var(--orange); }
+  .nutrition-slice-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-mid); font-weight: 600; }
+  .nutrition-slice-row select { font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--parchment); color: var(--text-dark); font-family: 'Source Sans 3', sans-serif; cursor: pointer; }
+  .nutrition-savings { background: var(--green-light); border: 1px solid var(--green); color: #3B6D11; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; margin-bottom: 14px; display: none; }
+  .nutrition-section-label { font-size: 11px; color: var(--text-muted); font-style: italic; margin-bottom: 8px; }
+  .nutrition-comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .nutrition-comp-card { background: var(--parchment-mid); border-radius: 8px; padding: 12px; border: 0.5px solid var(--border); }
+  .nutrition-comp-label { font-size: 11px; color: var(--text-mid); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .nutrition-comp-cal { font-size: 20px; font-weight: 700; color: var(--orange); font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 4px; }
+  .nutrition-comp-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .nutrition-macro-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .npill-p { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: var(--green-light); color: #3B6D11; }
+  .npill-c { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #FFF8EE; color: #854F0B; }
+  .npill-f { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: var(--orange-light); color: #712B13; }
+  .nutrition-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .nutrition-summary-card { background: var(--brown-dark); border-radius: 8px; padding: 14px; }
+  .nutrition-summary-label { font-size: 10px; color: #A8B898; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .nutrition-summary-cal { font-size: 24px; font-weight: 700; color: var(--orange); font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 8px; }
+  .nutrition-summary-macros { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tpill-p { background: #27500A; color: #C0DD97; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+  .tpill-c { background: #633806; color: #FAC775; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+  .tpill-f { background: #712B13; color: #F5C4B3; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+  .nutrition-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; }
+  /* ══════════════════════════════════════
+     MOBILE STYLES — max-width: 767px
+  ══════════════════════════════════════ */
+  @media (max-width: 767px) {
+
+    /* ── NAV ── */
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--brown-dark);
+      border-bottom: 2px solid var(--orange);
+      flex-direction: column;
+      gap: 0;
+      z-index: 99;
+    }
+
+    .nav-links.open { display: flex; }
+
+    .nav-links a {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--brown-light);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links a:last-child { border-bottom: none; }
+
+    .nav-hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--orange);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* ── OUTPUT TOGGLE BAR ── */
+    .output-toggle-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+    }
+
+    .toggle-pair-label { min-width: unset; }
+
+    #jump-to-pizza-link { margin-left: 0; }
+
+    /* ── OUTPUT / SECTION BODY PADDING ── */
+    .output-body { padding: 14px 16px; }
+    .section-body { padding: 14px 16px; }
+    .accord-body { padding: 14px 16px; }
+
+    /* ── NUTRITION COMP GRID — 2 col is fine, just tighter padding ── */
+    .nutrition-comp-card { padding: 10px; }
+    .nutrition-comp-cal { font-size: 18px; }
+
+    /* ── NUTRITION SUMMARY GRID ── */
+    .nutrition-summary-card { padding: 12px; }
+    .nutrition-summary-cal { font-size: 20px; }
+
+    /* ── NUTRITION CONTROLS — stack slice row ── */
+    .nutrition-controls { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+    /* ── CALORIE GRID — fine at 2 col, reduce number size ── */
+    .calorie-num { font-size: 22px; }
+
+    /* ── VERSION CARDS — stack on mobile ── */
+    .version-cards { grid-template-columns: 1fr; }
+
+    /* ── TOP SECTION HEADER — tighten for step badge + text + chevron ── */
+    .top-section-header { padding: 14px 16px; }
+    .top-section-title { font-size: 16px; }
+    .top-section-summary { font-size: 10px; }
+
+    /* ── STEP BADGE — slightly smaller on mobile ── */
+    .top-section-step-badge {
+      width: 32px;
+      height: 32px;
+      font-size: 15px;
+    }
+
+    /* ── OUTPUT CARD HEADER ── */
+    .output-card-header-btn { padding: 12px 16px; }
+    .output-header-title { font-size: 16px; }
+
+    /* ── HERO ── */
+    .hero { padding: 20px 16px 18px; }
+    .hero h1 { font-size: 24px; }
+
+    /* ── FOOTER — stack vertically ── */
+    footer > div > div:first-child {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    footer > div > div:first-child > div:last-child {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  /* ── HAMBURGER HIDDEN ON DESKTOP ── */
+  @media (min-width: 768px) {
+    .nav-hamburger { display: none; }
+  }
+  /* ── RESTORE BANNER ── */
+  .restore-banner {
+    background: var(--brown-mid);
+    border: 1.5px solid var(--orange);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .restore-banner.visible { display: block; }
+
+  .restore-banner-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .restore-banner-text {
+    font-size: 13px;
+    color: var(--parchment);
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .restore-banner-text span {
+    color: #A8B898;
+    font-weight: 400;
+    font-size: 12px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .restore-btn {
+    padding: 9px 18px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .restore-btn:hover { opacity: 0.88; }
+
+  .restore-fresh-link {
+    font-size: 11px;
+    color: #A8B898;
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Source Sans 3', sans-serif;
+    padding: 0;
+    margin-top: 8px;
+    display: block;
+  }
+
+  .restore-fresh-link:hover { color: var(--parchment); }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    nav, .breadcrumb-bar, .restore-banner, .calc-btn-wrap,
+    .print-btn, #calculator-section, .output-toggle-bar,
+    .col-left, .choose-recipe-btn, .dough-next-btn,
+    .pizza-next-btn, .next-btn, #jump-to-pizza-link,
+    .top-section-chevron, .output-card-chevron,
+    .accord-chevron, .bygs-chevron, .top-section-step-badge,
+    #section-calculator, .section-mini-outline,
+    .dough-summary-bar, .output-card-header-btn > .output-card-chevron { display: none !important; }
+
+    body { background: white; font-size: 12px; }
+    .page { max-width: 100%; padding: 0; }
+    .two-col-wrap { display: block !important; }
+    .col-right { display: block !important; width: 100% !important; }
+
+    /* Show all collapsed cards for print */
+    .output-card-body.collapsed,
+    .top-section-body,
+    .accord-body,
+    #bygs-body,
+    .pizza-seq-body,
+    [id^="pizza-body-"],
+    [id^="ocb-"] { display: block !important; }
+
+    .output-card {
+      border: 1px solid #ccc;
+      break-inside: avoid;
+      margin-bottom: 10px;
+      box-shadow: none;
+    }
+
+    .output-card-header-btn {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .output-header { background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .method-step { break-inside: avoid; }
+    .method-step-accord-body { display: block !important; }
+
+    .hero { border: 1px solid #ccc; border-radius: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero-wrap { max-width: 100%; }
+
+    #output-section { display: block !important; }
+    #pizza-output-section { display: block !important; }
+    #section-dough, #section-recipe { display: block !important; }
+
+    /* Nutrition — print as simple rows not grid */
+    .nutrition-comp-grid { display: block !important; }
+    .nutrition-comp-card {
+      display: inline-block;
+      width: 48%;
+      margin-bottom: 6px;
+      border: 1px solid #ccc;
+      break-inside: avoid;
+    }
+    .nutrition-summary-grid { display: block !important; }
+    .nutrition-summary-card {
+      display: inline-block;
+      width: 48%;
+      background: #2C1F0E !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      margin-bottom: 6px;
+    }
+
+    /* Inner card groups — remove flush borders for print */
+    .inner-card-group .output-card {
+      border-radius: 6px !important;
+      border-bottom-width: 1px !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* Page title */
+    .hero h1 { color: #C8622A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    @page { margin: 1.5cm; }
+  }
+  /* ── DOWNLOAD PIZZA RECIPE BUTTON ── */
+  .download-pizza-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--brown-dark);
+    color: var(--parchment);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+    display: none;
+  }
+
+  .download-pizza-btn.visible { display: block; }
+  .download-pizza-btn:hover { opacity: 0.85; }
+
+  /* ── PRINT PIZZA ONLY ── */
+  @media print {
+    body.print-pizza-only nav,
+    body.print-pizza-only .breadcrumb-bar,
+    body.print-pizza-only .restore-banner,
+    body.print-pizza-only .hero-wrap,
+    body.print-pizza-only #section-calculator,
+    body.print-pizza-only #section-dough,
+    body.print-pizza-only .choose-recipe-btn,
+    body.print-pizza-only #choose-recipe-section,
+    body.print-pizza-only .print-btn,
+    body.print-pizza-only .download-pizza-btn,
+    body.print-pizza-only .pizza-next-btn,
+    body.print-pizza-only .dough-next-btn,
+    body.print-pizza-only #jump-to-pizza-link,
+    body.print-pizza-only .output-card-chevron,
+    body.print-pizza-only .top-section-chevron,
+    body.print-pizza-only .dough-summary-bar,
+    body.print-pizza-only #pizza-ingredients-card { display: none !important; }
+
+    body.print-pizza-only .page { max-width: 100%; padding: 0; }
+    body.print-pizza-only #section-recipe { display: block !important; }
+    body.print-pizza-only .top-section-body { display: block !important; }
+    body.print-pizza-only #pizza-output-section { display: block !important; }
+    body.print-pizza-only [id^="pizza-body-"] { display: block !important; }
+    body.print-pizza-only .output-card-body.collapsed { display: block !important; }
+    body.print-pizza-only .two-col-wrap { display: block !important; }
+    body.print-pizza-only .col-left { display: none !important; }
+    body.print-pizza-only .col-right { width: 100% !important; }
+
+    /* Print header */
+    body.print-pizza-only #pizza-print-header { display: block !important; }
+
+    body.print-pizza-only .output-card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 10px; box-shadow: none; }
+    body.print-pizza-only .output-card-header-btn { pointer-events: none; }
+    body.print-pizza-only .output-header { background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body.print-pizza-only .method-step { break-inside: avoid; }
+    body.print-pizza-only .inner-card-group .output-card { border-radius: 6px !important; border-bottom-width: 1px !important; margin-bottom: 8px !important; }
+    body.print-pizza-only .nutrition-comp-grid { display: block !important; }
+    body.print-pizza-only .nutrition-comp-card { display: inline-block; width: 48%; margin-bottom: 6px; border: 1px solid #ccc; break-inside: avoid; }
+    body.print-pizza-only .nutrition-summary-grid { display: block !important; }
+    body.print-pizza-only .nutrition-summary-card { display: inline-block; width: 48%; background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin-bottom: 6px; }
+
+    @page { margin: 1.5cm; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Marko<span>dough</span></div>
+  <div class="nav-links" id="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../doughs/index.html" class="nav-active">Doughs</a>
+    <a href="../recipes/index.html">Recipes</a>
+    <a href="../calculators/index.html">Calculators</a>
+    <a href="../learn/index.html">Learn</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div style="background:var(--brown-mid);padding:8px 24px;border-bottom:1px solid var(--brown-light);" class="breadcrumb-bar">
+  <div style="max-width:1200px;margin:0 auto;">
+    <a href="index.html" style="font-size:12px;color:#A8B898;text-decoration:none;letter-spacing:0.04em;">← Doughs</a>
+    <span style="font-size:12px;color:var(--brown-light);margin:0 8px;">/</span>
+    <span style="font-size:12px;color:var(--parchment);font-weight:600;">Neapolitan</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- RESTORE BANNER -->
+  <div class="restore-banner" id="restore-banner">
+    <div class="restore-banner-top">
+      <div class="restore-banner-text">
+        You have a saved session
+        <span id="restore-banner-date"></span>
+      </div>
+      <button class="restore-btn" onclick="restoreSession()">Continue where you left off →</button>
+    </div>
+    <button class="restore-fresh-link" onclick="clearSession()">Start fresh</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-wrap">
+  <div class="hero">
+    <div class="hero-tag">Hoagie Roll Calculator</div>
+    <h1>Sesame<br>Hoagie Roll</h1>
+    <p>A Sarcone's-inspired sesame seeded roll built for cheesesteaks. Overnight biga, sturdy open crumb, and a thin crackly crust. The seeded roll that changed how Philadelphia thinks about the cheesesteak.</p>
+  </div>
+  </div><!-- end hero-wrap -->
+
+  <div class="two-col-wrap">
+  <div class="col-left">
+  <!-- BEFORE YOU GET STARTED -->
+  <div class="section-card">
+    <button class="bygs-toggle" id="bygs-toggle" onclick="toggleBYGS()">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--orange);border:2px solid #E8823A;color:var(--text-dark);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0;font-family:'Playfair Display',serif;">1</div>
+        <div>
+          <div class="section-tag" style="color:#C8922A;font-weight:700;">Step 1 — Read Before You Begin</div>
+          <div class="section-title">Before You Get Started</div>
+        </div>
+      </div>
+      <div class="bygs-chevron open" id="bygs-chevron">›</div>
+    </button>
+    <div class="section-body" id="bygs-body">
+
+      <div class="warning-callout">
+        <div class="callout-title">⚠ Plan ahead — the biga is made the night before</div>
+        <p>The biga (Italian pre-ferment) needs to sit at room temperature for <strong>12–16 hours</strong> before you can mix your dough. After mixing, the rolls proof for 45–60 minutes before baking. Total elapsed time from start to bake: about 15–18 hours. Start the biga the evening before you plan to bake.</p>
+      </div>
+
+      <div class="warning-callout">
+        <div class="callout-title">⚖ A kitchen scale is essential</div>
+        <p>All measurements are by weight. Volume cups are not accurate enough for bread dough — especially for small ingredients like yeast where a fraction of a gram changes the result. A basic digital kitchen scale accurate to 0.1g is required before proceeding.</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">What is a biga?</div>
+        <p>A biga is a stiff Italian pre-ferment made with flour, water, and a very small amount of yeast. Unlike a poolish (which is wet and pourable), a biga looks rough and shaggy after mixing. That is correct. The long overnight fermentation builds flavor and gluten strength. It is the foundation of traditional South Philly Italian bread.</p>
+      </div>
+
+      <div class="subsection-title">Must-Have Ingredients</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Bread Flour</div>
+          <div class="info-row-note">High protein content (12–13%) is essential for the gluten structure and chewy crumb of a proper hoagie roll. AP flour is supported but produces a softer, less structured result.</div>
+        </div>
+        <div class="info-row-detail">King Arthur recommended</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Water</div>
+          <div class="info-row-note">Fridge-cold for stand mixer use — friction from the dough hook raises dough temp significantly during mixing. Room temperature for hand mixing.</div>
+        </div>
+        <div class="info-row-detail">Filtered or tap</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Instant Yeast</div>
+          <div class="info-row-note">Used in both the biga (tiny amount) and the main dough. Active dry yeast is supported but less reliable at the small quantities used in the biga.</div>
+        </div>
+        <div class="info-row-detail">SAF recommended</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Salt</div>
+          <div class="info-row-note">Do not use iodized table salt — iodine inhibits yeast activity. Fine sea or kosher salt only.</div>
+        </div>
+        <div class="info-row-detail">Fine sea or kosher</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Neutral Oil or Crisco</div>
+          <div class="info-row-note">Neutral oil (vegetable, canola) produces a slightly moister crumb. Crisco (vegetable shortening) shortens gluten more aggressively and produces a more tender, slightly richer result — closer to old-school American bakery character. Both are flavor-neutral.</div>
+        </div>
+        <div class="info-row-detail">Either works</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Honey or Sugar</div>
+          <div class="info-row-note">Honey adds subtle moisture retention and a very mild sweetness. Sugar is completely neutral. Both are used in small amounts — flavor difference is minor.</div>
+        </div>
+        <div class="info-row-detail">Honey suggested</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Sesame Seeds</div>
+          <div class="info-row-note">Applied after an egg white wash before baking. Toasted or raw both work. Be generous: the seeds should coat the entire top and upper sides.</div>
+        </div>
+        <div class="info-row-detail">Coat generously</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Egg White</div>
+          <div class="info-row-note">Used as the wash to adhere sesame seeds. Egg white only — no yolk. Yolk adds too much color and produces a thicker, matte crust rather than a thin, shiny one.</div>
+        </div>
+        <div class="info-row-detail">1 white + 1 tsp water</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Semolina or Fine Cornmeal</div>
+          <div class="info-row-note">For dusting the bottom of the pan or baguette tray. Prevents sticking and adds subtle texture to the underside — a traditional Italian bread characteristic.</div>
+        </div>
+        <div class="info-row-detail">For pan dusting</div>
+      </div>
+
+      <div class="subsection-title">Tools</div>
+
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dark);background:var(--parchment-dark);padding:5px 10px;border-radius:4px;margin-bottom:6px;display:inline-block;">Essential</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Kitchen Scale (0.1g accuracy)</div>
+          <div class="info-row-note">Essential for the small amount of biga yeast, which is measured in fractions of a gram.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Instant Read Thermometer</div>
+          <div class="info-row-note">For checking finished dough temperature (FDT) after mixing. Target: 65–70°F. Without it you are guessing.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Bench Scraper</div>
+          <div class="info-row-note">For dividing and handling dough without deflating. Fingers stretch and tear; a scraper cuts cleanly.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Wire Cooling Rack</div>
+          <div class="info-row-note">Rolls must cool on a wire rack — not a cutting board. Airflow underneath keeps the crust firm. A solid surface traps steam and softens the bottom.</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dark);background:var(--parchment-dark);padding:5px 10px;border-radius:4px;margin:14px 0 6px;display:inline-block;">Strongly Recommended</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Lame or Single-Edge Razor</div>
+          <div class="info-row-note">For scoring the final slash before baking. A serrated knife drags and deflates; a razor cuts cleanly at the low angle needed to open an ear. A sharp paring knife can substitute.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Bread Cloth (Couche) or Substitute</div>
+          <div class="info-row-note">A linen couche supports the sides of the shaped rolls during proofing so they rise upward, not outward. A thick, heavily floured linen towel works as a substitute. A perforated baguette pan does the same structural job.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Stand Mixer with Dough Hook</div>
+          <div class="info-row-note">Produces more consistent gluten development than hand mixing. Requires fridge-cold water due to friction heat during mixing.</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dark);background:var(--parchment-dark);padding:5px 10px;border-radius:4px;margin:14px 0 6px;display:inline-block;">Depends on Baking Method</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Perforated Baguette Pan</div>
+          <div class="info-row-note">Shapes rolls consistently and circulates heat under the crust. Produces the most uniform result for home bakers without a couche.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Pizza Steel or Stone</div>
+          <div class="info-row-note">For the steel/stone baking method. Provides aggressive bottom heat that mimics hearth baking. Requires a full 45–60 minute preheat at 475°F.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Large Heavy Roasting Pan</div>
+          <div class="info-row-note">For the inverted cover steam method. Must be large enough that it does not touch the rolls. Preheated so it is hot when inverted over the rolls.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Challenger Bread Pan or Cast Iron</div>
+          <div class="info-row-note">Cast iron base plus deep lid traps steam from the dough. Fits 2–3 rolls at a time. Any comparable covered cast iron works.</div>
+        </div>
+      </div>
+
+
+      <button class="next-btn" onclick="scrollToCalculator()" style="margin-top:20px;">Next: Build Your Recipe →</button>
+
+    </div>
+  </div>
+
+  </div><!-- end col-left -->
+  <div class="col-right">
+  <!-- CALCULATOR -->
+  <!-- SECTION 2: BUILD YOUR RECIPE -->
+  <div class="top-section" id="section-calculator">
+    <button class="top-section-header" onclick="toggleTopSection('calculator')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">2</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 2</div>
+          <div class="top-section-title">Build Your Recipe</div>
+          <div class="top-section-summary" id="calculator-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron" id="chev-section-calculator">›</div>
+    </button>
+    <div class="top-section-body" id="body-section-calculator">
+  <div id="calculator-section">
+
+    <div class="accord">
+
+      <!-- STEP 1: EQUIPMENT -->
+      <div class="accord-item" id="step1-item">
+        <button class="accord-trigger" id="step1-trigger" onclick="toggleStep(1)">
+          <div class="accord-num active" id="step1-num">1</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 1 of 4</div>
+            <div class="accord-step-title">Equipment</div>
+            <div class="accord-step-summary" id="step1-summary"></div>
+          </div>
+          <div class="accord-chevron open" id="step1-chevron">›</div>
+        </button>
+        <div class="accord-body open" id="step1-body">
+          <div class="field-label">Mixer type</div>
+          <div class="btn-group" id="mixer-group">
+            <div class="btn-opt" onclick="selectOpt(this,'mixer','stand')">Stand Mixer</div>
+            <div class="btn-opt" onclick="selectOpt(this,'mixer','hand')">Hand Mix</div>
+          </div>
+          <div class="field-label">Baking method</div>
+          <div class="btn-group" id="method-group">
+            <div class="btn-opt" onclick="selectOpt(this,'method','steam')">Steel / Stone + Cover</div>
+            <div class="btn-opt" onclick="selectOpt(this,'method','cover')">Inverted Pan Cover</div>
+            <div class="btn-opt" onclick="selectOpt(this,'method','baguette')">Baguette Pan + Steam</div>
+            <div class="btn-opt" onclick="selectOpt(this,'method','challenger')">Challenger Bread Pan</div>
+          </div>
+          <div class="dynamic-note visible" id="method-note" style="display:block;">Select a baking method above to see a description.</div>
+          <button class="next-btn" onclick="completeStep(1)">Next: Roll Count →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: ROLL COUNT -->
+      <div class="accord-item" id="step2-item">
+        <button class="accord-trigger" id="step2-trigger" onclick="toggleStep(2)" disabled>
+          <div class="accord-num" id="step2-num">2</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 2 of 4</div>
+            <div class="accord-step-title">Roll Count</div>
+            <div class="accord-step-summary" id="step2-summary"></div>
+          </div>
+          <div class="accord-chevron" id="step2-chevron">›</div>
+        </button>
+        <div class="accord-body" id="step2-body">
+          <div class="field-label">Number of rolls</div>
+          <div class="btn-group" id="rolls-group">
+            <div class="btn-opt" onclick="selectOpt(this,'rolls','2')">2</div>
+            <div class="btn-opt" onclick="selectOpt(this,'rolls','3')">3</div>
+            <div class="btn-opt" onclick="selectOpt(this,'rolls','4')">4</div>
+            <div class="btn-opt" onclick="selectOpt(this,'rolls','5')">5</div>
+            <div class="btn-opt" onclick="selectOpt(this,'rolls','6')">6</div>
+            <div class="btn-opt" onclick="selectOpt(this,'rolls','7')">7</div>
+            <div class="btn-opt" onclick="selectOpt(this,'rolls','8')">8</div>
+          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.5;">Each roll is approximately 9 inches long and weighs 160g. This is a standard cheesesteak roll size.</p>
+          <button class="next-btn" onclick="completeStep(2)">Next: Ingredient Options →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: INGREDIENT OPTIONS -->
+      <div class="accord-item" id="step3-item">
+        <button class="accord-trigger" id="step3-trigger" onclick="toggleStep(3)" disabled>
+          <div class="accord-num" id="step3-num">3</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 3 of 4</div>
+            <div class="accord-step-title">Ingredient Options</div>
+            <div class="accord-step-summary" id="step3-summary"></div>
+          </div>
+          <div class="accord-chevron" id="step3-chevron">›</div>
+        </button>
+        <div class="accord-body" id="step3-body">
+          <div class="field-label">Fat type</div>
+          <div class="btn-group" id="fat-group">
+            <div class="btn-opt" onclick="selectOpt(this,'fat','oil')">Neutral Oil</div>
+            <div class="btn-opt" onclick="selectOpt(this,'fat','crisco')">Crisco</div>
+          </div>
+          <div class="dynamic-note" id="fat-note"></div>
+          <div class="field-label">Sweetener</div>
+          <div class="btn-group" id="sweet-group">
+            <div class="btn-opt sel" onclick="selectOpt(this,'sweet','honey')">Honey</div>
+            <div class="btn-opt" onclick="selectOpt(this,'sweet','sugar')">Sugar</div>
+          </div>
+          <div class="field-label">Flour type</div>
+          <select class="styled-select" id="flour-select" onchange="updateFlourNote()">
+            <option value="ka">King Arthur Bread Flour (recommended)</option>
+            <option value="other">Other Bread Flour</option>
+            <option value="ap">All Purpose Flour</option>
+          </select>
+          <div class="dynamic-note" id="flour-note"></div>
+          <div class="field-label">Yeast type</div>
+          <select class="styled-select" id="yeast-select" onchange="updateYeastNote()">
+            <option value="instant">Instant Yeast (recommended)</option>
+            <option value="ady">Active Dry Yeast</option>
+          </select>
+          <div class="dynamic-note" id="yeast-note"></div>
+          <button class="next-btn" onclick="completeStep(3)">Next: Plan Ahead →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: PLAN AHEAD -->
+      <div class="accord-item" id="step4-item">
+        <button class="accord-trigger" id="step4-trigger" onclick="toggleStep(4)" disabled>
+          <div class="accord-num" id="step4-num">4</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 4 of 4</div>
+            <div class="accord-step-title">Plan Ahead</div>
+            <div class="accord-step-summary" id="step4-summary"></div>
+          </div>
+          <div class="accord-chevron" id="step4-chevron">›</div>
+        </button>
+        <div class="accord-body" id="step4-body">
+          <div class="warning-callout" style="margin-bottom:14px;">
+            <div class="callout-title">⚠ The night before — make your biga</div>
+            <p>The biga must be mixed <strong>12–16 hours before</strong> you plan to mix your dough. It sits at room temperature the entire time. To bake in the morning, mix your biga the evening before. To bake in the evening, mix it that morning.</p>
+          </div>
+          <div class="callout" style="margin-bottom:0;">
+            <div class="callout-title">What your biga will look like</div>
+            <p>Right after mixing it will look rough, shaggy, and dry — not smooth. That is correct for a stiff biga at 60% hydration. After 12–16 hours it should look puffed and domed, feel slightly tacky, and smell lightly yeasty. It will not double the way a wet poolish does.</p>
+          </div>
+          <button class="next-btn green" onclick="completeStep(4)" style="margin-top:16px;">All done — ready to calculate ✓</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="calc-btn-wrap">
+      <button class="calc-btn" id="calc-btn" onclick="calculate()" disabled>Complete all steps to calculate →</button>
+    </div>
+  </div><!-- end calculator-section -->
+  </div><!-- end body-section-calculator -->
+  </div><!-- end section-calculator -->
+
+  <!-- SECTION 3: PREP YOUR DOUGH -->
+  <div class="top-section" id="section-dough" style="display:none;">
+    <button class="top-section-header" onclick="toggleTopSection('dough')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">3</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 3</div>
+          <div class="top-section-title">Prep Your Dough</div>
+          <div class="top-section-summary" id="dough-section-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron open" id="chev-section-dough">›</div>
+    </button>
+    <!-- Mini outline shown when section collapsed -->
+    <div class="section-mini-outline" id="dough-mini-outline">
+      <div class="mini-outline-row" id="mini-row-plan" onclick="expandDoughToCard('plan')">
+        <div class="mini-row-num" id="mini-num-plan">1</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 1</div>
+          <div class="mini-row-title">Plan</div>
+          <div class="mini-row-summary" id="mini-sum-plan">Timing and fermentation notes</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-ingredients" onclick="expandDoughToCard('ingredients')">
+        <div class="mini-row-num" id="mini-num-ingredients">2</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 2</div>
+          <div class="mini-row-title">Your Ingredients</div>
+          <div class="mini-row-summary" id="mini-sum-ingredients">Biga and main dough amounts</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-steps" onclick="expandDoughToCard('steps')">
+        <div class="mini-row-num" id="mini-num-steps">3</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 3</div>
+          <div class="mini-row-title">Method Steps</div>
+          <div class="mini-row-summary" id="mini-sum-steps">12 steps from biga to cooling</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+    </div>
+    <div class="top-section-body open" id="body-section-dough">
+  <!-- OUTPUT -->
+  <div id="output-section">
+
+    <!-- UNIT TOGGLE BAR -->
+    <div class="output-toggle-bar">
+      <div class="output-toggle-bar-label">Display units:</div>
+      <div class="toggle-pair">
+        <span class="toggle-pair-label" id="unit-label">Metric (g)</span>
+        <label class="toggle">
+          <input type="checkbox" id="unit-toggle" onchange="refreshOutput()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span id="unit-label-right" style="font-size:13px;color:var(--text-dark);font-weight:500;">Imperial (oz)</span>
+      </div>
+      <div class="toggle-pair">
+        <span class="toggle-pair-label" id="temp-label">Fahrenheit (°F)</span>
+        <label class="toggle">
+          <input type="checkbox" id="temp-toggle" onchange="refreshOutput()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span id="temp-label-right" style="font-size:13px;color:var(--text-dark);font-weight:500;">Celsius (°C)</span>
+      </div>
+      <a href="#choose-recipe-section" id="jump-to-pizza-link" style="display:none;margin-left:auto;font-size:12px;font-weight:700;color:var(--orange);text-decoration:none;letter-spacing:0.04em;white-space:nowrap;">Jump to Pizza ↓</a>
+    </div>
+
+    <!-- THREE INNER CARDS — FLUSH GROUP WITH SEQUENTIAL FLOW -->
+    <div class="inner-card-group">
+
+    <!-- CARD 1: PLAN — starts open -->
+    <div class="output-card" id="oc-plan">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('plan')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Preparation Timing</div>
+          <div class="output-header-title">Plan Ahead</div>
+        </div>
+        <div class="output-card-chevron open" id="chev-plan">›</div>
+      </button>
+      <div class="output-body output-card-body" id="ocb-plan">
+        <div class="subsection-title" style="margin-top:0;">Estimated Time</div>
+        <div class="output-row"><span class="output-row-label">Biga prep (night before)</span><span class="output-row-value">5 min active · 12–16 hrs passive</span></div>
+        <div class="output-row"><span class="output-row-label">Combining biga with liquids</span><span class="output-row-value">5 min active · 5 min rest</span></div>
+        <div class="output-row"><span class="output-row-label">Mixing</span><span class="output-row-value" id="mix-time-out">—</span></div>
+        <div class="output-row"><span class="output-row-label">Bulk rest + stretch and folds</span><span class="output-row-value">10 min active · 1.5–2 hrs passive</span></div>
+        <div class="output-row"><span class="output-row-label">Divide, pre-shape, bench rest</span><span class="output-row-value">10 min active · 20 min passive</span></div>
+        <div class="output-row"><span class="output-row-label">Final shaping</span><span class="output-row-value">10 min active</span></div>
+        <div class="output-row"><span class="output-row-label">Final proof</span><span class="output-row-value">45–60 min passive</span></div>
+        <div class="output-row"><span class="output-row-label">Oven preheat</span><span class="output-row-value" id="preheat-time-out">—</span></div>
+        <div class="output-row"><span class="output-row-label">Baking and cooling</span><span class="output-row-value">18–22 min bake · 30 min cool</span></div>
+        <div class="output-total-row">
+          <span class="output-total-label">Total active time (bake day)</span>
+          <span class="output-total-value" id="active-time-out">—</span>
+        </div>
+        <div class="output-total-row" style="border-top:none;padding-top:2px;">
+          <span class="output-total-label">Total elapsed (bake day)</span>
+          <span class="output-total-value" id="elapsed-time-out">—</span>
+        </div>
+        <div class="subsection-title" style="margin-top:18px;">The Poke Test</div>
+        <div class="ferm-note" id="ferm-note-text">With a floured finger, press gently into the side of a shaped roll about half an inch. Under-proofed: springs back immediately and fully. Properly proofed: springs back slowly and mostly, not all the way — bake now. Over-proofed: does not spring back at all — bake immediately.</div>
+        <button class="dough-next-btn" onclick="openDoughCard('ingredients')">Next: Your Ingredients →</button>
+      </div>
+    </div>
+
+    <!-- CARD 2: YOUR INGREDIENTS — starts collapsed -->
+    <div class="output-card" id="oc-ingredients">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('ingredients')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Ingredients</div>
+          <div class="output-header-title">Your Ingredients</div>
+        </div>
+        <div class="output-card-chevron" id="chev-ingredients">›</div>
+      </button>
+      <div class="output-body output-card-body collapsed" id="ocb-ingredients">
+        <div class="warning-callout" id="biga-storage-callout">
+          <div class="callout-title">⚠ Storage — Room Temperature Only</div>
+          <p>Leave your biga uncovered or loosely covered at room temperature for the full 12–16 hours. Do not refrigerate — cold temperatures stall fermentation. Cover loosely with plastic wrap or a damp towel to prevent the surface drying out.</p>
+        </div>
+        <div class="subsection-title" style="margin-top:0;">Your Biga — Make the Night Before</div>
+        <div id="biga-rows"></div>
+        <div class="callout mt8" id="biga-ready-callout">
+          <div class="callout-title">✓ Biga is ready when</div>
+          <p>It has expanded noticeably (50–75% larger), looks domed and bubbly on top, smells lightly yeasty and alcoholic, and feels slightly tacky. It will not look smooth — a biga is a stiff dough, not a liquid. A fully collapsed biga is over-fermented — still usable, but reduce your main dough yeast by 25%.</p>
+        </div>
+        <div class="subsection-title" style="margin-top:18px;">Main Dough Mix</div>
+        <div id="flour-output-note" class="dynamic-note"></div>
+        <div id="yeast-output-note" class="dynamic-note"></div>
+        <div id="ingredient-rows"></div>
+        <div class="output-total-row" id="total-dough-row">
+          <span class="output-total-label">Total dough weight</span>
+          <span class="output-total-value" id="total-dough-out">—</span>
+        </div>
+        <div class="output-total-row" style="border-top:none;padding-top:2px;">
+          <span class="output-total-label" id="per-ball-label-out">Per ball</span>
+          <span class="output-total-value" id="per-ball-out">—</span>
+        </div>
+        <div class="subsection-title" style="margin-top:18px;">Dough Calories</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Dough only — does not include sauce, cheese, or toppings.</p>
+        <div class="calorie-grid">
+          <div class="calorie-card">
+            <div class="calorie-num" id="cal-batch-out">—</div>
+            <div class="calorie-label">Total batch calories</div>
+          </div>
+          <div class="calorie-card">
+            <div class="calorie-num" id="cal-ball-out">—</div>
+            <div class="calorie-label">Calories per dough ball</div>
+          </div>
+        </div>
+        <button class="dough-next-btn" onclick="openDoughCard('steps')">Next: Method Steps →</button>
+      </div>
+    </div>
+
+    <!-- CARD 3: METHOD STEPS — starts collapsed -->
+    <div class="output-card" id="oc-steps">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('steps')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Instructions</div>
+          <div class="output-header-title">Method Steps</div>
+        </div>
+        <div class="output-card-chevron" id="chev-steps">›</div>
+      </button>
+      <div class="output-body output-card-body collapsed" id="ocb-steps"></div>
+    </div>
+
+    </div><!-- end inner-card-group -->
+
+    <button class="print-btn" onclick="window.print()">⎙ Print This Recipe</button>
+
+    <!-- CHOOSE YOUR RECIPE BUTTON -->
+    <button class="choose-recipe-btn" onclick="showRecipeSelector()">Choose Your Recipe →</button>
+
+  </div><!-- end output -->
+  </div><!-- end body-section-dough -->
+  </div><!-- end section-dough -->
+
+  <!-- SECTION 4: RECIPE -->
+  <div class="top-section" id="section-recipe" style="display:none;">
+    <button class="top-section-header" onclick="toggleTopSection('recipe')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">4</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 4</div>
+          <div class="top-section-title">Recipe</div>
+          <div class="top-section-summary" id="recipe-section-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron open" id="chev-section-recipe">›</div>
+    </button>
+    <!-- Mini outline shown when section collapsed -->
+    <div class="section-mini-outline" id="recipe-mini-outline">
+      <div class="mini-outline-row" id="mini-row-recipe-choose" onclick="expandRecipeToCard('choose')">
+        <div class="mini-row-num" id="mini-num-recipe-choose">1</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 1</div>
+          <div class="mini-row-title">Choose &amp; Configure</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-choose">Select recipe, cheese, toppings</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-prep" onclick="expandRecipeToCard('prep')">
+        <div class="mini-row-num" id="mini-num-recipe-prep">2</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 2</div>
+          <div class="mini-row-title">Prep &amp; Ingredients</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-prep">Ribeye, roll, scaled amounts</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-cook" onclick="expandRecipeToCard('cook')">
+        <div class="mini-row-num" id="mini-num-recipe-cook">3</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 3</div>
+          <div class="mini-row-title">Cooking Instructions</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-cook">Griddle method, step by step</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+    </div>
+    <div class="top-section-body open" id="body-section-recipe">
+
+    <!-- DOUGH SUMMARY BAR -->
+    <div class="dough-summary-bar" id="dough-summary-bar">
+      <div class="dough-summary-text">✓ Roll recipe ready — bake your rolls before making cheesesteaks</div>
+      <button class="dough-summary-expand" onclick="expandDoughOutput()">View dough ↑</button>
+    </div>
+
+    <!-- CHOOSE YOUR RECIPE SECTION -->
+    <div id="choose-recipe-section">
+      <div class="section-header" style="background:var(--parchment-mid);border-radius:12px 12px 0 0;border:0.5px solid var(--border);border-bottom:none;padding:14px 20px;">
+        <div class="section-tag">What are you making?</div>
+        <div class="section-title">Choose &amp; Configure</div>
+      </div>
+      <div style="background:var(--parchment);border-radius:0 0 12px 12px;border:0.5px solid var(--border);border-top:none;padding:16px;margin-bottom:16px;">
+        <div id="recipe-card-list">
+          <!-- Populated dynamically by renderRecipeSelector() -->
+        </div>
+
+        <!-- CHEESESTEAK CONFIG -->
+        <div id="cs-config" style="display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+          <div class="field-label">How many cheesesteaks today?</div>
+          <div class="btn-group" id="cs-count-group"></div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:4px;margin-bottom:10px;">You made <span id="cs-rolls-made">—</span>. Choose how many you're making right now — ingredients scale to this number.</p>
+
+          <div class="field-label">Cheese</div>
+          <div class="btn-group" id="cs-cheese-group">
+            <div class="btn-opt" onclick="selectCSopt(this,'cheese','whiz')">Cheez Whiz</div>
+            <div class="btn-opt" onclick="selectCSopt(this,'cheese','cooper')">Cooper Sharp</div>
+            <div class="btn-opt" onclick="selectCSopt(this,'cheese','provolone')">Provolone</div>
+            <div class="btn-opt" onclick="selectCSopt(this,'cheese','american')">American</div>
+          </div>
+          <div class="dynamic-note" id="cs-cheese-note"></div>
+
+          <div class="field-label">Toppings <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);">— tap to toggle, choose any combination</span></div>
+          <div class="btn-group" id="cs-toppings-group">
+            <div class="btn-opt sel" onclick="toggleCSTopping(this,'onions')">Onions</div>
+            <div class="btn-opt" onclick="toggleCSTopping(this,'peppers')">Peppers</div>
+            <div class="btn-opt" onclick="toggleCSTopping(this,'mushrooms')">Mushrooms</div>
+          </div>
+          <div class="dynamic-note visible" id="cs-toppings-note" style="display:block;font-size:12px;color:var(--text-muted);">In Philly, "wit'" means with onions, "witout" means without. Onions only is the most traditional. Toggle any combination you like.</div>
+
+          <div class="field-label">Cooking surface</div>
+          <div class="btn-group" id="cs-surface-group">
+            <div class="btn-opt" onclick="selectCSopt(this,'surface','castiron')">Cast Iron Skillet</div>
+            <div class="btn-opt" onclick="selectCSopt(this,'surface','griddle')">Flat Griddle / Blackstone</div>
+            <div class="btn-opt" onclick="selectCSopt(this,'surface','stainless')">Stainless Pan</div>
+          </div>
+        </div>
+
+        <button class="next-btn" id="build-recipe-btn" style="margin-top:16px;background:var(--disabled-bg);color:var(--disabled-text);cursor:not-allowed;" disabled onclick="buildRecipe()">Build This Recipe →</button>
+        <div style="font-size:11px;color:var(--text-muted);font-style:italic;text-align:center;margin-top:6px;" id="build-recipe-note">Select a recipe above to continue</div>
+      </div>
+    </div>
+
+    <!-- SANDWICH OUTPUT -->
+    <div id="pizza-output-section" style="display:none;">
+
+      <div class="inner-card-group">
+
+      <!-- PREP & INGREDIENTS -->
+      <div class="output-card" id="pizza-card-prep">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('prep')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Section 2 — Prep</div>
+            <div class="output-header-title" id="cs-ingredients-title">Prep &amp; Ingredients</div>
+          </div>
+          <div class="output-card-chevron open" id="pizza-chev-prep">›</div>
+        </button>
+        <div class="output-body output-card-body" id="pizza-body-prep">
+
+          <div class="warning-callout">
+            <div class="callout-title">⚠ The meat must be sliced paper thin</div>
+            <p>Thinly sliced ribeye is what makes a cheesesteak a cheesesteak — not a steak sandwich with melted cheese. Target <strong>1/8 inch or thinner</strong>. At this thickness the beef cooks in seconds, stays tender, and molds into the roll.</p>
+          </div>
+
+          <div class="subsection-title" style="margin-top:0;">Slicing the Ribeye</div>
+          <div class="method-step" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+            <div class="method-step-header"><div class="method-step-num">1</div><div class="method-step-title">Partial freeze method (recommended)</div></div>
+            <p class="method-step-p">Freeze your ribeye for <strong>45–60 minutes</strong> before slicing — firm but not solid. Partially frozen beef slices cleanly and thinly with a sharp chef's knife. Slice across the grain at 1/8 inch or thinner.</p>
+            <div class="timer-badge">⏱ 45–60 min freeze</div>
+          </div>
+          <div class="method-step" style="margin-top:12px;border-bottom:none;margin-bottom:0;padding-bottom:0;">
+            <div class="method-step-header"><div class="method-step-num">2</div><div class="method-step-title">Butcher method (easiest)</div></div>
+            <p class="method-step-p">Ask your butcher to slice a whole ribeye at 1/8 inch on their commercial slicer. Most counters do this at no charge if you buy the meat there. Most reliable, most consistent.</p>
+          </div>
+          <div class="callout" style="margin-top:12px;">
+            <div class="callout-title">Why ribeye specifically</div>
+            <p>Ribeye is the correct cut. Its fat marbling keeps the beef tender and juicy at high heat. Leaner cuts dry out. Sirloin is an acceptable budget substitute if sliced thin enough, but noticeably less juicy.</p>
+          </div>
+
+          <div class="subsection-title">The Seeded Roll Difference</div>
+          <div class="callout">
+            <div class="callout-title">✓ Lightly toast the interior on the griddle</div>
+            <p>Unlike a soft roll loaded cold, a seeded roll benefits from a light toast on the cut interior. The toast adds structure so the sturdier roll holds the juicy filling without going soggy, plus a layer of Maillard flavor that complements the sesame crust. Slice three-quarters through with a hinge, place open-face down on the hot surface 30–60 seconds until lightly golden. Do not over-toast — the interior should still yield.</p>
+          </div>
+
+          <div class="subsection-title">Your Cheesesteak Ingredients</div>
+          <div id="cs-ingredient-rows"></div>
+
+          <button class="dough-next-btn" onclick="openPizzaCard('cook')">Next: Cooking Instructions →</button>
+        </div>
+      </div>
+
+      <!-- COOKING METHOD -->
+      <div class="output-card" id="pizza-card-cook">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('cook')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Section 3 — Cook</div>
+            <div class="output-header-title" id="cs-method-title">Cooking Instructions</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-cook">›</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-cook">
+          <div id="cs-method-body"></div>
+        </div>
+      </div>
+
+      </div><!-- end inner-card-group -->
+
+      <button class="print-btn" onclick="window.print()" style="margin-top:16px;">⎙ Print This Recipe</button>
+
+    </div><!-- end sandwich output -->
+
+  </div><!-- end body-section-recipe -->
+  </div><!-- end section-recipe -->
+  </div><!-- end col-right -->
+  </div><!-- end two-col-wrap -->
+
+</div><!-- end page -->
+
+<script>
+// ── DOUGH TYPE ──
+const DOUGH_TYPE = 'sesame-roll';
+
+// ── RECIPE COMPATIBILITY ──
+const RECIPE_COMPATIBILITY = {
+  'ny-style':    ['pizza-round'],
+  'neapolitan':  ['pizza-round'],
+  'detroit':     ['pizza-pan'],
+  'sicilian':    ['pizza-pan'],
+  'hoagie-roll': ['sandwich'],
+  'sesame-roll': ['sandwich']
+};
+
+const sel = {};
+let lastCalcData = null;
+
+function selectOpt(el, group, val) {
+  const grp = document.getElementById(group + '-group');
+  if (grp) grp.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  sel[group] = val;
+}
+
+function selectMethod(type) { /* not used on hoagie roll page — baking method is set via selectOpt */ }
+
+function toggleStep(n) {
+  const body = document.getElementById('step' + n + '-body');
+  const chevron = document.getElementById('step' + n + '-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open', body.classList.contains('open'));
+}
+
+// ── DEV QUICK FILL ──
+(function() {
+  if (new URLSearchParams(window.location.search).get('dev') !== '1') return;
+  const btn = document.createElement('button');
+  btn.textContent = '⚡ Dev: Quick Fill';
+  btn.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:9999;padding:10px 16px;background:#5E8A42;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Source Sans 3,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+  btn.onclick = devQuickFill;
+  document.body.appendChild(btn);
+})();
+
+function devQuickFill() {
+  const mixerBtn = document.querySelector('#mixer-group .btn-opt');
+  if (mixerBtn) { mixerBtn.classList.add('sel'); sel.mixer = 'stand'; }
+  document.querySelectorAll('#method-group .btn-opt').forEach((b,i) => { if (i===0) { b.classList.add('sel'); sel.method = 'steam'; }});
+  updateMethodNote();
+  completeStep(1);
+  document.querySelectorAll('#rolls-group .btn-opt').forEach((b,i) => { if (i===2) { b.classList.add('sel'); sel.rolls = '4'; }});
+  completeStep(2);
+  document.querySelectorAll('#fat-group .btn-opt').forEach((b,i) => { if (i===0) { b.classList.add('sel'); sel.fat = 'oil'; }});
+  updateFatNote();
+  document.getElementById('flour-select').value = 'ka';
+  document.getElementById('yeast-select').value = 'instant';
+  completeStep(3);
+  completeStep(4);
+  setTimeout(() => calculate(), 100);
+}
+
+// ── SCROLL HELPER ──
+function scrollToEl(el, extraOffset) {
+  if (!el) return;
+  var navH = 72;
+  var top = el.getBoundingClientRect().top + window.pageYOffset - navH - (extraOffset || 0);
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+function scrollToCalculator() {
+  var body = document.getElementById('body-section-calculator');
+  var chev = document.getElementById('chev-section-calculator');
+  if (body && !body.classList.contains('open')) { body.classList.add('open'); chev.classList.add('open'); }
+  scrollToEl(document.getElementById('section-calculator'));
+}
+
+// ── NAV ──
+function toggleNav() {
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+
+// ── BYGS ──
+function toggleBYGS() {
+  var body = document.getElementById('bygs-body');
+  var chev = document.getElementById('bygs-chevron');
+  body.classList.toggle('bygs-hidden');
+  chev.classList.toggle('open', !body.classList.contains('bygs-hidden'));
+}
+
+// ── TOP SECTION TOGGLE ──
+function toggleTopSection(id) {
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var outline = document.getElementById(id + '-mini-outline');
+  if (!body) return;
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+  if (outline) {
+    outline.classList.toggle('visible', isOpen);
+    if (isOpen && id === 'dough') updateMiniOutline(lastCalcData);
+    if (isOpen && id === 'recipe') updateRecipeMiniOutline();
+  }
+}
+
+function collapseSection(id, summaryText) {
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var summary = document.getElementById(id === 'calculator' ? 'calculator-summary' : id + '-section-summary');
+  var outline = document.getElementById(id + '-mini-outline');
+  if (body) body.classList.remove('open');
+  if (chev) chev.classList.remove('open');
+  if (outline) outline.classList.add('visible');
+  if (summary && summaryText) summary.textContent = summaryText;
+}
+
+function showSection(id) {
+  var section = document.getElementById('section-' + id);
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var outline = document.getElementById(id + '-mini-outline');
+  if (section) section.style.display = 'block';
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  setTimeout(function() { scrollToEl(section); }, 50);
+}
+
+// ── DOUGH SECTION PROGRESS ──
+var doughProgress = { plan: false, ingredients: false, steps: false };
+var doughOrder = ['plan', 'ingredients', 'steps'];
+
+function updateMiniOutline(d) {
+  var summaries = {
+    plan: '~' + (sel.mixer === 'stand' ? '45' : '60') + ' min active · 12–16 hr biga',
+    ingredients: d ? Math.round(d.totalFlour) + 'g flour · ' + Math.round(d.totalWater) + 'g water' : 'Biga, flour, water, salt, yeast',
+    steps: '12 steps · biga to cooling'
+  };
+  doughOrder.forEach(function(id, idx) {
+    var num = document.getElementById('mini-num-' + id);
+    var sum = document.getElementById('mini-sum-' + id);
+    var done = doughProgress[id];
+    var isNext = !done && doughOrder.slice(0, idx).every(function(prev) { return doughProgress[prev]; });
+    if (num) { num.classList.remove('done','active'); if (done) { num.classList.add('done'); num.textContent = '✓'; } else if (isNext) { num.classList.add('active'); num.textContent = idx + 1; } else { num.textContent = idx + 1; } }
+    if (sum) { sum.classList.remove('active'); if (done) { sum.textContent = summaries[id]; } else if (isNext) { sum.textContent = 'Up next'; sum.classList.add('active'); } else { sum.textContent = summaries[id]; } }
+  });
+}
+
+function expandDoughToCard(id) {
+  var body = document.getElementById('body-section-dough');
+  var chev = document.getElementById('chev-section-dough');
+  var outline = document.getElementById('dough-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  var cardBody = document.getElementById('ocb-' + id);
+  var cardChev = document.getElementById('chev-' + id);
+  var card = document.getElementById('oc-' + id);
+  if (cardBody) cardBody.classList.remove('collapsed');
+  if (cardChev) cardChev.classList.add('open');
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function openDoughCard(id) {
+  var prevIdx = doughOrder.indexOf(id) - 1;
+  if (prevIdx >= 0) { doughProgress[doughOrder[prevIdx]] = true; }
+  var body = document.getElementById('ocb-' + id);
+  var chev = document.getElementById('chev-' + id);
+  var card = document.getElementById('oc-' + id);
+  if (!body) return;
+  body.classList.remove('collapsed');
+  if (chev) chev.classList.add('open');
+  updateMiniOutline(lastCalcData);
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function toggleOutputCard(id) {
+  var body = document.getElementById('ocb-' + id);
+  var chev = document.getElementById('chev-' + id);
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function expandDoughOutput() {
+  doughProgress.plan = false; doughProgress.ingredients = false; doughProgress.steps = false;
+  var body = document.getElementById('body-section-dough');
+  var chev = document.getElementById('chev-section-dough');
+  var section = document.getElementById('section-dough');
+  var outline = document.getElementById('dough-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  ['ingredients','steps'].forEach(function(id) { var b = document.getElementById('ocb-'+id); var c = document.getElementById('chev-'+id); if (b) b.classList.add('collapsed'); if (c) c.classList.remove('open'); });
+  var planBody = document.getElementById('ocb-plan');
+  var planChev = document.getElementById('chev-plan');
+  if (planBody) planBody.classList.remove('collapsed');
+  if (planChev) planChev.classList.add('open');
+  setTimeout(function() { scrollToEl(section); }, 50);
+}
+
+// ── RECIPE SECTION PROGRESS ──
+var recipeProgress = { choose: false, prep: false, cook: false };
+var recipeOrder = ['choose', 'prep', 'cook'];
+
+function updateRecipeMiniOutline() {
+  var count = cs.count ? cs.count : '—';
+  var cheeseLbl = cs.cheese === 'whiz' ? 'Cheez Whiz' : cs.cheese === 'cooper' ? 'Cooper Sharp' : cs.cheese === 'provolone' ? 'Provolone' : cs.cheese === 'american' ? 'American' : 'Cheese';
+  var summaries = {
+    choose: (selectedRecipe && RECIPES[selectedRecipe] ? RECIPES[selectedRecipe].name : 'Select recipe') + (cs.cheese ? ' · ' + cheeseLbl : ''),
+    prep: 'Ribeye, roll, scaled for ' + count,
+    cook: cs.surface ? csSurfaceLabel(cs.surface) + ' method' : 'Griddle method, step by step'
+  };
+  recipeOrder.forEach(function(id, idx) {
+    var num = document.getElementById('mini-num-recipe-' + id);
+    var sum = document.getElementById('mini-sum-recipe-' + id);
+    var done = recipeProgress[id];
+    var isNext = !done && recipeOrder.slice(0, idx).every(function(prev) { return recipeProgress[prev]; });
+    if (num) { num.classList.remove('done','active'); if (done) { num.classList.add('done'); num.textContent = '✓'; } else if (isNext) { num.classList.add('active'); num.textContent = idx+1; } else { num.textContent = idx+1; } }
+    if (sum) { sum.classList.remove('active'); if (done) { sum.textContent = summaries[id]; } else if (isNext) { sum.textContent = 'Up next'; sum.classList.add('active'); } else { sum.textContent = summaries[id]; } }
+  });
+}
+
+function expandRecipeToCard(id) {
+  var body = document.getElementById('body-section-recipe');
+  var chev = document.getElementById('chev-section-recipe');
+  var outline = document.getElementById('recipe-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  if (id === 'choose') { setTimeout(function() { scrollToEl(document.getElementById('choose-recipe-section')); }, 50); return; }
+  var cardBody = document.getElementById('pizza-body-' + id);
+  var cardChev = document.getElementById('pizza-chev-' + id);
+  var card = document.getElementById('pizza-card-' + id);
+  if (cardBody) cardBody.classList.remove('collapsed');
+  if (cardChev) cardChev.classList.add('open');
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function togglePizzaIngredients() {
+  var body = document.getElementById('pizza-ingredients-body');
+  var chev = document.getElementById('pizza-ingredients-chevron');
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function togglePizzaCard(id) {
+  var body = document.getElementById('pizza-body-' + id);
+  var chev = document.getElementById('pizza-chev-' + id);
+  if (!body) return;
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function openPizzaCard(id) {
+  var prevIdx = recipeOrder.indexOf(id) - 1;
+  if (prevIdx >= 0) { recipeProgress[recipeOrder[prevIdx]] = true; }
+  var body = document.getElementById('pizza-body-' + id);
+  var chev = document.getElementById('pizza-chev-' + id);
+  var card = document.getElementById('pizza-card-' + id);
+  if (!body) return;
+  body.classList.remove('collapsed');
+  if (chev) chev.classList.add('open');
+  updateRecipeMiniOutline();
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+// ── OVEN TYPE SELECTION ──
+function selectOvenType(el, type) { /* not used on hoagie roll page */ }
+function selectPizzaFuel(el, fuel) { /* not used on hoagie roll page */ }
+function selectPizzaStyle(el, style) { /* not used on hoagie roll page */ }
+function checkPizzaOvenSize() { /* not used on hoagie roll page */ }
+
+// ── COMPLETE STEP ──
+function completeStep(n) {
+  if (n === 1 && (!sel.mixer || !sel.method)) { alert('Please select a mixer type and a baking method.'); return; }
+  if (n === 2 && !sel.rolls) { alert('Please select the number of rolls.'); return; }
+  if (n === 3 && !sel.fat) { alert('Please select a fat type.'); return; }
+
+  var num = document.getElementById('step' + n + '-num');
+  var body = document.getElementById('step' + n + '-body');
+  var chevron = document.getElementById('step' + n + '-chevron');
+  var summary = document.getElementById('step' + n + '-summary');
+  num.classList.remove('active'); num.classList.add('done'); num.textContent = '✓';
+  body.classList.remove('open'); chevron.classList.remove('open');
+
+  if (n === 1) summary.textContent = mixerLabel() + ' · ' + methodLabel();
+  if (n === 2) summary.textContent = sel.rolls + ' roll' + (parseInt(sel.rolls) > 1 ? 's' : '') + ' · ~160g each';
+  if (n === 3) { sel.flour = document.getElementById('flour-select').value; sel.yeast = document.getElementById('yeast-select').value; summary.textContent = fatLabel() + ' · ' + sweetLabel() + ' · ' + flourLabel() + ' · ' + yeastLabel(); }
+  if (n === 4) summary.textContent = 'Biga timing confirmed';
+
+  if (n < 4) {
+    var nt = document.getElementById('step' + (n+1) + '-trigger');
+    var nn = document.getElementById('step' + (n+1) + '-num');
+    var nb = document.getElementById('step' + (n+1) + '-body');
+    var nc = document.getElementById('step' + (n+1) + '-chevron');
+    nt.disabled = false; nn.classList.add('active'); nb.classList.add('open'); nc.classList.add('open');
+  }
+  if (n === 4) { var btn = document.getElementById('calc-btn'); btn.disabled = false; btn.textContent = 'Calculate My Hoagie Roll Recipe →'; }
+}
+
+// ── LABEL HELPERS ──
+function mixerLabel() { return sel.mixer === 'stand' ? 'Stand Mixer' : 'Hand Mix'; }
+function methodLabel() { return sel.method === 'steam' ? 'Steel/Stone + Cover' : sel.method === 'cover' ? 'Inverted Pan Cover' : sel.method === 'challenger' ? 'Challenger Bread Pan' : 'Baguette Pan + Steam'; }
+function surfaceLabel() { return methodLabel(); }
+function peelLabel() { return ''; }
+function fatLabel() { return sel.fat === 'crisco' ? 'Crisco' : 'Neutral Oil'; }
+function sweetLabel() { return sel.sweet === 'sugar' ? 'Sugar' : 'Honey'; }
+function fermLabel() { return '12–16 hr biga'; }
+function flourLabel() { return sel.flour === 'ap' ? 'AP Flour' : sel.flour === 'other' ? 'Other Bread Flour' : 'KA Bread Flour'; }
+function yeastLabel() { return sel.yeast === 'ady' ? 'Active Dry Yeast' : 'Instant Yeast'; }
+
+// ── DYNAMIC NOTES ──
+function updateMethodNote() {
+  var notes = {
+    steam:      'Pizza steel or stone preheated at 475°F for 45–60 min. Rolls load directly onto the hot steel on parchment. 1–2 ice cubes drop onto the steel beside the rolls, then a preheated inverted heavy pan covers everything to trap steam. Cover comes off at 12–13 min. Best hearth-like result for home bakers with a steel.',
+    cover:      'Rolls bake on a sheet pan under a large inverted heavy roasting pan for the first 12–13 minutes. The cover traps steam from the dough itself — no ice cubes needed. Most forgiving for home bakers. The inverted pan must be preheated alongside the oven.',
+    baguette:   'Perforated baguette or French bread pan shapes rolls consistently and circulates heat under the bottom. Used with ice cube steam on a lower pan. Produces the most uniform, evenly colored result for home bakers.',
+    challenger: 'Cast iron Challenger Bread Pan or comparable covered cast iron. The base preheats so rolls load onto a hot surface. The deep lid traps steam from the dough. 1–2 ice cubes optional but recommended for extra oven spring. Lid comes off at 12–13 min. Fits 2–3 hoagie rolls at a time — larger batches bake in rounds.'
+  };
+  var note = document.getElementById('method-note');
+  if (!note) return;
+  note.textContent = notes[sel.method] || 'Select a baking method above to see a description.';
+  note.style.display = 'block';
+  note.classList.add('visible');
+}
+
+function updateFatNote() {
+  var note = document.getElementById('fat-note');
+  if (!note) return;
+  if (sel.fat === 'crisco') { note.textContent = 'Crisco (vegetable shortening) shortens gluten more aggressively than liquid oil. The result is a more tender, slightly richer crumb — closer to old-school American bakery character. Make sure it is at room temperature before mixing.'; note.classList.add('visible'); }
+  else if (sel.fat === 'oil') { note.textContent = 'Neutral oil (vegetable, canola, soybean) coats gluten strands and lubricates the crumb. Result is slightly moister with a clean, neutral flavor. Easier to incorporate than Crisco.'; note.classList.add('visible'); }
+  else { note.classList.remove('visible'); }
+}
+
+function updateFlourNote() {
+  var v = document.getElementById('flour-select').value;
+  var note = document.getElementById('flour-note');
+  if (v === 'other') { note.textContent = 'Results may vary by brand. This calculator assumes ~12% protein. If dough feels too stiff, add water a few grams at a time; if too slack, reduce by the same amount.'; note.classList.add('visible'); }
+  else if (v === 'ap') { note.textContent = 'AP flour produces a softer crumb with less chew and weaker gluten structure. Hydration has been reduced to 60% to account for lower protein. Expect a noticeably softer roll.'; note.classList.add('visible'); }
+  else { note.classList.remove('visible'); }
+}
+
+function updateYeastNote() {
+  var v = document.getElementById('yeast-select').value;
+  var note = document.getElementById('yeast-note');
+  if (v === 'ady') { note.textContent = 'Active dry yeast must be proofed before use in the main dough. Dissolve in a small amount of warm water (105–110°F / 40–43°C) for 5–10 minutes until foamy. The biga yeast amount is unchanged.'; note.classList.add('visible'); }
+  else { note.classList.remove('visible'); }
+}
+
+// ── UNIT / TEMP FORMATTING ──
+function fw(g, dec) {
+  var isImp = document.getElementById('unit-toggle').checked;
+  if (isImp) return (g * 0.035274).toFixed(dec !== undefined ? dec : 2) + ' oz';
+  if (dec !== undefined) return g.toFixed(dec) + 'g';
+  return Math.round(g) + 'g';
+}
+function ft(f) {
+  var isCel = document.getElementById('temp-toggle').checked;
+  return isCel ? Math.round((f - 32) * 5 / 9) + '°C' : f + '°F';
+}
+
+// ── CORE CALCULATION ──
+function computeData() {
+  var isAP = sel.flour === 'ap';
+  var isADY = sel.yeast === 'ady';
+  var isCrisco = sel.fat === 'crisco';
+  var rolls = parseInt(sel.rolls);
+  var sweetener = sel.sweet === 'sugar' ? 'Sugar' : 'Honey';
+
+  var ballWeight = 160;
+  var totalDough = ballWeight * rolls;
+  var hydration = isAP ? 0.60 : 0.63;
+  var saltPct = 0.02, fatPct = 0.025, sweetPct = 0.015;
+  var yeastPct = isADY ? 0.009 : 0.007;
+  var bigaFlourPct = 0.20, bigaHydration = 0.60;
+
+  var divisor = 1 + hydration + saltPct + fatPct + sweetPct + yeastPct;
+  var totalFlour = Math.round(totalDough / divisor);
+  var totalWater = Math.round(totalFlour * hydration);
+  var salt = Math.round(totalFlour * saltPct * 10) / 10;
+  var fat = Math.round(totalFlour * fatPct * 10) / 10;
+  var sweet = Math.round(totalFlour * sweetPct * 10) / 10;
+  var mainYeast = Math.round(totalFlour * yeastPct * 10) / 10;
+  var bigaFlour = Math.round(totalFlour * bigaFlourPct);
+  var bigaWater = Math.round(bigaFlour * bigaHydration);
+  var bigaYeast = 0.3;
+  var bigaTotal = bigaFlour + bigaWater + bigaYeast;
+  var remainingFlour = totalFlour - bigaFlour;
+  var remainingWater = totalWater - bigaWater;
+  var actualTotal = Math.round(bigaTotal + remainingFlour + remainingWater + mainYeast + salt + fat + sweet);
+
+  var calFlour = totalFlour * 3.6;
+  var calFat = fat * (isCrisco ? 9.0 : 8.8);
+  var calSweet = sweet * (sweetener === 'Honey' ? 3.0 : 3.87);
+  var calYeast = (mainYeast + bigaYeast) * 2.5;
+  var totalCal = Math.round(calFlour + calFat + calSweet + calYeast);
+
+  return { rolls: rolls, balls: rolls, ballWeight: ballWeight, isAP: isAP, isADY: isADY, isCrisco: isCrisco, sweetener: sweetener,
+    totalFlour: totalFlour, totalWater: totalWater, salt: salt, fat: fat, sweet: sweet, mainYeast: mainYeast,
+    bigaFlour: bigaFlour, bigaWater: bigaWater, bigaYeast: bigaYeast, bigaTotal: bigaTotal,
+    remainingFlour: remainingFlour, remainingWater: remainingWater, actualTotal: actualTotal, totalCal: totalCal };
+}
+
+// ── RENDER OUTPUT ──
+function renderOutput(d) {
+  var isStand = sel.mixer === 'stand';
+  document.getElementById('mix-time-out').textContent = isStand ? '12–15 min active' : '25–30 min active';
+  var preheatEl = document.getElementById('preheat-time-out');
+  if (preheatEl) preheatEl.textContent = sel.method === 'steam' ? '45–60 min (steel/stone)' : sel.method === 'baguette' ? '30–45 min (oven + steam pan)' : sel.method === 'challenger' ? '45–60 min (cast iron)' : '30–45 min (oven + pan)';
+  document.getElementById('active-time-out').textContent = isStand ? '~45 min' : '~60 min';
+  document.getElementById('elapsed-time-out').textContent = '~5–6 hours (excludes biga overnight)';
+
+  document.getElementById('biga-rows').innerHTML =
+    '<div class="output-row"><span class="output-row-label">Bread flour</span><span class="output-row-value highlight">' + fw(d.bigaFlour) + '</span></div>' +
+    '<div class="output-row"><span class="output-row-label">Water, room temperature</span><span class="output-row-value highlight">' + fw(d.bigaWater) + '</span></div>' +
+    '<div class="output-row"><span class="output-row-label">' + (d.isADY ? 'Active dry yeast' : 'Instant yeast') + '</span><span class="output-row-value highlight">' + d.bigaYeast.toFixed(1) + 'g (a very small pinch)</span></div>' +
+    '<div class="output-total-row"><span class="output-total-label">Total biga weight</span><span class="output-total-value">' + fw(d.bigaTotal) + '</span></div>';
+
+  var flourNoteEl = document.getElementById('flour-output-note');
+  if (d.isAP) { flourNoteEl.textContent = 'AP flour: hydration reduced to 60%. Expect a softer, less chewy roll.'; flourNoteEl.style.display = 'block'; } else { flourNoteEl.style.display = 'none'; }
+  var yeastNoteEl = document.getElementById('yeast-output-note');
+  if (d.isADY) { yeastNoteEl.textContent = 'Active dry yeast: proof in warm water (' + ft(105) + '–' + ft(110) + ') for 5–10 min before adding. Amount adjusted.'; yeastNoteEl.style.display = 'block'; } else { yeastNoteEl.style.display = 'none'; }
+
+  var wTemp = isStand ? ft(40) : ft(70);
+  var waterLabel = isStand ? 'Water, fridge-cold (' + wTemp + ')' : 'Water, room temp (' + wTemp + ')';
+  var fatName = d.isCrisco ? 'Crisco (vegetable shortening), room temp' : 'Neutral oil (vegetable / canola)';
+
+  document.getElementById('ingredient-rows').innerHTML =
+    '<div class="output-row"><span class="output-row-label">Biga (all of it)</span><span class="output-row-value highlight">' + fw(d.bigaTotal) + '</span></div>' +
+    '<div class="output-row"><span class="output-row-label">Bread flour (remaining)</span><span class="output-row-value highlight">' + fw(d.remainingFlour) + '</span></div>' +
+    '<div class="output-row"><span class="output-row-label">' + waterLabel + '</span><span class="output-row-value highlight">' + fw(d.remainingWater) + '</span></div>' +
+    '<div class="output-row"><span class="output-row-label">' + (d.isADY ? 'Active dry yeast (proofed)' : 'Instant yeast') + '</span><span class="output-row-value highlight">' + d.mainYeast.toFixed(1) + 'g</span></div>' +
+    '<div class="output-row"><span class="output-row-label">Salt (fine sea or kosher)</span><span class="output-row-value highlight">' + fw(d.salt, 1) + '</span></div>' +
+    '<div class="output-row"><span class="output-row-label">' + fatName + '</span><span class="output-row-value highlight">' + fw(d.fat, 1) + '</span></div>' +
+    '<div class="output-row"><span class="output-row-label">' + d.sweetener + '</span><span class="output-row-value highlight">' + fw(d.sweet, 1) + '</span></div>';
+
+  document.getElementById('total-dough-out').textContent = fw(d.actualTotal);
+  document.getElementById('per-ball-label-out').textContent = 'Per roll (' + d.rolls + ' × ' + fw(d.ballWeight) + ')';
+  document.getElementById('per-ball-out').textContent = fw(d.ballWeight);
+  document.getElementById('cal-batch-out').textContent = d.totalCal.toLocaleString() + ' kcal';
+  document.getElementById('cal-ball-out').textContent = Math.round(d.totalCal / d.rolls).toLocaleString() + ' kcal';
+
+  document.getElementById('ocb-steps').innerHTML = buildMethodSteps(d);
+}
+
+function calculate() {
+  var d = computeData();
+  lastCalcData = d;
+  renderOutput(d);
+  var calcSummary = [mixerLabel(), methodLabel(), d.rolls + ' roll' + (d.rolls > 1 ? 's' : ''), fatLabel(), sweetLabel()].filter(Boolean).join(' · ');
+  collapseSection('calculator', calcSummary);
+  showSection('dough');
+  saveSession('calculated');
+}
+
+function refreshOutput() { if (lastCalcData) renderOutput(lastCalcData); }
+
+function buildMethodSteps(d) {
+  const isStand   = sel.mixer   === 'stand';
+  const isSteam   = sel.method  === 'steam';
+  const isCover   = sel.method  === 'cover';
+  const isBaguette = sel.method === 'baguette';
+  const wTemp     = isStand ? ft(40) : ft(70);
+  const fatName   = d.isCrisco ? 'Crisco' : 'neutral oil';
+  const sweetName = d.sweetener;
+
+  const steps = [
+    {
+      num: 1,
+      title: 'Confirm Your Biga Is Ready',
+      ingredients: `Biga (all of it): ${fw(d.bigaTotal)} — mixed 12–16 hours earlier`,
+      before: 'Your biga should have been sitting at room temperature for 12–16 hours. Do not proceed with a biga that looks unchanged — it should have expanded, domed, and smell lightly yeasty. A cold biga mixed and used immediately is not a biga; it is just flour and water.',
+      body: `<p>Check your biga against the readiness signs: visibly expanded (50–75% larger), domed on top, surface bubbles visible, smells lightly yeasty and alcoholic. Texture will still be rough and stiff — that is correct for a biga. If it has fully collapsed and smells aggressively sour, it is over-fermented — still usable, but reduce your main dough yeast by 25%. Have your biga measured and at the bowl ready before you start mixing.</p>`
+    },
+    {
+      num: 2,
+      title: 'Combine Biga, Water, Yeast, and Sweetener',
+      ingredients: `Biga: ${fw(d.bigaTotal)} · ${d.isADY ? 'Active dry yeast (proofed)' : 'Instant yeast'}: ${d.mainYeast.toFixed(1)}g · ${sweetName}: ${fw(d.sweet, 1)} · Water: ${fw(d.remainingWater)} at ${wTemp}`,
+      before: isStand
+        ? `Measure your water straight from the fridge — cold water is required for stand mixing. The biga is at room temperature. This temperature contrast, combined with the friction heat from the dough hook, helps bring the finished dough temperature into the target range of ${ft(65)}–${ft(70)}.`
+        : `Room temperature water is correct for hand mixing. Have a large bowl ready. The biga will resist breaking up at first — this is normal.`,
+      body: isStand
+        ? `<p>Tear the biga into rough pieces and add to the stand mixer bowl. Add <strong>${fw(d.remainingWater)}</strong> fridge-cold water (${wTemp}), <strong>${d.mainYeast.toFixed(1)}g</strong> ${d.isADY ? 'active dry yeast (proofed in a small amount of the measured water at 105–110°F before this step)' : 'instant yeast'}, and <strong>${fw(d.sweet, 1)}</strong> ${sweetName}. Let sit 5 minutes — the water softens the biga and makes it easier to incorporate.</p>`
+        : `<p>Tear the biga into rough pieces into a large mixing bowl. Add <strong>${fw(d.remainingWater)}</strong> room temperature water (${wTemp}), <strong>${d.mainYeast.toFixed(1)}g</strong> ${d.isADY ? 'active dry yeast (proofed first)' : 'instant yeast'}, and <strong>${fw(d.sweet, 1)}</strong> ${sweetName}. Use your hand to squeeze and pinch the biga into the liquid — it will break up gradually. Let sit 5 minutes once roughly combined.</p>`,
+      timer: '⏱ 5 min rest'
+    },
+    {
+      num: 3,
+      title: 'Add Flour and Salt — Develop the Dough',
+      ingredients: `Bread flour (remaining): ${fw(d.remainingFlour)} · Salt: ${fw(d.salt, 1)}`,
+      before: 'Add flour and salt in the same step — but add them separately, not pre-mixed. Do not add the fat yet. Developing the gluten before adding fat produces a stronger, more structured crumb.',
+      body: isStand
+        ? `<p>Add <strong>${fw(d.remainingFlour)}</strong> bread flour and <strong>${fw(d.salt, 1)}</strong> salt to the bowl. Mix on speed 1 for 2–3 minutes until no dry flour remains. Increase to speed 2 and mix for <strong>8–10 minutes</strong> until the dough is smooth, slightly tacky, and pulls away cleanly from the sides of the bowl. Perform the windowpane test: stretch a small piece of dough between your fingers — it should stretch thin and translucent without tearing. If it tears, mix another 2 minutes and test again.</p>`
+        : `<p>Add <strong>${fw(d.remainingFlour)}</strong> bread flour and <strong>${fw(d.salt, 1)}</strong> salt. Mix by hand until no dry flour remains, then knead on a lightly floured surface for <strong>12–15 minutes</strong> until smooth and slightly tacky. Perform the windowpane test — stretch a small piece between your fingers and it should stretch thin and translucent without tearing.</p>`,
+      timer: isStand ? '⏱ 10–12 min mixing' : '⏱ 12–15 min kneading'
+    },
+    {
+      num: 4,
+      title: `Add ${d.isCrisco ? 'Crisco' : 'Oil'} — Final Mix`,
+      ingredients: `${d.isCrisco ? 'Crisco (room temperature)' : 'Neutral oil'}: ${fw(d.fat, 1)}`,
+      before: d.isCrisco
+        ? 'Make sure your Crisco is at room temperature — cold shortening takes much longer to incorporate and can tear the gluten you just built. Adding fat after gluten is developed (not before) produces a stronger, more extensible dough.'
+        : 'Oil is added last, after gluten is fully developed. This is correct technique — oil added too early coats the gluten strands before they form and weakens the final structure.',
+      body: isStand
+        ? `<p>With the mixer on speed 1, add <strong>${fw(d.fat, 1)}</strong> ${fatName} ${d.isCrisco ? 'in small pieces' : 'in a slow drizzle'}. Mix on speed 2 for <strong>2–3 minutes</strong> until fully incorporated and the dough is smooth and slightly tacky. It should not be sticky. Do not add extra flour.</p>`
+        : `<p>Flatten the dough on your work surface and add <strong>${fw(d.fat, 1)}</strong> ${fatName} ${d.isCrisco ? 'in small pieces on top' : 'over the surface'}. Fold the dough over the fat and knead for <strong>3–4 minutes</strong> until fully incorporated. The dough will feel slippery at first and then come back together smoothly.</p>`,
+      timer: isStand ? '⏱ 2–3 min mixing' : '⏱ 3–4 min kneading'
+    },
+    {
+      num: 5,
+      title: 'Check Finished Dough Temperature',
+      ingredients: 'None — have your instant read thermometer ready',
+      before: 'Take this reading immediately after the mixer stops or you finish kneading. Temperature drops quickly once the dough is resting. This check tells you whether your process is calibrated correctly.',
+      body: `<p>Insert the thermometer probe into the center of the dough.</p>
+             <p style="margin-top:8px;"><strong>Target: ${ft(65)}–${ft(70)}</strong></p>
+             <p style="margin-top:6px;">
+               Below ${ft(60)}: Too cold — let sit uncovered a few minutes before continuing. Use slightly warmer water next time.<br>
+               ${ft(65)}–${ft(70)}: Perfect — move to bulk rest now.<br>
+               Above ${ft(75)}: Too warm — use colder water next time.${isStand ? ' If consistently over, use a portion of ice water — weigh ice as part of your total water and strain before adding.' : ''}
+             </p>`
+    },
+    {
+      num: 6,
+      title: 'Bulk Rest with Stretch and Folds',
+      ingredients: 'None — keep the dough in the bowl',
+      before: 'Have a small bowl of water nearby to wet your hand — this prevents sticking without adding flour to the surface. Do not flour your hand for stretch and folds.',
+      body: `<p>Cover the bowl and rest at room temperature for <strong>1.5–2 hours</strong>. Perform a set of stretch and folds every 30 minutes for the first hour — two sets total.</p>
+             <p style="margin-top:8px;"><strong>Stretch and fold technique:</strong><br>
+             1. Wet your hand slightly<br>
+             2. Grab one side of the dough and stretch upward as far as it will go without tearing<br>
+             3. Fold over to the opposite side<br>
+             4. Rotate the bowl 90° and repeat until you have gone around the full circle (4 folds = 1 set)</p>
+             <p style="margin-top:8px;">The dough will feel tighter and more structured after each set. After the second set, leave it alone for the remaining time. At the end of bulk rest, the dough should look puffy and feel noticeably lighter than when you started.</p>`,
+      timer: '⏱ 1.5–2 hours total'
+    },
+    {
+      num: 7,
+      title: 'Divide and Pre-Shape — Bench Rest',
+      ingredients: 'None — have a bench scraper ready',
+      before: 'Work on a clean, unfloured surface for pre-shaping — you need the friction to build surface tension. Have your bench scraper ready. Pre-shaping followed by a bench rest is not optional: it relaxes the gluten enough for final shaping without tearing.',
+      body: `<p>Turn the dough out onto a clean, unfloured surface. Divide into <strong>${d.rolls} piece${d.rolls > 1 ? 's' : ''} of approximately ${fw(d.ballWeight)}</strong> each using your bench scraper — cut, do not tear. Any small remainder can be folded into the heaviest piece.</p>
+             <p style="margin-top:8px;">Pre-shape each piece into a rough log: fold the edges toward the center, flip seam-side down, and roll gently under your palm to build light surface tension. Do not overwork them — this is a rough shape, not the final one.</p>
+             <p style="margin-top:8px;">Cover loosely with a damp kitchen towel or an inverted bowl and bench rest <strong>20 minutes</strong>. Do not use plastic wrap directly on the dough surface.</p>`,
+      timer: '⏱ 20 min bench rest'
+    },
+    {
+      num: 8,
+      title: 'Final Shape',
+      ingredients: 'Semolina or fine cornmeal for dusting the pan · Couche or baguette pan ready',
+      before: `Have your pan dusted with semolina or cornmeal. If using a couche (linen cloth), dust it heavily with flour and fold it into dividers between rolls. If using a baguette pan, dust it lightly with semolina. Final shaping should take about 30–45 seconds per roll — do not overhandle.`,
+      body: `<p>Working with one piece at a time, press the dough gently to degas slightly. Starting from the far edge, fold the dough toward you in thirds, pressing down firmly with your fingertips as you go. On the final fold, use the heel of your hand to seal the seam tightly. Roll the log to <strong>9 inches</strong> with even pressure.</p>
+             <p style="margin-top:8px;">Place seam-side down in the couche dividers or baguette pan. The sides of the couche or pan support the roll so it rises upward, not outward. Without this support, rolls spread flat during proofing and lose the height that makes a proper cheesesteak roll.</p>
+             <p style="margin-top:8px;">Repeat for all rolls. Cover the pan or couche loosely with a damp towel — not plastic wrap.</p>`
+    },
+    {
+      num: 9,
+      title: 'Final Proof',
+      ingredients: 'None',
+      before: 'Start preheating your oven now, including your steel, stone, or inverted pan. The rolls need 45–60 minutes to proof and the oven needs time to fully saturate with heat. If you preheat too late the rolls will be over-proofed by the time the oven is ready.',
+      body: `<p>Proof at room temperature for <strong>45–60 minutes</strong>. Use the poke test — not a timer — to determine doneness. Press a floured finger gently into the side of a roll about half an inch. Properly proofed: springs back slowly and mostly but not fully. Under-proofed: springs back immediately and completely. Over-proofed: no spring back at all.</p>
+             <p style="margin-top:8px;">Do not proof in a warm oven — this softens the skin before baking and reduces ear formation when you score. Room temperature proofing gives you better crust and more defined scoring.</p>`,
+      timer: '⏱ 45–60 min proof'
+    },
+    {
+      num: 10,
+      title: 'Egg White Wash, Sesame Seeds, and Score',
+      ingredients: '1 egg white + 1 tsp water · Sesame seeds (generous amount)',
+      before: 'Have your lame or single-edge razor blade ready. Work quickly once you apply the wash — you want to score before the surface dries. Score immediately before baking, not during proofing.',
+      body: `<p>Whisk together 1 egg white and 1 teaspoon of water until just combined. Brush each roll with the wash — cover the top and upper sides completely, including over the seam. Do not use whole egg or yolk: egg white produces a thin, shiny, golden crust. Yolk produces a thicker, darker, matte crust that obscures the seeds.</p>
+             <p style="margin-top:8px;">Immediately press sesame seeds onto the washed surface — top and upper sides. Be generous. The seeds should cover the roll, not be scattered across it. Washed surfaces hold seeds reliably; any dry spots will not.</p>
+             <p style="margin-top:8px;"><strong>Scoring:</strong> Hold your lame or razor nearly horizontal — a low angle of about 20–30 degrees. Make one decisive slash down the length of the roll, slightly off-center. A low angle opens an ear; a steep angle just splits the top. One clean cut is better than multiple hesitant ones.</p>`,
+      timer: '⏱ Score immediately before loading oven'
+    },
+    {
+      num: 11,
+      title: 'Bake',
+      ingredients: 'None — ice cubes ready if using Method A or C',
+      before: buildPreheatInstructions(),
+      body: buildBakeInstructions(d),
+      timer: '⏱ 18–22 minutes total'
+    },
+    {
+      num: 12,
+      title: 'Cool on a Wire Rack',
+      ingredients: 'None',
+      before: 'Have your wire rack set up and ready before the rolls come out of the oven.',
+      body: `<p>Transfer rolls to a wire rack immediately. Do not let them cool on a cutting board, sheet pan, or any flat solid surface — trapped steam softens the crust underneath and undoes the work of baking. A wire rack keeps airflow on all sides.</p>
+             <p style="margin-top:8px;">Cool for a <strong>minimum of 30 minutes</strong> before cutting. The crust continues to develop as internal steam escapes through it. Cutting into a hot roll collapses the crumb and makes it gummy. After 30 minutes, tap the bottom of a roll — it should sound hollow.</p>
+             <p style="margin-top:8px;">Rolls are best used within 4–6 hours of baking. If storing, wrap individually in a clean kitchen towel — not plastic, which softens the crust. Do not refrigerate: refrigeration makes bread stale faster. For longer storage, freeze individual rolls and reheat unwrapped in a 375°F oven for 8–10 minutes.</p>`,
+      timer: '⏱ 30 min minimum cool'
+    }
+  ];
+
+  const total = steps.length;
+
+  return steps.map((s, idx) => {
+    const isFirst = idx === 0;
+    const isLast  = idx === total - 1;
+    const n = s.num;
+    const nextBtn = !isLast
+      ? `<button class="next-btn" onclick="advanceMethodStep(${n}, ${total})" style="margin-top:16px;">Next: Step ${n + 1} →</button>`
+      : `<button class="next-btn green" onclick="advanceMethodStep(${n}, ${total})" style="margin-top:16px;">✓ All steps complete</button>`;
+
+    return `
+    <div class="accord-item" id="ms-item-${n}">
+      <button class="accord-trigger" onclick="toggleMethodStep(${n})">
+        <div class="accord-num active" id="ms-num-${n}">${n}</div>
+        <div class="accord-trigger-text">
+          <div class="accord-step-label">Step ${n} of ${total}</div>
+          <div class="accord-step-title">${s.title}</div>
+          ${s.timer ? `<div class="accord-step-summary">${s.timer}</div>` : ''}
+        </div>
+        <div class="accord-chevron${isFirst ? ' open' : ''}" id="ms-chevron-${n}">›</div>
+      </button>
+      <div class="accord-body${isFirst ? ' open' : ''}" id="ms-body-${n}">
+        <div class="ingredient-callout">
+          <div class="callout-title">📦 Ingredients this step</div>
+          <p>${s.ingredients}</p>
+        </div>
+        <div class="before-step-callout">
+          <div class="callout-title">🔲 Before you begin</div>
+          <p>${s.before}</p>
+        </div>
+        ${s.body}
+        ${s.timer ? `<div class="timer-badge">${s.timer}</div>` : ''}
+        ${nextBtn}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildPreheatInstructions() {
+  if (sel.method === 'steam') {
+    return `Your pizza steel or stone must have been preheating at 475°F for a minimum of 45–60 minutes. The inverted heavy roasting pan must also be preheating in the oven at the same time — it needs to be hot when it goes over the rolls. Have 1–2 ice cubes and oven mitts ready at the oven.`;
+  } else if (sel.method === 'cover') {
+    return `Your oven should be at 475°F. The inverted heavy roasting pan or hotel pan must have been preheating inside the oven at the same time. It needs to be hot when it goes over the rolls — a cold cover acts as a heat sink and slows crust development. Have oven mitts ready for handling the hot cover.`;
+  } else if (sel.method === 'challenger') {
+    return `The Challenger base (or comparable cast iron base) must have been preheating at 475°F for a minimum of 45–60 minutes. The deep lid should be preheating alongside it. Have 1–2 ice cubes and heavy oven mitts ready. If baking more than 3 rolls, plan to bake in batches — the Challenger fits 2–3 hoagie rolls at a time.`;
+  } else {
+    return `Your oven should be at 475°F with a heavy empty sheet pan on the rack below. Have 6–8 ice cubes ready. The baguette pan goes in at launch and can be transferred using the pan handles.`;
+  }
+}
+
+function buildBakeInstructions(d) {
+  if (sel.method === 'steam') {
+    return `<p>Slide the rolls on parchment directly onto the preheated steel or stone. Immediately drop <strong>1–2 ice cubes</strong> onto the steel surface beside (not under) the rolls — they will flash to steam on contact. Without pausing, carefully invert the preheated heavy roasting pan over the rolls and ice cubes to trap the steam. The cover must clear the rolls — if it touches them it will crush them. Close the oven door immediately.</p>
+            <p style="margin-top:8px;">Leave covered for <strong>12–13 minutes</strong>. The combination of the hot steel underneath and the steam trapped above replicates hearth baking conditions closely. Remove the cover with oven mitts. Bake uncovered a further <strong>8–10 minutes</strong> at 475°F until deep golden brown and the sesame seeds are fully toasted. Internal temperature should reach <strong>${ft(200)}–${ft(205)}</strong>.</p>`;
+  } else if (sel.method === 'cover') {
+    return `<p>Place the sheet pan of rolls in the oven. Immediately invert the preheated heavy roasting pan over the rolls. The cover must not touch the rolls — if it does, the rolls will be crushed. Leave covered for <strong>12–13 minutes</strong>. The steam generated by the dough itself creates the baking environment. Remove the cover carefully with oven mitts. Bake uncovered a further <strong>8–10 minutes</strong> at 475°F until deep golden brown and the sesame seeds are toasted. Internal temperature should reach <strong>${ft(200)}–${ft(205)}</strong>.</p>`;
+  } else if (sel.method === 'challenger') {
+    return `<p>Using heavy oven mitts, carefully remove the preheated Challenger base from the oven. Working quickly, slide the scored and seeded rolls onto the hot base using parchment paper — the parchment protects your hands and prevents sticking. Optionally drop <strong>1–2 ice cubes</strong> onto the base beside the rolls for extra oven spring and crust development. Immediately close the deep lid.</p>
+            <p style="margin-top:8px;">Return to the oven and bake covered for <strong>12–13 minutes</strong>. The cast iron base delivers aggressive bottom heat while the deep lid traps steam from the dough. Remove the lid with oven mitts — it will be extremely hot. Bake uncovered a further <strong>8–10 minutes</strong> until deep golden brown and the sesame seeds are fully toasted. Internal temperature should reach <strong>${ft(200)}–${ft(205)}</strong>.</p>
+            <div class="callout" style="margin-top:10px;"><div class="callout-title">✓ Baking in batches</div><p>The Challenger fits approximately 2–3 hoagie rolls at a time. For larger batches, keep remaining shaped rolls covered at room temperature while the first batch bakes. They will continue proofing slightly — if the wait is more than 30 minutes, move them to the fridge to slow fermentation until the pan is free again.</p></div>`;
+  } else {
+    return `<p>Place the baguette pan in the oven. Immediately throw <strong>6–8 ice cubes</strong> onto the hot lower pan and close the door quickly. After 12 minutes, remove the lower steam pan. Bake a further <strong>8–10 minutes</strong> until deep golden brown and the sesame seeds are fully toasted. The perforated pan circulates heat under the rolls for even bottom browning. Internal temperature should reach <strong>${ft(200)}–${ft(205)}</strong>.</p>`;
+  }
+}
+
+// ── METHOD STEP ACCORDION CONTROLS ──
+function toggleMethodStep(n) {
+  const body    = document.getElementById('ms-body-' + n);
+  const chevron = document.getElementById('ms-chevron-' + n);
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function advanceMethodStep(current, total) {
+  const num = document.getElementById('ms-num-' + current);
+  if (num) { num.classList.remove('active'); num.classList.add('done'); num.textContent = '✓'; }
+  const body    = document.getElementById('ms-body-' + current);
+  const chevron = document.getElementById('ms-chevron-' + current);
+  if (body)    body.classList.remove('open');
+  if (chevron) chevron.classList.remove('open');
+  if (current < total) {
+    const nextBody    = document.getElementById('ms-body-' + (current + 1));
+    const nextChevron = document.getElementById('ms-chevron-' + (current + 1));
+    if (nextBody)    nextBody.classList.add('open');
+    if (nextChevron) nextChevron.classList.add('open');
+    const nextItem = document.getElementById('ms-item-' + (current + 1));
+    if (nextItem) setTimeout(() => nextItem.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+}
+
+// ── RECIPES DATA ──
+var RECIPES = {
+  cheesesteak: {
+    id: 'cheesesteak', type: 'sandwich', name: 'Philly Cheesesteak',
+    desc: 'Thinly sliced ribeye, your choice of cheese, and griddled onions on a toasted seeded roll. The Angelo\'s-influenced seeded roll style. Scaled to how many you make today.',
+    prepTime: '~20 min additional prep', hasHealthier: false
+  }
+};
+
+var selectedRecipe = null;
+var selectedVersion = null;
+var cs = { toppings: { onions: true, peppers: false, mushrooms: false } };
+
+function showRecipeSelector() {
+  collapseSection('dough', 'Your roll recipe is ready — bake before making cheesesteaks');
+  showSection('recipe');
+  document.getElementById('pizza-output-section').style.display = 'none';
+  renderRecipeSelector();
+}
+
+function renderRecipeSelector() {
+  var compatibleTypes = RECIPE_COMPATIBILITY[DOUGH_TYPE] || [];
+  var compatible = Object.values(RECIPES).filter(function(r) { return compatibleTypes.includes(r.type); });
+  var list = document.getElementById('recipe-card-list');
+  list.innerHTML = compatible.map(function(r) {
+    return '<div class="recipe-card" id="recipe-card-' + r.id + '" onclick="selectRecipe(\'' + r.id + '\')">' +
+      '<div class="recipe-card-inner"><div>' +
+      '<div class="recipe-card-title">' + r.name + '</div>' +
+      '<div class="recipe-card-desc">' + r.desc + '</div>' +
+      '<div class="recipe-card-time">' + r.prepTime + '</div></div>' +
+      '<div class="recipe-card-check" id="recipe-check-' + r.id + '">✓</div></div></div>';
+  }).join('');
+}
+
+function selectRecipe(id) {
+  Object.values(RECIPES).forEach(function(r) {
+    var card = document.getElementById('recipe-card-' + r.id);
+    var check = document.getElementById('recipe-check-' + r.id);
+    if (card) card.classList.remove('sel');
+    if (check) check.style.display = 'none';
+  });
+  var card = document.getElementById('recipe-card-' + id);
+  var check = document.getElementById('recipe-check-' + id);
+  if (card) card.classList.add('sel');
+  if (check) check.style.display = 'flex';
+  selectedRecipe = id;
+  selectedVersion = 'standard';
+
+  if (id === 'cheesesteak' && lastCalcData) {
+    var countGroup = document.getElementById('cs-count-group');
+    countGroup.innerHTML = '';
+    for (var i = 1; i <= lastCalcData.rolls; i++) {
+      var btn = document.createElement('div');
+      btn.className = 'btn-opt';
+      btn.textContent = i;
+      btn.setAttribute('data-count', i);
+      btn.onclick = (function(val){ return function(){ selectCSopt(this,'count',String(val)); }; })(i);
+      countGroup.appendChild(btn);
+    }
+    document.getElementById('cs-rolls-made').textContent = lastCalcData.rolls + ' roll' + (lastCalcData.rolls > 1 ? 's' : '');
+    document.getElementById('cs-config').style.display = 'block';
+  }
+  checkBuildReady();
+}
+
+function selectCSopt(el, group, val) {
+  var grp = document.getElementById('cs-' + group + '-group');
+  if (grp) grp.querySelectorAll('.btn-opt').forEach(function(b){ b.classList.remove('sel'); });
+  el.classList.add('sel');
+  cs[group] = val;
+  if (group === 'cheese') updateCSCheeseNote();
+  checkBuildReady();
+}
+
+function toggleCSTopping(el, topping) {
+  cs.toppings[topping] = !cs.toppings[topping];
+  el.classList.toggle('sel', cs.toppings[topping]);
+}
+
+function updateCSCheeseNote() {
+  var note = document.getElementById('cs-cheese-note');
+  var notes = {
+    whiz: 'Cheez Whiz is the traditional Philly choice — warm it in a saucepan or double boiler to about 140°F before serving. Do not microwave without stirring frequently; it can scorch. Drizzle over the filling after it is loaded into the roll.',
+    cooper: 'Cooper Sharp is the preferred cheese for the seeded roll style — its higher fat content gives exceptional melt and a sharp, nutty flavor that complements the sesame crust. Available at deli counters throughout the Northeast. Harder to find elsewhere — check specialty grocers or order online.',
+    provolone: 'Mild provolone slices melt well under a dome. Avoid aged provolone — too sharp for a cheesesteak. Use 4–5 slices per sandwich.',
+    american: 'White American melts in under 45 seconds under a dome. Creamy, mild result. Use 2–3 slices per sandwich.'
+  };
+  if (cs.cheese && notes[cs.cheese]) { note.textContent = notes[cs.cheese]; note.classList.add('visible'); }
+  else { note.classList.remove('visible'); }
+}
+
+function checkBuildReady() {
+  var ready = selectedRecipe && cs.count && cs.cheese && cs.surface;
+  var btn = document.getElementById('build-recipe-btn');
+  var note = document.getElementById('build-recipe-note');
+  if (ready) {
+    btn.disabled = false; btn.style.background = ''; btn.style.color = ''; btn.style.cursor = '';
+    if (note) note.style.display = 'none';
+  } else {
+    btn.disabled = true; btn.style.background = 'var(--disabled-bg)'; btn.style.color = 'var(--disabled-text)'; btn.style.cursor = 'not-allowed';
+    if (note) { note.textContent = 'Select count, cheese, and cooking surface to continue'; note.style.display = 'block'; }
+  }
+}
+
+function selectVersion() {}
+function enableBuildBtn() { checkBuildReady(); }
+
+function buildRecipe() {
+  if (!selectedRecipe) { alert('Please select a recipe.'); return; }
+  if (!cs.count) { alert('Please select how many cheesesteaks you are making today.'); return; }
+  if (!cs.cheese) { alert('Please select a cheese.'); return; }
+  if (!cs.surface) { alert('Please select a cooking surface.'); return; }
+  if (!lastCalcData) { alert('Please calculate your roll recipe first.'); return; }
+
+  recipeOrder.forEach(function(id) { recipeProgress[id] = false; });
+  recipeProgress.choose = true;
+  var cookBody = document.getElementById('pizza-body-cook'); var cookChev = document.getElementById('pizza-chev-cook');
+  if (cookBody) cookBody.classList.add('collapsed'); if (cookChev) cookChev.classList.remove('open');
+  var prepBody = document.getElementById('pizza-body-prep'); var prepChev = document.getElementById('pizza-chev-prep');
+  if (prepBody) prepBody.classList.remove('collapsed'); if (prepChev) prepChev.classList.add('open');
+
+  buildRecipeFromData(selectedRecipe, lastCalcData);
+  updateRecipeMiniOutline();
+  collapseSection('dough', 'Your roll recipe is ready — bake before making cheesesteaks');
+  showSection('recipe');
+  document.getElementById('pizza-output-section').style.display = 'block';
+  var jump = document.getElementById('jump-to-pizza-link'); if (jump) jump.style.display = 'flex';
+  setTimeout(function() { scrollToEl(document.getElementById('pizza-card-prep')); }, 50);
+  saveSession('recipe');
+}
+
+function buildRecipeFromData(recipeId, d) {
+  var recipe = RECIPES[recipeId];
+  if (!recipe) { console.warn('Recipe not found:', recipeId); return; }
+  if (recipe.type === 'sandwich') { buildCheesesteakRecipe(d); return; }
+  console.warn('Unknown recipe type:', recipe.type);
+}
+
+function buildCheesesteakRecipe(d) {
+  var count = parseInt(cs.count);
+  var hasOnions = cs.toppings.onions;
+  var hasPeppers = cs.toppings.peppers;
+  var hasMush = cs.toppings.mushrooms;
+
+  var ribeye_g = 227 * count;
+  var cheeseAmounts = {
+    whiz: { amount: Math.round(99 * count), label: 'Cheez Whiz (warmed)' },
+    cooper: { slices: '2–3 slices per sandwich', label: 'Cooper Sharp, thinly sliced (deli counter)' },
+    provolone: { slices: '4–5 slices per sandwich', label: 'Mild provolone, thinly sliced' },
+    american: { slices: '2–3 slices per sandwich', label: 'White American cheese, sliced' }
+  };
+  var onionLabel = count <= 2 ? '1 medium onion' : count <= 4 ? '2 medium onions' : '3 medium onions';
+  var pepperLabel = count <= 2 ? '1 pepper' : count <= 4 ? '2 peppers' : '3 peppers';
+  var mushroom_g = 57 * count;
+
+  var rows = '<div class="output-row"><span class="output-row-label">Ribeye steak, sliced 1/8 inch thin</span><span class="output-row-value highlight">' + fw(ribeye_g) + ' (' + count + ' × 8 oz)</span></div>';
+  if (hasOnions) rows += '<div class="output-row"><span class="output-row-label">Yellow onion, thinly sliced</span><span class="output-row-value highlight">' + onionLabel + '</span></div>';
+  if (hasPeppers) rows += '<div class="output-row"><span class="output-row-label">Green bell pepper, thinly sliced</span><span class="output-row-value highlight">' + pepperLabel + '</span></div>';
+  if (hasMush) rows += '<div class="output-row"><span class="output-row-label">White or cremini mushrooms, sliced</span><span class="output-row-value highlight">' + fw(mushroom_g) + '</span></div>';
+  var ch = cheeseAmounts[cs.cheese];
+  if (ch.amount) rows += '<div class="output-row"><span class="output-row-label">' + ch.label + '</span><span class="output-row-value highlight">' + fw(ch.amount) + ' total</span></div>';
+  else rows += '<div class="output-row"><span class="output-row-label">' + ch.label + '</span><span class="output-row-value highlight">' + ch.slices + '</span></div>';
+  rows += '<div class="output-row"><span class="output-row-label">Neutral oil (for cooking)</span><span class="output-row-value highlight">' + count + ' tbsp</span></div>';
+  rows += '<div class="output-row"><span class="output-row-label">Your seeded hoagie rolls</span><span class="output-row-value highlight">' + count + ' roll' + (count > 1 ? 's' : '') + '</span></div>';
+  rows += '<div class="output-row"><span class="output-row-label">Salt and black pepper</span><span class="output-row-value highlight">To taste</span></div>';
+
+  document.getElementById('cs-ingredient-rows').innerHTML = rows;
+  document.getElementById('cs-ingredients-title').textContent = 'Prep & Ingredients — ' + count + ' Sandwich' + (count > 1 ? 'es' : '');
+  document.getElementById('cs-method-title').textContent = 'Cooking on ' + csSurfaceLabel(cs.surface);
+  document.getElementById('cs-method-body').innerHTML = buildCheesesteakMethod(count);
+}
+
+function csSurfaceLabel(s) { return s === 'castiron' ? 'Cast Iron' : s === 'griddle' ? 'a Flat Griddle' : 'a Stainless Pan'; }
+
+function buildCheesesteakMethod(count) {
+  var isWhiz = cs.cheese === 'whiz';
+  var isProvolone = cs.cheese === 'provolone';
+  var isCooper = cs.cheese === 'cooper';
+  var hasOnions = cs.toppings.onions;
+  var hasPeppers = cs.toppings.peppers;
+  var hasMush = cs.toppings.mushrooms;
+  var isGriddle = cs.surface === 'griddle';
+  var isCastIron = cs.surface === 'castiron';
+
+  var anyVeg = hasOnions || hasPeppers || hasMush;
+  var vegList = [];
+  if (hasOnions) vegList.push('onions');
+  if (hasPeppers) vegList.push('peppers');
+  if (hasMush) vegList.push('mushrooms');
+  var vegPhrase = vegList.length === 0 ? '' : vegList.length === 1 ? vegList[0] : vegList.slice(0,-1).join(', ') + ' and ' + vegList[vegList.length-1];
+
+  var surfaceNote = isCastIron ? 'Cast iron holds heat well but can create hot spots. Preheat evenly over medium-high for at least 3–4 minutes before adding anything.'
+    : isGriddle ? 'A flat griddle gives maximum surface area for chopping and moving the meat, and lets you zone onions, peppers, and meat separately.'
+    : 'A stainless pan responds quickly to heat adjustments. Use medium-high and make sure the pan is hot before adding oil.';
+  var cheeseNote = isWhiz ? 'Begin warming your Cheez Whiz now in a saucepan over lowest heat or a double boiler. Target 140°F — warm enough to drizzle, not so hot it separates.'
+    : isProvolone ? 'Have your provolone ready — 4–5 slices per sandwich, melted under a dome.'
+    : isCooper ? 'Have your Cooper Sharp ready — 2–3 slices per sandwich. It melts aggressively due to high fat content.'
+    : 'Have your American cheese ready — 2–3 slices per sandwich, melted under a dome.';
+
+  var steps = '';
+  steps += '<div class="method-step"><div class="method-step-header"><div class="method-step-num">1</div><div class="method-step-title">Toast the Rolls</div></div>'
+    + '<div class="before-step-callout"><div class="callout-title">🔲 Before you begin</div><p>Rolls sliced three-quarters through with a hinge intact. Griddle or skillet at medium-high.</p></div>'
+    + '<p class="method-step-p">Place each roll open-face down on the hot surface for <strong>30–60 seconds</strong> until the interior is lightly golden. This is the seeded roll technique — structure plus Maillard flavor before the filling goes in. Set aside. Do not over-toast; the interior should yield when you press the sandwich closed.</p>'
+    + '<div class="timer-badge">⏱ 30–60 sec per roll</div></div>';
+
+  if (anyVeg) {
+    steps += '<div class="method-step"><div class="method-step-header"><div class="method-step-num">2</div><div class="method-step-title">Cook the ' + vegPhrase.charAt(0).toUpperCase() + vegPhrase.slice(1) + '</div></div>'
+      + '<div class="before-step-callout"><div class="callout-title">🔲 Before you begin</div><p>' + surfaceNote + ' ' + cheeseNote + '</p></div>'
+      + '<p class="method-step-p">Add 1 tablespoon neutral oil to the hot surface. '
+      + (hasOnions ? 'Add the sliced onion' + (hasPeppers ? ' and green pepper' : '') + ' and cook over medium-high, stirring occasionally, for <strong>6–8 minutes</strong> until softened and golden at the edges.' : hasPeppers ? 'Add the sliced pepper and cook 6–8 minutes until softened.' : '')
+      + (hasMush ? ' Add the mushrooms in the final 3 minutes and cook until they release their liquid and brown.' : '')
+      + ' Season lightly with salt. Push to the side and keep warm.</p>'
+      + '<div class="timer-badge">⏱ 6–8 minutes</div></div>';
+  } else {
+    steps += '<div class="method-step"><div class="method-step-header"><div class="method-step-num">2</div><div class="method-step-title">Heat Your Surface</div></div>'
+      + '<div class="before-step-callout"><div class="callout-title">🔲 Before you begin</div><p>' + surfaceNote + ' ' + cheeseNote + '</p></div>'
+      + '<p class="method-step-p">You chose no toppings — a plain cheesesteak. Add 1 tablespoon neutral oil to the hot surface and bring it up to temperature before adding the meat.</p></div>';
+  }
+
+  steps += '<div class="method-step"><div class="method-step-header"><div class="method-step-num">3</div><div class="method-step-title">Cook the Ribeye</div></div>'
+    + '<div class="ingredient-callout"><div class="callout-title">📦 Ingredients this step</div><p>Sliced ribeye · salt · black pepper</p></div>'
+    + '<div class="warning-callout"><div class="callout-title">⚠ Hot and fast</div><p>Cook at medium-high to high heat — thin slices are done in under 2 minutes. Do not crowd the pan. For more than 2 sandwiches on a small surface, cook in batches. Crowding steams the meat instead of searing it.</p></div>'
+    + '<p class="method-step-p">Add a thin film of oil if needed. Spread the ribeye in a thin even layer — do not pile it. Season with salt and pepper. Sear undisturbed <strong>60–90 seconds</strong>, then chop with two spatulas as you turn it — bite-sized pieces, half-inch to one-inch, not minced. Cook another 60 seconds until no pink remains.</p>'
+    + '<div class="timer-badge">⏱ 2–3 minutes</div></div>';
+
+  steps += '<div class="method-step"><div class="method-step-header"><div class="method-step-num">4</div><div class="method-step-title">Combine and Melt the Cheese</div></div>'
+    + '<div class="before-step-callout"><div class="callout-title">🔲 Before you begin</div><p>' + (isWhiz ? 'Your Cheez Whiz should be warm and ready to pour.' : 'Cheese slices ready to go on the moment meat is combined.') + '</p></div>'
+    + '<p class="method-step-p">' + (anyVeg ? 'Mix the cooked ribeye together with the ' + vegPhrase + ' on the surface. ' : 'Gather the cooked ribeye into a pile. ') + 'Divide into ' + count + ' portion' + (count > 1 ? 's' : '') + ', each roughly the length of a roll.</p>'
+    + (isWhiz ? '<p class="method-step-p" style="margin-top:8px;">Pour warmed Cheez Whiz generously over each portion on the surface. No dome needed.</p>'
+      : '<p class="method-step-p" style="margin-top:8px;">Lay ' + (isProvolone ? '4–5 slices of provolone' : isCooper ? '2–3 slices of Cooper Sharp' : '2–3 slices of American') + ' over each portion. Cover with a metal bowl or dome and let trapped steam melt the cheese for <strong>30–45 seconds</strong>. Do not stir — let it melt in place.</p>') + '</div>';
+
+  steps += '<div class="method-step"' + (count > 1 ? '' : ' style="border-bottom:none;margin-bottom:0;padding-bottom:0;"') + '><div class="method-step-header"><div class="method-step-num">5</div><div class="method-step-title">Load the Roll — the Flip Method</div></div>'
+    + '<p class="method-step-p">Place your toasted roll face-down over one portion of meat and cheese. Slide your spatula under the pile and flip — the roll ends on the bottom, filling inside. This is the traditional Philly method: the meat goes into the roll, not the other way around. ' + (isWhiz ? 'Add a final drizzle of Whiz over the top.' : 'Serve immediately.') + ' Cheesesteaks do not hold — the seeded roll stays crisper than a soft roll but the window is still short.</p></div>';
+
+  if (count > 1) {
+    steps += '<div class="method-step" style="border-bottom:none;margin-bottom:0;padding-bottom:0;"><div class="method-step-header"><div class="method-step-num">6</div><div class="method-step-title">Making Multiple</div></div>'
+      + '<div class="warning-callout" style="margin-bottom:0;"><div class="callout-title">⚠ Do not crowd a small surface</div><p>On cast iron or a standard skillet, cook 1–2 at a time. On a full flat griddle you can run all ' + count + ' at once by zoning the surface. Keep finished sandwiches warm in parchment — not foil, which softens the crust.</p></div></div>';
+  }
+  return steps;
+}
+
+// ── NUTRITION (placeholder — cheesesteak nutrition handled in future pass) ──
+function setNutritionMode() {}
+function renderNutrition() {}
+function downloadPizzaRecipe() {}
+
+
+var SESSION_KEY = 'markodough_sesame_roll_session';
+
+function saveSession(stage) {
+  try { var data = { stage: stage, savedAt: new Date().toISOString(), sel: Object.assign({}, sel), lastCalcData: lastCalcData, selectedRecipe: selectedRecipe, selectedVersion: selectedVersion, cs: cs }; localStorage.setItem(SESSION_KEY, JSON.stringify(data)); }
+  catch(e) { console.warn('Could not save session:', e); }
+}
+
+function loadSession() {
+  try { var raw = localStorage.getItem(SESSION_KEY); if (!raw) return null; return JSON.parse(raw); } catch(e) { return null; }
+}
+
+function clearSession() { localStorage.removeItem(SESSION_KEY); document.getElementById('restore-banner').classList.remove('visible'); }
+
+function checkForSavedSession() {
+  var session = loadSession();
+  if (!session || !session.lastCalcData) return;
+  var banner = document.getElementById('restore-banner');
+  var dateEl = document.getElementById('restore-banner-date');
+  var saved = new Date(session.savedAt);
+  var diffHrs = Math.round((new Date() - saved) / 36e5);
+  var timeStr = diffHrs < 1 ? 'less than an hour ago' : diffHrs < 24 ? diffHrs + ' hour' + (diffHrs > 1 ? 's' : '') + ' ago' : Math.round(diffHrs / 24) + ' day' + (Math.round(diffHrs / 24) > 1 ? 's' : '') + ' ago';
+  dateEl.textContent = 'Last saved ' + timeStr;
+  banner.classList.add('visible');
+}
+
+function restoreSession() {
+  var session = loadSession();
+  if (!session) return;
+  Object.assign(sel, session.sel);
+  lastCalcData = session.lastCalcData;
+  selectedRecipe = session.selectedRecipe;
+  selectedVersion = session.selectedVersion;
+  if (session.cs) { cs = session.cs; if (!cs.toppings) cs.toppings = { onions: true, peppers: false, mushrooms: false }; }
+  document.getElementById('restore-banner').classList.remove('visible');
+
+  if (sel.mixer) document.querySelectorAll('#mixer-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Stand Mixer' && sel.mixer === 'stand') || (b.textContent.trim() === 'Hand Mix' && sel.mixer === 'hand')) b.classList.add('sel'); });
+  if (sel.method) {
+    var methodText = { steam: 'Steel / Stone + Cover', cover: 'Inverted Pan Cover', baguette: 'Baguette Pan + Steam', challenger: 'Challenger Bread Pan' };
+    document.querySelectorAll('#method-group .btn-opt').forEach(function(b) { if (b.textContent.trim() === methodText[sel.method]) b.classList.add('sel'); });
+    updateMethodNote();
+  }
+  if (sel.rolls) document.querySelectorAll('#rolls-group .btn-opt').forEach(function(b) { if (b.textContent.trim() === String(sel.rolls)) b.classList.add('sel'); });
+  if (sel.fat) { document.querySelectorAll('#fat-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Neutral Oil' && sel.fat === 'oil') || (b.textContent.trim() === 'Crisco' && sel.fat === 'crisco')) b.classList.add('sel'); }); updateFatNote(); }
+  if (sel.sweet) document.querySelectorAll('#sweet-group .btn-opt').forEach(function(b) { b.classList.remove('sel'); if ((b.textContent.trim() === 'Honey' && sel.sweet === 'honey') || (b.textContent.trim() === 'Sugar' && sel.sweet === 'sugar')) b.classList.add('sel'); });
+  if (sel.flour) { document.getElementById('flour-select').value = sel.flour; updateFlourNote(); }
+  if (sel.yeast) { document.getElementById('yeast-select').value = sel.yeast; updateYeastNote(); }
+
+  completeStepSilent(1); if (sel.rolls) completeStepSilent(2); if (sel.fat) completeStepSilent(3); completeStepSilent(4);
+  var btn = document.getElementById('calc-btn'); if (btn) { btn.disabled = false; btn.textContent = 'Calculate My Hoagie Roll Recipe →'; }
+  renderOutput(lastCalcData);
+  var calcSummary = [mixerLabel(), methodLabel(), lastCalcData.rolls + ' roll' + (lastCalcData.rolls > 1 ? 's' : ''), fatLabel(), sweetLabel()].filter(Boolean).join(' · ');
+  collapseSection('calculator', calcSummary);
+
+  if (session.stage === 'recipe' && selectedRecipe && RECIPES[selectedRecipe] && cs.count) {
+    showSection('dough'); collapseSection('dough', 'Your roll recipe is ready — bake before making cheesesteaks'); showSection('recipe'); renderRecipeSelector();
+    setTimeout(function() {
+      selectRecipe(selectedRecipe);
+      if (cs.count) document.querySelectorAll('#cs-count-group .btn-opt').forEach(function(b) { b.classList.remove('sel'); if (b.getAttribute('data-count') === String(cs.count)) b.classList.add('sel'); });
+      if (cs.cheese) document.querySelectorAll('#cs-cheese-group .btn-opt').forEach(function(b) { b.classList.remove('sel'); }), document.querySelectorAll('#cs-cheese-group .btn-opt').forEach(function(b) { var map={whiz:'Cheez Whiz',cooper:'Cooper Sharp',provolone:'Provolone',american:'American'}; if (b.textContent.trim() === map[cs.cheese]) b.classList.add('sel'); });
+      if (cs.cheese) updateCSCheeseNote();
+      if (cs.toppings) { document.querySelectorAll('#cs-toppings-group .btn-opt').forEach(function(b) { var t = b.textContent.trim().toLowerCase(); b.classList.toggle('sel', !!cs.toppings[t]); }); }
+      if (cs.surface) document.querySelectorAll('#cs-surface-group .btn-opt').forEach(function(b) { var map={castiron:'Cast Iron Skillet',griddle:'Flat Griddle / Blackstone',stainless:'Stainless Pan'}; if (b.textContent.trim() === map[cs.surface]) b.classList.add('sel'); });
+      checkBuildReady();
+      buildRecipeFromData(selectedRecipe, lastCalcData);
+      document.getElementById('pizza-output-section').style.display = 'block';
+      var jump = document.getElementById('jump-to-pizza-link'); if (jump) jump.style.display = 'flex';
+      setTimeout(function() { scrollToEl(document.getElementById('section-recipe')); }, 100);
+    }, 150);
+  } else { showSection('dough'); setTimeout(function() { scrollToEl(document.getElementById('section-dough')); }, 100); }
+}
+
+function completeStepSilent(n) {
+  var num = document.getElementById('step' + n + '-num');
+  var body = document.getElementById('step' + n + '-body');
+  var chevron = document.getElementById('step' + n + '-chevron');
+  var summary = document.getElementById('step' + n + '-summary');
+  if (!num) return;
+  num.classList.remove('active'); num.classList.add('done'); num.textContent = '✓';
+  if (body) body.classList.remove('open'); if (chevron) chevron.classList.remove('open');
+  if (n === 1 && summary) summary.textContent = mixerLabel() + ' · ' + methodLabel();
+  if (n === 2 && summary) summary.textContent = (lastCalcData ? lastCalcData.rolls : sel.rolls) + ' roll' + ((lastCalcData ? lastCalcData.rolls : parseInt(sel.rolls)) > 1 ? 's' : '') + ' · ~160g each';
+  if (n === 3 && summary) summary.textContent = fatLabel() + ' · ' + sweetLabel() + ' · ' + flourLabel() + ' · ' + yeastLabel();
+  if (n === 4 && summary) summary.textContent = 'Biga timing confirmed';
+  if (n < 4) { var nt = document.getElementById('step' + (n+1) + '-trigger'); var nn = document.getElementById('step' + (n+1) + '-num'); if (nt) nt.disabled = false; if (nn) nn.classList.add('active'); }
+}
+
+document.addEventListener('DOMContentLoaded', checkForSavedSession);
+</script>
+
+</body>
+</html>
