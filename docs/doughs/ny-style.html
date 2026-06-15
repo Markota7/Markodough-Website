@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Markodough, NY Style Pizza Dough Calculator</title>
+<title>Markodough - NY Style Pizza Dough Calculator</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -69,6 +69,7 @@
     transition: opacity 0.2s;
   }
   .nav-links a:hover { opacity: 0.75; }
+  .nav-links a.nav-active { color: var(--parchment); opacity: 1; }
 
   /* ── PAGE WRAPPER ── */
   .page { max-width: 680px; margin: 0 auto; padding: 0 16px 60px; }
@@ -100,20 +101,23 @@
     .col-left {
       position: sticky;
       top: 68px;
-      max-height: calc(100vh - 88px);
-      overflow-y: auto;
       padding-right: 4px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
     }
-
-    .col-left::-webkit-scrollbar { width: 4px; }
-    .col-left::-webkit-scrollbar-track { background: transparent; }
-    .col-left::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     .col-right { min-width: 0; }
 
     .col-left .section-card { margin-bottom: 0; }
+
+    /* Desktop: BYGS body scrollable independently */
+    #bygs-body {
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    #bygs-body::-webkit-scrollbar { width: 4px; }
+    #bygs-body::-webkit-scrollbar-track { background: transparent; }
+    #bygs-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
   }
 
   /* ── HERO ── */
@@ -547,8 +551,7 @@
   .toggle-pair-label { font-size: 12px; color: var(--text-muted); min-width: 90px; }
 
   /* ── OUTPUT SECTION ── */
-  #output-section { display: none; }
-  #output-section.visible { display: block; }
+  #output-section { display: block; }
 
   .output-card {
     background: var(--parchment);
@@ -731,7 +734,486 @@
 
   .mt8 { margin-top: 8px; }
 
-  /* ── CHOOSE RECIPE BUTTON ── */
+  /* ── DOUGH INGREDIENTS LIST IN METHOD STEPS ── */
+  .dough-ing-section {
+    background: var(--parchment-mid);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 4px;
+    border: 0.5px solid var(--border);
+  }
+
+  .dough-ing-header {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .dough-ing-header-note {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+
+  .dough-ing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--orange);
+    font-size: 13px;
+  }
+
+  .dough-ing-row:last-of-type { border-bottom: none; }
+
+  .dough-ing-name { color: var(--text-mid); font-weight: 500; }
+  .dough-ing-val { font-weight: 700; color: var(--orange); }
+
+  .dough-ing-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0 2px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    border-top: 2px solid var(--orange);
+    margin-top: 4px;
+  }
+
+  .dough-ing-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* ── METHOD STEP ACCORDION ── */
+  .method-step-accord {
+    border-bottom: 1px solid var(--orange);
+    overflow: hidden;
+  }
+
+  .method-step-accord:last-child { border-bottom: none; }
+
+  .method-step-accord-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity 0.15s;
+  }
+
+  .method-step-accord-trigger:hover { opacity: 0.8; }
+
+  .method-step-accord-body {
+    display: none;
+    padding-bottom: 14px;
+  }
+
+  .method-step-accord-body.open { display: block; }
+
+  .method-step-accord-chevron {
+    font-size: 16px;
+    color: var(--orange);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .method-step-accord-chevron.open { transform: rotate(90deg); }
+
+  /* ── BAKING REMINDER CALLOUT ── */
+  .baking-reminder {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--orange-light);
+  }
+
+  .baking-reminder .callout-title { color: var(--orange); font-size: 12px; margin-bottom: 6px; }
+  .baking-reminder p { font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+  .hydration-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .hydration-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    line-height: 1.4;
+    position: relative;
+    min-width: 0;
+    font-size: 14px;
+  }
+
+  .hydration-range {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .btn-opt.sel .hydration-range { color: var(--text-dark); }
+
+  .hydration-rec-badge {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.02em;
+    margin-top: 3px;
+  }
+
+  .btn-opt.sel .hydration-rec-badge { color: var(--text-dark); }
+
+  .hydration-desc {
+    display: none;
+    background: var(--parchment);
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    padding: 10px 12px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  .hydration-desc.visible { display: block; }
+
+  .hydration-desc-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  .hydration-desc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hydration-desc ul li {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .hydration-desc ul li:before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  .hydration-warning {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    margin-top: 8px;
+    background: var(--orange-light);
+    font-size: 12px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    display: none;
+  }
+
+  .hydration-warning.visible { display: block; }
+  .hydration-warning strong { color: var(--orange); }
+  .output-card-header-btn {
+    width: 100%;
+    background: var(--brown-dark);
+    border: none;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .output-card-header-btn:hover { opacity: 0.92; }
+
+  .output-card-header-left { text-align: left; }
+  .output-card-chevron { font-size: 18px; color: var(--orange); transition: transform 0.25s; flex-shrink: 0; }
+  .output-card-chevron.open { transform: rotate(90deg); }
+  .output-card-body { display: block; }
+  .output-card-body.collapsed { display: none; }
+
+  /* ── SECTION MINI OUTLINE (Option C — accordion rows) ── */
+  .section-mini-outline {
+    display: none;
+    background: #F5EFE0;
+  }
+
+  .section-mini-outline.visible { display: block; }
+
+  .mini-outline-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid #C8B898;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .mini-outline-row:last-child { border-bottom: none; }
+  .mini-outline-row:hover { background: #EDE3CE; }
+
+  .mini-row-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: #C8B898;
+    color: #8A7A6A;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .mini-row-num.done { background: #5E8A42; color: #fff; }
+  .mini-row-num.active { background: #C8622A; color: #2C1F0E; }
+
+  .mini-row-text { flex: 1; }
+
+  .mini-row-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5E8A42;
+    font-weight: 600;
+    margin-bottom: 1px;
+  }
+
+  .mini-row-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2C1F0E;
+  }
+
+  .mini-row-summary {
+    font-size: 11px;
+    color: #8A7A6A;
+    font-style: italic;
+    margin-top: 1px;
+  }
+
+  .mini-row-summary.active { color: #C8622A; font-style: italic; }
+
+  .mini-row-chev {
+    font-size: 16px;
+    color: #C8622A;
+    flex-shrink: 0;
+  }
+
+  /* ── FLUSH INNER CARDS ── */
+  .inner-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px;
+  }
+
+  .inner-card-group .output-card {
+    border-radius: 0;
+    border-bottom-width: 0;
+    margin-bottom: 0;
+  }
+
+  .inner-card-group .output-card:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .inner-card-group .output-card:last-child {
+    border-radius: 0 0 8px 8px;
+    border-bottom-width: 0.5px;
+  }
+
+  .inner-card-group .output-card:only-child {
+    border-radius: 8px;
+    border-bottom-width: 0.5px;
+  }
+
+  /* ── DOUGH SECTION NEXT BTN ── */
+  .dough-next-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+    margin-top: 16px;
+  }
+
+  .dough-next-btn:hover { opacity: 0.88; }
+
+  /* ── TOP LEVEL SECTIONS ── */
+  .top-section {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .top-section-header {
+    width: 100%;
+    background: var(--brown-dark);
+    border: none;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .top-section-header:hover { opacity: 0.92; }
+
+  .top-section-header-left { flex: 1; }
+  .top-section-tag { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #C8922A; font-weight: 700; margin-bottom: 3px; }
+  .top-section-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--parchment); }
+  .top-section-summary { font-size: 11px; color: #A8B898; font-style: italic; margin-top: 3px; }
+  .top-section-chevron { font-size: 20px; color: var(--orange); transition: transform 0.25s; flex-shrink: 0; line-height: 1; }
+  .top-section-chevron.open { transform: rotate(90deg); }
+
+  .top-section-step-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--orange);
+    border: 2px solid #E8823A;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 900;
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .top-section-body { display: none; }
+  .top-section-body.open { display: block; }
+
+  /* ── BEFORE YOU GET STARTED TOGGLE ── */
+  .bygs-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .bygs-toggle:hover { opacity: 0.85; }
+
+  .bygs-chevron {
+    font-size: 20px;
+    color: var(--orange);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .bygs-chevron.open { transform: rotate(90deg); }
+
+  /* BYGS collapse utility */
+  .bygs-hidden { display: none !important; }
+
+  /* ── DOUGH SUMMARY BAR ── */
+  .dough-summary-bar {
+    background: var(--green);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: none;
+  }
+
+  .dough-summary-bar.visible { display: flex; }
+
+  .dough-summary-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .dough-summary-expand {
+    font-size: 12px;
+    color: #fff;
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+  }
+
+
+  .pizza-next-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+    margin-top: 16px;
+  }
+
+  .pizza-next-btn:hover { opacity: 0.88; }
   .choose-recipe-btn {
     width: 100%;
     padding: 15px;
@@ -749,6 +1231,64 @@
   }
 
   .choose-recipe-btn:hover { opacity: 0.85; }
+
+  /* ── VERSION CARDS ── */
+  .version-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-mid);
+    margin: 12px 0 8px;
+  }
+
+  .version-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .version-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: var(--parchment);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .version-card:hover { border-color: var(--orange); }
+
+  .version-card.sel-standard {
+    border-color: var(--orange);
+    border-width: 2px;
+    background: var(--orange-light);
+  }
+
+  .version-card.sel-healthier {
+    border-color: var(--green);
+    border-width: 2px;
+    background: var(--green-light);
+  }
+
+  .version-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .version-card.sel-standard .version-card-name { color: var(--orange); }
+  .version-card.sel-healthier .version-card-name { color: var(--green); }
+
+  .version-card-detail {
+    font-size: 11px;
+    color: var(--text-mid);
+    line-height: 1.4;
+  }
+
+  .version-card-savings {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--green);
+    margin-top: 5px;
+  }
 
   /* ── RECIPE CARD ── */
   .recipe-card {
@@ -840,20 +1380,383 @@
   .tpill-c { background: #633806; color: #FAC775; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
   .tpill-f { background: #712B13; color: #F5C4B3; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
   .nutrition-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; }
+  /* ══════════════════════════════════════
+     MOBILE STYLES — max-width: 767px
+  ══════════════════════════════════════ */
+  @media (max-width: 767px) {
+
+    /* ── NAV ── */
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--brown-dark);
+      border-bottom: 2px solid var(--orange);
+      flex-direction: column;
+      gap: 0;
+      z-index: 99;
+    }
+
+    .nav-links.open { display: flex; }
+
+    .nav-links a {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--brown-light);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links a:last-child { border-bottom: none; }
+
+    .nav-hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--orange);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* ── OUTPUT TOGGLE BAR ── */
+    .output-toggle-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+    }
+
+    .toggle-pair-label { min-width: unset; }
+
+    #jump-to-pizza-link { margin-left: 0; }
+
+    /* ── OUTPUT / SECTION BODY PADDING ── */
+    .output-body { padding: 14px 16px; }
+    .section-body { padding: 14px 16px; }
+    .accord-body { padding: 14px 16px; }
+
+    /* ── NUTRITION COMP GRID — 2 col is fine, just tighter padding ── */
+    .nutrition-comp-card { padding: 10px; }
+    .nutrition-comp-cal { font-size: 18px; }
+
+    /* ── NUTRITION SUMMARY GRID ── */
+    .nutrition-summary-card { padding: 12px; }
+    .nutrition-summary-cal { font-size: 20px; }
+
+    /* ── NUTRITION CONTROLS — stack slice row ── */
+    .nutrition-controls { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+    /* ── CALORIE GRID — fine at 2 col, reduce number size ── */
+    .calorie-num { font-size: 22px; }
+
+    /* ── VERSION CARDS — stack on mobile ── */
+    .version-cards { grid-template-columns: 1fr; }
+
+    /* ── TOP SECTION HEADER — tighten for step badge + text + chevron ── */
+    .top-section-header { padding: 14px 16px; }
+    .top-section-title { font-size: 16px; }
+    .top-section-summary { font-size: 10px; }
+
+    /* ── STEP BADGE — slightly smaller on mobile ── */
+    .top-section-step-badge {
+      width: 32px;
+      height: 32px;
+      font-size: 15px;
+    }
+
+    /* ── OUTPUT CARD HEADER ── */
+    .output-card-header-btn { padding: 12px 16px; }
+    .output-header-title { font-size: 16px; }
+
+    /* ── HERO ── */
+    .hero { padding: 20px 16px 18px; }
+    .hero h1 { font-size: 24px; }
+
+    /* ── FOOTER — stack vertically ── */
+    footer > div > div:first-child {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    footer > div > div:first-child > div:last-child {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  /* ── HAMBURGER HIDDEN ON DESKTOP ── */
+  @media (min-width: 768px) {
+    .nav-hamburger { display: none; }
+  }
+  /* ── RESTORE BANNER ── */
+  .restore-banner {
+    background: var(--brown-mid);
+    border: 1.5px solid var(--orange);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .restore-banner.visible { display: block; }
+
+  .restore-banner-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .restore-banner-text {
+    font-size: 13px;
+    color: var(--parchment);
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .restore-banner-text span {
+    color: #A8B898;
+    font-weight: 400;
+    font-size: 12px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .restore-btn {
+    padding: 9px 18px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .restore-btn:hover { opacity: 0.88; }
+
+  .restore-fresh-link {
+    font-size: 11px;
+    color: #A8B898;
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Source Sans 3', sans-serif;
+    padding: 0;
+    margin-top: 8px;
+    display: block;
+  }
+
+  .restore-fresh-link:hover { color: var(--parchment); }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    nav, .breadcrumb-bar, .restore-banner, .calc-btn-wrap,
+    .print-btn, #calculator-section, .output-toggle-bar,
+    .col-left, .choose-recipe-btn, .dough-next-btn,
+    .pizza-next-btn, .next-btn, #jump-to-pizza-link,
+    .top-section-chevron, .output-card-chevron,
+    .accord-chevron, .bygs-chevron, .top-section-step-badge,
+    #section-calculator, .section-mini-outline,
+    .dough-summary-bar, .output-card-header-btn > .output-card-chevron { display: none !important; }
+
+    body { background: white; font-size: 12px; }
+    .page { max-width: 100%; padding: 0; }
+    .two-col-wrap { display: block !important; }
+    .col-right { display: block !important; width: 100% !important; }
+
+    /* Show all collapsed cards for print */
+    .output-card-body.collapsed,
+    .top-section-body,
+    .accord-body,
+    #bygs-body,
+    .pizza-seq-body,
+    [id^="pizza-body-"],
+    [id^="ocb-"] { display: block !important; }
+
+    .output-card {
+      border: 1px solid #ccc;
+      break-inside: avoid;
+      margin-bottom: 10px;
+      box-shadow: none;
+    }
+
+    .output-card-header-btn {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .output-header { background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .method-step { break-inside: avoid; }
+    .method-step-accord-body { display: block !important; }
+
+    .hero { border: 1px solid #ccc; border-radius: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero-wrap { max-width: 100%; }
+
+    #output-section { display: block !important; }
+    #pizza-output-section { display: block !important; }
+    #section-dough, #section-recipe { display: block !important; }
+
+    /* Nutrition — print as simple rows not grid */
+    .nutrition-comp-grid { display: block !important; }
+    .nutrition-comp-card {
+      display: inline-block;
+      width: 48%;
+      margin-bottom: 6px;
+      border: 1px solid #ccc;
+      break-inside: avoid;
+    }
+    .nutrition-summary-grid { display: block !important; }
+    .nutrition-summary-card {
+      display: inline-block;
+      width: 48%;
+      background: #2C1F0E !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      margin-bottom: 6px;
+    }
+
+    /* Inner card groups — remove flush borders for print */
+    .inner-card-group .output-card {
+      border-radius: 6px !important;
+      border-bottom-width: 1px !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* Page title */
+    .hero h1 { color: #C8622A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    @page { margin: 1.5cm; }
+  }
+  /* ── DOWNLOAD PIZZA RECIPE BUTTON ── */
+  .download-pizza-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--brown-dark);
+    color: var(--parchment);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+    display: none;
+  }
+
+  .download-pizza-btn.visible { display: block; }
+  .download-pizza-btn:hover { opacity: 0.85; }
+
+  /* ── PRINT PIZZA ONLY ── */
+  @media print {
+    body.print-pizza-only nav,
+    body.print-pizza-only .breadcrumb-bar,
+    body.print-pizza-only .restore-banner,
+    body.print-pizza-only .hero-wrap,
+    body.print-pizza-only #section-calculator,
+    body.print-pizza-only #section-dough,
+    body.print-pizza-only .choose-recipe-btn,
+    body.print-pizza-only #choose-recipe-section,
+    body.print-pizza-only .print-btn,
+    body.print-pizza-only .download-pizza-btn,
+    body.print-pizza-only .pizza-next-btn,
+    body.print-pizza-only .dough-next-btn,
+    body.print-pizza-only #jump-to-pizza-link,
+    body.print-pizza-only .output-card-chevron,
+    body.print-pizza-only .top-section-chevron,
+    body.print-pizza-only .dough-summary-bar,
+    body.print-pizza-only #pizza-ingredients-card { display: none !important; }
+
+    body.print-pizza-only .page { max-width: 100%; padding: 0; }
+    body.print-pizza-only #section-recipe { display: block !important; }
+    body.print-pizza-only .top-section-body { display: block !important; }
+    body.print-pizza-only #pizza-output-section { display: block !important; }
+    body.print-pizza-only [id^="pizza-body-"] { display: block !important; }
+    body.print-pizza-only .output-card-body.collapsed { display: block !important; }
+    body.print-pizza-only .two-col-wrap { display: block !important; }
+    body.print-pizza-only .col-left { display: none !important; }
+    body.print-pizza-only .col-right { width: 100% !important; }
+
+    /* Print header */
+    body.print-pizza-only #pizza-print-header { display: block !important; }
+
+    body.print-pizza-only .output-card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 10px; box-shadow: none; }
+    body.print-pizza-only .output-card-header-btn { pointer-events: none; }
+    body.print-pizza-only .output-header { background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body.print-pizza-only .method-step { break-inside: avoid; }
+    body.print-pizza-only .inner-card-group .output-card { border-radius: 6px !important; border-bottom-width: 1px !important; margin-bottom: 8px !important; }
+    body.print-pizza-only .nutrition-comp-grid { display: block !important; }
+    body.print-pizza-only .nutrition-comp-card { display: inline-block; width: 48%; margin-bottom: 6px; border: 1px solid #ccc; break-inside: avoid; }
+    body.print-pizza-only .nutrition-summary-grid { display: block !important; }
+    body.print-pizza-only .nutrition-summary-card { display: inline-block; width: 48%; background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin-bottom: 6px; }
+
+    @page { margin: 1.5cm; }
+  }
 </style>
 </head>
 <body>
 
 <nav>
   <div class="logo">Marko<span>dough</span></div>
-  <div class="nav-links">
-    <a href="#">Recipes</a>
-    <a href="#">Calculators</a>
-    <a href="#">About</a>
+  <div class="nav-links" id="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../doughs/index.html" class="nav-active">Doughs</a>
+    <a href="../recipes/index.html">Recipes</a>
+    <a href="../calculators/index.html">Calculators</a>
+    <a href="../learn/index.html">Learn</a>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
+<div style="background:var(--brown-mid);padding:8px 24px;border-bottom:1px solid var(--brown-light);" class="breadcrumb-bar">
+  <div style="max-width:1200px;margin:0 auto;">
+    <a href="index.html" style="font-size:12px;color:#A8B898;text-decoration:none;letter-spacing:0.04em;">&larr; Doughs</a>
+    <span style="font-size:12px;color:var(--brown-light);margin:0 8px;">/</span>
+    <span style="font-size:12px;color:var(--parchment);font-weight:600;">NY Style</span>
+  </div>
+</div>
+
 <div class="page">
+
+  <!-- RESTORE BANNER -->
+  <div class="restore-banner" id="restore-banner">
+    <div class="restore-banner-top">
+      <div class="restore-banner-text">
+        You have a saved session
+        <span id="restore-banner-date"></span>
+      </div>
+      <button class="restore-btn" onclick="restoreSession()">Continue where you left off &rarr;</button>
+    </div>
+    <button class="restore-fresh-link" onclick="clearSession()">Start fresh</button>
+  </div>
 
   <!-- HERO -->
   <div class="hero-wrap">
@@ -868,11 +1771,18 @@
   <div class="col-left">
   <!-- BEFORE YOU GET STARTED -->
   <div class="section-card">
-    <div class="section-header">
-      <div class="section-tag">Read before you begin</div>
-      <div class="section-title">Before You Get Started</div>
-    </div>
-    <div class="section-body">
+    <button class="bygs-toggle" id="bygs-toggle" onclick="toggleBYGS()">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--orange);border:2px solid #E8823A;color:var(--text-dark);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0;font-family:'Playfair Display',serif;">1</div>
+        <div>
+          <div class="section-tag" style="color:#C8922A;font-weight:700;">Step 1, Read Before You Begin</div>
+          <div class="section-title">Before You Get Started</div>
+        </div>
+      </div>
+      <div class="bygs-chevron open" id="bygs-chevron">&rsaquo;</div>
+    </button>
+    <div class="section-body" id="bygs-body">
+
 
       <div class="warning-callout">
         <div class="callout-title">⚠ Plan ahead, this is not a same-day dough</div>
@@ -1009,12 +1919,29 @@
         <div class="info-row-detail">Helpful</div>
       </div>
 
+
+      <button class="next-btn" onclick="scrollToCalculator()" style="margin-top:20px;">Next: Build Your Recipe &rarr;</button>
+
     </div>
   </div>
 
   </div><!-- end col-left -->
   <div class="col-right">
   <!-- CALCULATOR -->
+  <!-- SECTION 2: BUILD YOUR RECIPE -->
+  <div class="top-section" id="section-calculator">
+    <button class="top-section-header" onclick="toggleTopSection('calculator')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">2</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 2</div>
+          <div class="top-section-title">Build Your Recipe</div>
+          <div class="top-section-summary" id="calculator-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron" id="chev-section-calculator">&rsaquo;</div>
+    </button>
+    <div class="top-section-body" id="body-section-calculator">
   <div id="calculator-section">
     <div style="background:var(--parchment-mid);border-radius:12px 12px 0 0;border:0.5px solid var(--border);border-bottom:none;padding:14px 20px;margin-bottom:0;">
       <div class="section-tag">Build your recipe</div>
@@ -1178,16 +2105,56 @@
     </div>
   </div>
 
+  </div><!-- end body-section-calculator -->
+  </div><!-- end section-calculator -->
+
+  <!-- SECTION 3: PREP YOUR DOUGH -->
+  <div class="top-section" id="section-dough" style="display:none;">
+    <button class="top-section-header" onclick="toggleTopSection('dough')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">3</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 3</div>
+          <div class="top-section-title">Prep Your Dough</div>
+          <div class="top-section-summary" id="dough-section-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron open" id="chev-section-dough">&rsaquo;</div>
+    </button>
+    <!-- Mini outline shown when section collapsed -->
+    <div class="section-mini-outline" id="dough-mini-outline">
+      <div class="mini-outline-row" id="mini-row-plan" onclick="expandDoughToCard('plan')">
+        <div class="mini-row-num" id="mini-num-plan">1</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 1</div>
+          <div class="mini-row-title">Plan</div>
+          <div class="mini-row-summary" id="mini-sum-plan">Timing and fermentation notes</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-ingredients" onclick="expandDoughToCard('ingredients')">
+        <div class="mini-row-num" id="mini-num-ingredients">2</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 2</div>
+          <div class="mini-row-title">Your Ingredients</div>
+          <div class="mini-row-summary" id="mini-sum-ingredients">Poolish and main dough amounts</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-steps" onclick="expandDoughToCard('steps')">
+        <div class="mini-row-num" id="mini-num-steps">3</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 3</div>
+          <div class="mini-row-title">Method Steps</div>
+          <div class="mini-row-summary" id="mini-sum-steps">8 steps from poolish to temper</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+    </div>
+    <div class="top-section-body open" id="body-section-dough">
   <!-- OUTPUT -->
   <div id="output-section">
 
-    <!-- TRANSITION MESSAGE -->
-    <div class="callout" style="margin-bottom:16px;">
-      <div class="callout-title">✓ Your dough recipe is ready</div>
-      <p>Everything you need to make your dough is below. Once you have reviewed it, scroll to the bottom to choose your pizza recipe, sauce, cheese, and baking instructions are all included and scaled to your configuration.</p>
-    </div>
-
-    <!-- UNIT TOGGLE BAR -->
     <div class="output-toggle-bar">
       <div class="output-toggle-bar-label">Display units:</div>
       <div class="toggle-pair">
@@ -1209,38 +2176,51 @@
       <a href="#choose-recipe-section" id="jump-to-pizza-link" style="display:none;margin-left:auto;font-size:12px;font-weight:700;color:var(--orange);text-decoration:none;letter-spacing:0.04em;white-space:nowrap;">Jump to Pizza ↓</a>
     </div>
 
-    <!-- ESTIMATED TIME -->
-    <div class="output-card">
-      <div class="output-header">
-        <div class="output-header-tag">Planning</div>
-        <div class="output-header-title">Estimated Time</div>
-      </div>
-      <div class="output-body">
+    <div class="inner-card-group">
+
+    <!-- CARD 1: PLAN AHEAD -->
+    <div class="output-card" id="oc-plan">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('plan')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Planning</div>
+          <div class="output-header-title">Plan Ahead</div>
+        </div>
+        <div class="output-card-chevron open" id="chev-plan">&rsaquo;</div>
+      </button>
+      <div class="output-body output-card-body" id="ocb-plan">
         <div class="output-row"><span class="output-row-label" id="prep-row-label">Poolish prep (night before)</span><span class="output-row-value" id="prep-row-value">5 min active · 12-16 hrs passive</span></div>
         <div class="output-row"><span class="output-row-label">Autolyse</span><span class="output-row-value">5 min active · 30 min passive</span></div>
-        <div class="output-row"><span class="output-row-label">Mixing</span><span class="output-row-value" id="mix-time-out">, </span></div>
+        <div class="output-row"><span class="output-row-label">Mixing</span><span class="output-row-value" id="mix-time-out">-</span></div>
         <div class="output-row"><span class="output-row-label">Bulk rest + stretch and folds</span><span class="output-row-value">10 min active · 1 hr passive</span></div>
         <div class="output-row"><span class="output-row-label">Balling and refrigerating</span><span class="output-row-value">5 min active</span></div>
-        <div class="output-row"><span class="output-row-label">Cold fermentation</span><span class="output-row-value" id="ferm-time-out">, </span></div>
+        <div class="output-row"><span class="output-row-label">Cold fermentation</span><span class="output-row-value" id="ferm-time-out">-</span></div>
         <div class="output-row"><span class="output-row-label">Tempering before bake</span><span class="output-row-value">5 min active · 2-3 hrs passive</span></div>
         <div class="output-total-row">
           <span class="output-total-label">Total active time</span>
-          <span class="output-total-value" id="active-time-out">, </span>
+          <span class="output-total-value" id="active-time-out">-</span>
         </div>
         <div class="output-total-row" style="border-top:none;padding-top:2px;">
           <span class="output-total-label">Total elapsed time</span>
-          <span class="output-total-value" id="elapsed-time-out">, </span>
+          <span class="output-total-value" id="elapsed-time-out">-</span>
         </div>
+        <div class="subsection-title" style="margin-top:18px;" id="ferm-note-title">Fermentation Note</div>
+        <div class="ferm-note" id="ferm-note-text">-</div>
+        <button class="dough-next-btn" onclick="openDoughCard('ingredients')">Next: Your Ingredients &rarr;</button>
       </div>
     </div>
 
-    <!-- POOLISH / DISCARD -->
-    <div class="output-card">
-      <div class="output-header">
-        <div class="output-header-tag" id="poolish-header-tag">Make the night before</div>
-        <div class="output-header-title" id="poolish-header-title">Your Poolish</div>
-      </div>
-      <div class="output-body">
+    <!-- CARD 2: YOUR INGREDIENTS -->
+    <div class="output-card" id="oc-ingredients">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('ingredients')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Main mix</div>
+          <div class="output-header-title">Your Ingredients</div>
+        </div>
+        <div class="output-card-chevron" id="chev-ingredients">&rsaquo;</div>
+      </button>
+      <div class="output-body output-card-body collapsed" id="ocb-ingredients">
+        <div class="subsection-title" style="margin-top:0;" id="poolish-header-tag">Make the night before</div>
+        <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:10px;" id="poolish-header-title">Your Poolish</div>
         <div class="warning-callout" id="poolish-storage-callout">
           <div class="callout-title">⚠ Storage, Room Temperature Only</div>
           <p id="poolish-storage-note"></p>
@@ -1250,107 +2230,182 @@
           <div class="callout-title" id="poolish-ready-title">✓ Poolish is ready when</div>
           <p id="poolish-ready-text">It has doubled in size, looks bubbly throughout, smells slightly tangy and yeasty, and is domed or just starting to fall. A fully collapsed poolish is over-fermented, still usable, but reduce your main yeast by 25%.</p>
         </div>
-      </div>
-    </div>
-
-    <!-- DOUGH INGREDIENTS -->
-    <div class="output-card">
-      <div class="output-header">
-        <div class="output-header-tag">Main mix</div>
-        <div class="output-header-title">Your Dough Ingredients</div>
-      </div>
-      <div class="output-body">
+        <div class="subsection-title">Main Dough</div>
         <div id="flour-output-note" class="dynamic-note"></div>
         <div id="yeast-output-note" class="dynamic-note"></div>
         <div id="ingredient-rows"></div>
         <div class="output-total-row" id="total-dough-row">
           <span class="output-total-label">Total dough weight</span>
-          <span class="output-total-value" id="total-dough-out">, </span>
+          <span class="output-total-value" id="total-dough-out">-</span>
         </div>
         <div class="output-total-row" style="border-top:none;padding-top:2px;">
           <span class="output-total-label" id="per-ball-label-out">Per ball</span>
-          <span class="output-total-value" id="per-ball-out">, </span>
+          <span class="output-total-value" id="per-ball-out">-</span>
         </div>
-      </div>
-    </div>
-
-    <!-- CALORIES -->
-    <div class="output-card">
-      <div class="output-header">
-        <div class="output-header-tag">Nutrition</div>
-        <div class="output-header-title">Calorie Information</div>
-      </div>
-      <div class="output-body">
+        <div class="subsection-title">Calories</div>
         <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Dough only, does not include sauce, cheese, or toppings.</p>
         <div class="calorie-grid">
           <div class="calorie-card">
-            <div class="calorie-num" id="cal-batch-out">, </div>
+            <div class="calorie-num" id="cal-batch-out">-</div>
             <div class="calorie-label">Total batch calories</div>
           </div>
           <div class="calorie-card">
-            <div class="calorie-num" id="cal-ball-out">, </div>
+            <div class="calorie-num" id="cal-ball-out">-</div>
             <div class="calorie-label">Calories per dough ball</div>
           </div>
         </div>
+        <button class="dough-next-btn" onclick="openDoughCard('steps')">Next: Method Steps &rarr;</button>
       </div>
     </div>
 
-    <!-- FERMENTATION NOTE -->
-    <div class="output-card">
-      <div class="output-header">
-        <div class="output-header-tag">Cold ferment</div>
-        <div class="output-header-title" id="ferm-note-title">Fermentation Note</div>
-      </div>
-      <div class="output-body">
-        <div class="ferm-note" id="ferm-note-text">, </div>
-      </div>
+    <!-- CARD 3: METHOD STEPS, starts collapsed -->
+    <div class="output-card" id="oc-steps">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('steps')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Instructions</div>
+          <div class="output-header-title">Method Steps</div>
+        </div>
+        <div class="output-card-chevron" id="chev-steps">&rsaquo;</div>
+      </button>
+      <div class="output-body output-card-body collapsed" id="ocb-steps"><div id="method-steps-body"></div></div>
     </div>
 
-    <!-- METHOD STEPS -->
-    <div class="output-card">
-      <div class="output-header">
-        <div class="output-header-tag">Instructions</div>
-        <div class="output-header-title">Method Steps</div>
-      </div>
-      <div class="output-body" id="method-steps-body"></div>
-    </div>
+    </div><!-- end inner-card-group -->
 
-    <button class="print-btn" onclick="window.print()">⎙ Print This Recipe</button>
+    <button class="print-btn" onclick="window.print()">&#9112; Print This Recipe</button>
 
     <!-- CHOOSE YOUR RECIPE BUTTON -->
-    <button class="choose-recipe-btn" onclick="showRecipeSelector()">Choose Your Recipe →</button>
+    <button class="choose-recipe-btn" onclick="showRecipeSelector()">Choose Your Recipe &rarr;</button>
+
+  </div><!-- end output -->
+  </div><!-- end body-section-dough -->
+  </div><!-- end section-dough -->
+
+  <!-- SECTION 4: RECIPE -->
+  <div class="top-section" id="section-recipe" style="display:none;">
+    <button class="top-section-header" onclick="toggleTopSection('recipe')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">4</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 4</div>
+          <div class="top-section-title">Recipe</div>
+          <div class="top-section-summary" id="recipe-section-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron open" id="chev-section-recipe">&rsaquo;</div>
+    </button>
+    <!-- Mini outline shown when section collapsed -->
+    <div class="section-mini-outline" id="recipe-mini-outline">
+      <div class="mini-outline-row" id="mini-row-recipe-choose" onclick="expandRecipeToCard('choose')">
+        <div class="mini-row-num" id="mini-num-recipe-choose">1</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 1</div>
+          <div class="mini-row-title">Choose Your Recipe</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-choose">Select a recipe</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-sauce" onclick="expandRecipeToCard('sauce')">
+        <div class="mini-row-num" id="mini-num-recipe-sauce">2</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 2</div>
+          <div class="mini-row-title">Sauce</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-sauce">San Marzano &middot; garlic &middot; olive oil</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-cheese" onclick="expandRecipeToCard('cheese')">
+        <div class="mini-row-num" id="mini-num-recipe-cheese">3</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 3</div>
+          <div class="mini-row-title">Cheese</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-cheese">Whole milk mozzarella</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-baking" onclick="expandRecipeToCard('baking')">
+        <div class="mini-row-num" id="mini-num-recipe-baking">4</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 4</div>
+          <div class="mini-row-title">Baking Instructions</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-baking">Baking guide for your setup</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-nutrition" onclick="expandRecipeToCard('nutrition')">
+        <div class="mini-row-num" id="mini-num-recipe-nutrition">5</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 5</div>
+          <div class="mini-row-title">Calorie &amp; Macro Breakdown</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-nutrition">Calories and macros per pizza</div>
+        </div>
+        <div class="mini-row-chev">&rsaquo;</div>
+      </div>
+    </div>
+    <div class="top-section-body open" id="body-section-recipe">
+
+    <!-- DOUGH SUMMARY BAR -->
+    <div class="dough-summary-bar" id="dough-summary-bar">
+      <div class="dough-summary-text">&#10003; Dough recipe ready, make this first before your pizza</div>
+      <button class="dough-summary-expand" onclick="expandDoughOutput()">View dough &uarr;</button>
+    </div>
 
     <!-- CHOOSE YOUR RECIPE SECTION -->
-    <div id="choose-recipe-section" style="display:none;">
+    <div id="choose-recipe-section">
       <div class="section-header" style="background:var(--parchment-mid);border-radius:12px 12px 0 0;border:0.5px solid var(--border);border-bottom:none;padding:14px 20px;">
         <div class="section-tag">What are you making?</div>
         <div class="section-title">Choose Your Recipe</div>
       </div>
       <div style="background:var(--parchment);border-radius:0 0 12px 12px;border:0.5px solid var(--border);border-top:none;padding:16px;margin-bottom:16px;">
-        <div class="recipe-card" id="recipe-card-cheese" onclick="selectRecipe('cheese')">
-          <div class="recipe-card-inner">
-            <div>
-              <div class="recipe-card-title">Plain Cheese Pizza</div>
-              <div class="recipe-card-desc">Classic NY slice with San Marzano tomatoes, whole milk mozzarella, and a hand-crushed raw sauce</div>
-              <div class="recipe-card-time">~15 min additional prep</div>
-            </div>
-            <div class="recipe-card-check" id="recipe-check-cheese">✓</div>
-          </div>
+        <div id="recipe-card-list">
+          <!-- Populated dynamically by renderRecipeSelector() -->
         </div>
-        <button class="next-btn" style="margin-top:12px;" onclick="buildRecipe()">Build This Recipe →</button>
+        <button class="next-btn" id="build-recipe-btn" style="margin-top:12px;background:var(--disabled-bg);color:var(--disabled-text);cursor:not-allowed;" disabled onclick="buildRecipe()">Build This Recipe &rarr;</button>
+        <div style="font-size:11px;color:var(--text-muted);font-style:italic;text-align:center;margin-top:6px;" id="build-recipe-note">Select a recipe above to continue</div>
       </div>
     </div>
 
     <!-- PIZZA OUTPUT -->
     <div id="pizza-output-section" style="display:none;">
 
-      <!-- SAUCE -->
-      <div class="output-card">
-        <div class="output-header">
-          <div class="output-header-tag">Make this first</div>
-          <div class="output-header-title">Sauce</div>
+      <!-- PRINT HEADER, only visible when printing pizza recipe -->
+      <div id="pizza-print-header" style="display:none;margin-bottom:16px;">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#C8622A;">NY Style Pizza</div>
+        <div id="pizza-print-config" style="font-size:13px;color:#4A3A22;margin-top:6px;"></div>
+      </div>
+
+      <div class="inner-card-group">
+
+      <!-- STATIC INGREDIENTS LIST -->
+      <div class="output-card" id="pizza-ingredients-card">
+        <button class="output-card-header-btn" onclick="togglePizzaIngredients()">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Reference</div>
+            <div class="output-header-title">All Ingredients at a Glance</div>
+          </div>
+          <div class="output-card-chevron open" id="pizza-ingredients-chevron">&rsaquo;</div>
+        </button>
+        <div class="output-body output-card-body" id="pizza-ingredients-body">
+          <div class="subsection-title" style="margin-top:0;">Sauce</div>
+          <div id="static-sauce-rows"></div>
+          <div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:4px;">Salt and red pepper flakes to taste</div>
+          <div class="subsection-title">Cheese</div>
+          <div id="static-cheese-rows"></div>
+          <div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:4px;">Pecorino Romano or Parmesan optional, to taste, applied before and after bake</div>
+          <button class="dough-next-btn" style="margin-top:16px;" onclick="openPizzaCard('sauce')">Go to Sauce &rarr;</button>
         </div>
-        <div class="output-body">
+      </div>
+
+      <!-- SAUCE -->
+      <div class="output-card" id="pizza-card-sauce">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('sauce')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Make this first</div>
+            <div class="output-header-title">Sauce</div>
+          </div>
+          <div class="output-card-chevron open" id="pizza-chev-sauce">&rsaquo;</div>
+        </button>
+        <div class="output-body output-card-body" id="pizza-body-sauce">
           <div class="callout" style="margin-bottom:14px;">
             <div class="callout-title">✓ Make your sauce before shaping</div>
             <p>Your sauce only takes a few minutes. Making it first gives the flavors time to meld while you shape your dough.</p>
@@ -1378,16 +2433,20 @@
               </div>
             </div>
           </div>
+          <button class="dough-next-btn" onclick="openPizzaCard('cheese')">Next: Cheese &rarr;</button>
         </div>
       </div>
 
       <!-- CHEESE -->
-      <div class="output-card">
-        <div class="output-header">
-          <div class="output-header-tag">Cheese</div>
-          <div class="output-header-title">Cheese</div>
-        </div>
-        <div class="output-body">
+      <div class="output-card" id="pizza-card-cheese">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('cheese')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Cheese</div>
+            <div class="output-header-title">Cheese</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-cheese">&rsaquo;</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-cheese">
           <div class="callout" style="margin-bottom:14px;">
             <div class="callout-title">✓ Grate your own mozzarella</div>
             <p>Pre-shredded mozzarella contains anti-caking agents that prevent proper melting and produce a greasy, uneven result. A box grater on the large holes works well. Grate cold, it shreds more cleanly.</p>
@@ -1396,16 +2455,35 @@
           <div class="output-total-row" style="border-top:none;padding-top:8px;">
             <span style="font-size:12px;font-style:italic;color:var(--text-muted);">Pecorino Romano or Parmesan optional, to taste, applied before and after bake</span>
           </div>
+          <button class="dough-next-btn" onclick="openPizzaCard('baking')">Next: Baking Instructions &rarr;</button>
+        </div>
+      </div>
+
+      <!-- BAKING -->
+      <div class="output-card" id="pizza-card-baking">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('baking')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Baking</div>
+            <div class="output-header-title" id="baking-title">Baking Instructions</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-baking">&rsaquo;</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-baking">
+          <div id="baking-steps-body"></div>
+          <button class="dough-next-btn" onclick="openPizzaCard('nutrition')">Next: Calorie &amp; Macro Breakdown &rarr;</button>
         </div>
       </div>
 
       <!-- NUTRITION -->
-      <div class="output-card">
-        <div class="output-header">
-          <div class="output-header-tag">Nutrition</div>
-          <div class="output-header-title" id="nutrition-title">Calorie & Macro Breakdown</div>
-        </div>
-        <div class="output-body">
+      <div class="output-card" id="pizza-card-nutrition">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('nutrition')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Nutrition</div>
+            <div class="output-header-title" id="nutrition-title">Calorie &amp; Macro Breakdown</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-nutrition">&rsaquo;</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-nutrition">
           <div class="nutrition-controls">
             <div class="nutrition-tog-group">
               <button class="nutrition-tog-btn active-orange" onclick="setNutritionMode('standard',this)">Standard</button>
@@ -1428,7 +2506,7 @@
           <div class="nutrition-comp-grid">
             <div class="nutrition-comp-card">
               <div class="nutrition-comp-label">Dough</div>
-              <div class="nutrition-comp-cal" id="n-dough-cal">, </div>
+              <div class="nutrition-comp-cal" id="n-dough-cal">-</div>
               <div class="nutrition-comp-sub">Per ball · unchanged</div>
               <div class="nutrition-macro-row">
                 <span class="npill-p" id="n-dough-p">P , </span>
@@ -1438,7 +2516,7 @@
             </div>
             <div class="nutrition-comp-card">
               <div class="nutrition-comp-label">Sauce</div>
-              <div class="nutrition-comp-cal" id="n-sauce-cal">, </div>
+              <div class="nutrition-comp-cal" id="n-sauce-cal">-</div>
               <div class="nutrition-comp-sub">San Marzano · olive oil</div>
               <div class="nutrition-macro-row">
                 <span class="npill-p" id="n-sauce-p">P , </span>
@@ -1448,8 +2526,8 @@
             </div>
             <div class="nutrition-comp-card">
               <div class="nutrition-comp-label">Cheese</div>
-              <div class="nutrition-comp-cal" id="n-cheese-cal">, </div>
-              <div class="nutrition-comp-sub" id="n-cheese-sub">, </div>
+              <div class="nutrition-comp-cal" id="n-cheese-cal">-</div>
+              <div class="nutrition-comp-sub" id="n-cheese-sub">-</div>
               <div class="nutrition-macro-row">
                 <span class="npill-p" id="n-cheese-p">P , </span>
                 <span class="npill-c" id="n-cheese-c">C , </span>
@@ -1458,8 +2536,8 @@
             </div>
             <div class="nutrition-comp-card">
               <div class="nutrition-comp-label">Oil drizzle</div>
-              <div class="nutrition-comp-cal" id="n-oil-cal">, </div>
-              <div class="nutrition-comp-sub" id="n-oil-sub">, </div>
+              <div class="nutrition-comp-cal" id="n-oil-cal">-</div>
+              <div class="nutrition-comp-sub" id="n-oil-sub">-</div>
               <div class="nutrition-macro-row">
                 <span class="npill-p">P 0g</span>
                 <span class="npill-c">C 0g</span>
@@ -1473,7 +2551,7 @@
           <div class="nutrition-summary-grid">
             <div class="nutrition-summary-card">
               <div class="nutrition-summary-label">Total pizza</div>
-              <div class="nutrition-summary-cal" id="n-total-cal">, </div>
+              <div class="nutrition-summary-cal" id="n-total-cal">-</div>
               <div class="nutrition-summary-macros">
                 <span class="tpill-p" id="n-total-p">P , </span>
                 <span class="tpill-c" id="n-total-c">C , </span>
@@ -1482,7 +2560,7 @@
             </div>
             <div class="nutrition-summary-card">
               <div class="nutrition-summary-label" id="n-slice-label">Per slice (8)</div>
-              <div class="nutrition-summary-cal" id="n-slice-cal">, </div>
+              <div class="nutrition-summary-cal" id="n-slice-cal">-</div>
               <div class="nutrition-summary-macros">
                 <span class="tpill-p" id="n-slice-p">P , </span>
                 <span class="tpill-c" id="n-slice-c">C , </span>
@@ -1495,24 +2573,35 @@
         </div>
       </div>
 
-      <!-- BAKING -->
-      <div class="output-card">
-        <div class="output-header">
-          <div class="output-header-tag">Baking</div>
-          <div class="output-header-title" id="baking-title">Baking Instructions</div>
-        </div>
-        <div class="output-body" id="baking-steps-body"></div>
-      </div>
+      </div><!-- end inner-card-group -->
+
+      <button class="download-pizza-btn" id="download-pizza-btn" onclick="downloadPizzaRecipe()">&#11015; Download Pizza Recipe as PDF</button>
 
     </div><!-- end pizza output -->
+    </div><!-- end body-section-recipe -->
+  </div><!-- end section-recipe -->
 
-  </div><!-- end output -->
   </div><!-- end col-right -->
   </div><!-- end two-col-wrap -->
 
 </div><!-- end page -->
 
 <script>
+
+
+// == DOUGH TYPE ==
+const DOUGH_TYPE = 'ny-style';
+
+// == RECIPE COMPATIBILITY ==
+const RECIPE_COMPATIBILITY = {
+  'ny-style':    ['pizza-round'],
+  'neapolitan':  ['pizza-round'],
+  'detroit':     ['pizza-pan'],
+  'sicilian':    ['pizza-pan'],
+  'hoagie-roll': ['sandwich'],
+  'sesame-roll': ['sandwich']
+};
+
 const sel = { sweet: 'honey' };
 let lastCalcData = null;
 
@@ -1540,6 +2629,244 @@ function toggleStep(n) {
   body.classList.toggle('open');
   chevron.classList.toggle('open', body.classList.contains('open'));
 }
+
+// == DEV QUICK FILL ==
+(function() {
+  if (new URLSearchParams(window.location.search).get('dev') !== '1') return;
+  const btn = document.createElement('button');
+  btn.textContent = '\u26A1 Dev: Quick Fill';
+  btn.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:9999;padding:10px 16px;background:#5E8A42;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Source Sans 3,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+  btn.onclick = devQuickFill;
+  document.body.appendChild(btn);
+})();
+
+function devQuickFill() {
+  const mixerBtn = document.querySelector('#mixer-group .btn-opt');
+  if (mixerBtn) { mixerBtn.classList.add('sel'); sel.mixer = 'stand'; }
+  const surfaceBtn = document.querySelector('#surface-group .btn-opt');
+  if (surfaceBtn) { surfaceBtn.classList.add('sel'); sel.surface = 'steel'; }
+  const peelBtn = document.querySelector('#peel-group .btn-opt');
+  if (peelBtn) { peelBtn.classList.add('sel'); sel.peel = 'wood'; }
+  completeStep(1);
+  selectPref('poolish');
+  completeStep(2);
+  document.querySelectorAll('#size-group .btn-opt').forEach((b,i) => { if (i===1) { b.classList.add('sel'); sel.size = '12'; }});
+  document.querySelectorAll('#balls-group .btn-opt').forEach((b,i) => { if (i===1) { b.classList.add('sel'); sel.balls = '2'; }});
+  document.querySelectorAll('#crust-group .btn-opt').forEach((b,i) => { if (i===1) { b.classList.add('sel'); sel.crust = 'ny'; }});
+  document.querySelectorAll('#ferm-group .btn-opt').forEach((b,i) => { if (i===1) { b.classList.add('sel'); sel.ferm = '60'; }});
+  completeStep(3);
+  completeStep(4);
+  setTimeout(() => calculate(), 100);
+}
+
+// == SCROLL HELPER ==
+function scrollToEl(el, extraOffset) {
+  if (!el) return;
+  var navH = 72;
+  var top = el.getBoundingClientRect().top + window.pageYOffset - navH - (extraOffset || 0);
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+function scrollToCalculator() {
+  var body = document.getElementById('body-section-calculator');
+  var chev = document.getElementById('chev-section-calculator');
+  if (body && !body.classList.contains('open')) { body.classList.add('open'); chev.classList.add('open'); }
+  scrollToEl(document.getElementById('section-calculator'));
+}
+
+// == NAV ==
+function toggleNav() {
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+
+// == BYGS ==
+function toggleBYGS() {
+  var body = document.getElementById('bygs-body');
+  var chev = document.getElementById('bygs-chevron');
+  body.classList.toggle('bygs-hidden');
+  chev.classList.toggle('open', !body.classList.contains('bygs-hidden'));
+}
+
+// == TOP SECTION TOGGLE ==
+function toggleTopSection(id) {
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var outline = document.getElementById(id + '-mini-outline');
+  if (!body) return;
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+  if (outline) {
+    outline.classList.toggle('visible', isOpen);
+    if (isOpen && id === 'dough') updateMiniOutline(lastCalcData);
+    if (isOpen && id === 'recipe') updateRecipeMiniOutline();
+  }
+}
+
+function collapseSection(id, summaryText) {
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var summary = document.getElementById(id === 'calculator' ? 'calculator-summary' : id + '-section-summary');
+  var outline = document.getElementById(id + '-mini-outline');
+  if (body) body.classList.remove('open');
+  if (chev) chev.classList.remove('open');
+  if (outline) outline.classList.add('visible');
+  if (summary && summaryText) summary.textContent = summaryText;
+}
+
+function showSection(id) {
+  var section = document.getElementById('section-' + id);
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var outline = document.getElementById(id + '-mini-outline');
+  if (section) section.style.display = 'block';
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  setTimeout(function() { scrollToEl(section); }, 50);
+}
+
+// == DOUGH SECTION PROGRESS ==
+var doughProgress = { plan: false, ingredients: false, steps: false };
+var doughOrder = ['plan', 'ingredients', 'steps'];
+
+function updateMiniOutline(d) {
+  var prefLbl = sel.pref === 'discard' ? 'discard' : 'poolish';
+  var summaries = {
+    plan: (sel.mixer === 'stand' ? '~40' : '~55') + ' min active \u00B7 ' + sel.ferm + ' hr cold ferment',
+    ingredients: d ? Math.round(d.totalFlour) + 'g flour \u00B7 ' + Math.round(d.totalWater) + 'g water' : 'Poolish and main dough amounts',
+    steps: '8 steps from ' + prefLbl + ' to temper'
+  };
+  doughOrder.forEach(function(id, idx) {
+    var num = document.getElementById('mini-num-' + id);
+    var sum = document.getElementById('mini-sum-' + id);
+    var done = doughProgress[id];
+    var isNext = !done && doughOrder.slice(0, idx).every(function(prev) { return doughProgress[prev]; });
+    if (num) { num.classList.remove('done','active'); if (done) { num.classList.add('done'); num.textContent = '\u2713'; } else if (isNext) { num.classList.add('active'); num.textContent = idx + 1; } else { num.textContent = idx + 1; } }
+    if (sum) { sum.classList.remove('active'); if (done) { sum.textContent = summaries[id]; } else if (isNext) { sum.textContent = 'Up next'; sum.classList.add('active'); } else { sum.textContent = summaries[id]; } }
+  });
+}
+
+function expandDoughToCard(id) {
+  var body = document.getElementById('body-section-dough');
+  var chev = document.getElementById('chev-section-dough');
+  var outline = document.getElementById('dough-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  var cardBody = document.getElementById('ocb-' + id);
+  var cardChev = document.getElementById('chev-' + id);
+  var card = document.getElementById('oc-' + id);
+  if (cardBody) cardBody.classList.remove('collapsed');
+  if (cardChev) cardChev.classList.add('open');
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function openDoughCard(id) {
+  var prevIdx = doughOrder.indexOf(id) - 1;
+  if (prevIdx >= 0) { doughProgress[doughOrder[prevIdx]] = true; }
+  var body = document.getElementById('ocb-' + id);
+  var chev = document.getElementById('chev-' + id);
+  var card = document.getElementById('oc-' + id);
+  if (!body) return;
+  body.classList.remove('collapsed');
+  if (chev) chev.classList.add('open');
+  updateMiniOutline(lastCalcData);
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function toggleOutputCard(id) {
+  var body = document.getElementById('ocb-' + id);
+  var chev = document.getElementById('chev-' + id);
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function expandDoughOutput() {
+  doughProgress.plan = false; doughProgress.ingredients = false; doughProgress.steps = false;
+  var body = document.getElementById('body-section-dough');
+  var chev = document.getElementById('chev-section-dough');
+  var section = document.getElementById('section-dough');
+  var outline = document.getElementById('dough-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  ['ingredients','steps'].forEach(function(id) { var b = document.getElementById('ocb-'+id); var c = document.getElementById('chev-'+id); if (b) b.classList.add('collapsed'); if (c) c.classList.remove('open'); });
+  var planBody = document.getElementById('ocb-plan');
+  var planChev = document.getElementById('chev-plan');
+  if (planBody) planBody.classList.remove('collapsed');
+  if (planChev) planChev.classList.add('open');
+  setTimeout(function() { scrollToEl(section); }, 50);
+}
+
+// == RECIPE SECTION PROGRESS ==
+var recipeProgress = { choose: false, sauce: false, cheese: false, baking: false, nutrition: false };
+var recipeOrder = ['choose', 'sauce', 'cheese', 'baking', 'nutrition'];
+
+function updateRecipeMiniOutline() {
+  var bakeSummary = surfaceLabel() + (sel.surface === 'steel' ? ' \u00B7 550\u00B0F \u00B7 5-7 min' : sel.surface === 'stone' ? ' \u00B7 550\u00B0F \u00B7 7-10 min' : ' \u00B7 475\u00B0F \u00B7 12-15 min');
+  var summaries = {
+    choose: selectedRecipe && RECIPES[selectedRecipe] ? RECIPES[selectedRecipe].name : 'Select a recipe',
+    sauce: 'San Marzano \u00B7 garlic \u00B7 olive oil',
+    cheese: currentNutritionMode === 'lighter' ? 'Part skim mozzarella' : 'Whole milk mozzarella',
+    baking: bakeSummary,
+    nutrition: 'Calories and macros per pizza'
+  };
+  recipeOrder.forEach(function(id, idx) {
+    var num = document.getElementById('mini-num-recipe-' + id);
+    var sum = document.getElementById('mini-sum-recipe-' + id);
+    var done = recipeProgress[id];
+    var isNext = !done && recipeOrder.slice(0, idx).every(function(prev) { return recipeProgress[prev]; });
+    if (num) { num.classList.remove('done','active'); if (done) { num.classList.add('done'); num.textContent = '\u2713'; } else if (isNext) { num.classList.add('active'); num.textContent = idx+1; } else { num.textContent = idx+1; } }
+    if (sum) { sum.classList.remove('active'); if (done) { sum.textContent = summaries[id]; } else if (isNext) { sum.textContent = 'Up next'; sum.classList.add('active'); } else { sum.textContent = summaries[id]; } }
+  });
+}
+
+function expandRecipeToCard(id) {
+  var body = document.getElementById('body-section-recipe');
+  var chev = document.getElementById('chev-section-recipe');
+  var outline = document.getElementById('recipe-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  if (id === 'choose') { setTimeout(function() { scrollToEl(document.getElementById('choose-recipe-section')); }, 50); return; }
+  var cardBody = document.getElementById('pizza-body-' + id);
+  var cardChev = document.getElementById('pizza-chev-' + id);
+  var card = document.getElementById('pizza-card-' + id);
+  if (cardBody) cardBody.classList.remove('collapsed');
+  if (cardChev) cardChev.classList.add('open');
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function togglePizzaIngredients() {
+  var body = document.getElementById('pizza-ingredients-body');
+  var chev = document.getElementById('pizza-ingredients-chevron');
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function togglePizzaCard(id) {
+  var body = document.getElementById('pizza-body-' + id);
+  var chev = document.getElementById('pizza-chev-' + id);
+  if (!body) return;
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function openPizzaCard(id) {
+  var prevIdx = recipeOrder.indexOf(id) - 1;
+  if (prevIdx >= 0) { recipeProgress[recipeOrder[prevIdx]] = true; }
+  var body = document.getElementById('pizza-body-' + id);
+  var chev = document.getElementById('pizza-chev-' + id);
+  var card = document.getElementById('pizza-card-' + id);
+  if (!body) return;
+  body.classList.remove('collapsed');
+  if (chev) chev.classList.add('open');
+  updateRecipeMiniOutline();
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
 
 function completeStep(n) {
   if (n === 1 && (!sel.mixer || !sel.surface || !sel.peel)) { alert('Please select an option for all three equipment fields.'); return; }
@@ -1776,8 +3103,10 @@ function calculate() {
   const d = computeData();
   lastCalcData = d;
   renderOutput(d);
-  document.getElementById('output-section').classList.add('visible');
-  setTimeout(() => document.getElementById('output-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  var calcSummary = [mixerLabel(), surfaceLabel(), sel.size + '"', d.balls + ' ball' + (d.balls > 1 ? 's' : ''), crustLabel(), sel.ferm + ' hrs'].filter(Boolean).join(' \u00B7 ');
+  collapseSection('calculator', calcSummary);
+  showSection('dough');
+  saveSession('calculated');
 }
 
 function refreshOutput() {
@@ -1915,48 +3244,100 @@ function buildMethodSteps(d) {
 
 // ── RECIPE SELECTOR ──
 let selectedRecipe = null;
+let selectedVersion = null;
 
 function showRecipeSelector() {
-  const section = document.getElementById('choose-recipe-section');
-  section.style.display = 'block';
-  setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  collapseSection('dough', 'Your dough recipe is ready, make this before baking');
+  showSection('recipe');
+  document.getElementById('pizza-output-section').style.display = 'none';
+  renderRecipeSelector();
 }
 
-function selectRecipe(type) {
-  selectedRecipe = type;
-  document.querySelectorAll('.recipe-card').forEach(c => c.classList.remove('sel'));
-  document.getElementById('recipe-card-' + type).classList.add('sel');
+function renderRecipeSelector() {
+  var compatibleTypes = RECIPE_COMPATIBILITY[DOUGH_TYPE] || [];
+  var compatible = Object.values(RECIPES).filter(function(r) { return compatibleTypes.includes(r.type); });
+  var list = document.getElementById('recipe-card-list');
+  if (!list) return;
+  list.innerHTML = compatible.map(function(recipe) {
+    return '<div class="recipe-card" id="recipe-card-' + recipe.id + '" onclick="selectRecipe(\'' + recipe.id + '\')"><div class="recipe-card-inner"><div><div class="recipe-card-title">' + recipe.name + '</div><div class="recipe-card-desc">' + recipe.desc + '</div><div class="recipe-card-time">' + recipe.prepTime + '</div></div><div class="recipe-card-check" id="recipe-check-' + recipe.id + '">\u2713</div></div></div>';
+  }).join('');
+  selectedRecipe = null; selectedVersion = null;
+  var btn = document.getElementById('build-recipe-btn');
+  if (btn) { btn.disabled = true; btn.style.background = 'var(--disabled-bg)'; btn.style.color = 'var(--disabled-text)'; btn.style.cursor = 'not-allowed'; }
+  var note = document.getElementById('build-recipe-note');
+  if (note) { note.textContent = 'Select a recipe above to continue'; note.style.display = 'block'; }
+}
+
+function selectRecipe(id) {
+  Object.values(RECIPES).forEach(function(r) {
+    var card = document.getElementById('recipe-card-' + r.id);
+    var check = document.getElementById('recipe-check-' + r.id);
+    if (card) card.classList.remove('sel');
+    if (check) check.style.display = 'none';
+  });
+  var card = document.getElementById('recipe-card-' + id);
+  var check = document.getElementById('recipe-check-' + id);
+  if (card) card.classList.add('sel');
+  if (check) check.style.display = 'flex';
+  selectedRecipe = id;
+  selectedVersion = 'standard';
+  enableBuildBtn();
+}
+
+function selectVersion(version, recipeId, event) {
+  if (event) event.stopPropagation();
+  selectedVersion = version;
+  enableBuildBtn();
+}
+
+function enableBuildBtn() {
+  var btn = document.getElementById('build-recipe-btn');
+  var note = document.getElementById('build-recipe-note');
+  if (btn) { btn.disabled = false; btn.style.background = ''; btn.style.color = ''; btn.style.cursor = ''; }
+  if (note) note.style.display = 'none';
 }
 
 function buildRecipe() {
   if (!selectedRecipe) { alert('Please select a recipe.'); return; }
   if (!lastCalcData) { alert('Please calculate your dough first.'); return; }
-  if (selectedRecipe === 'cheese') buildCheeseRecipe(lastCalcData);
+  recipeOrder.forEach(function(id) { recipeProgress[id] = false; });
+  recipeProgress.choose = true;
+  ['cheese','baking','nutrition'].forEach(function(id) { var body = document.getElementById('pizza-body-' + id); var chev = document.getElementById('pizza-chev-' + id); if (body) body.classList.add('collapsed'); if (chev) chev.classList.remove('open'); });
+  var sauceBody = document.getElementById('pizza-body-sauce'); var sauceChev = document.getElementById('pizza-chev-sauce');
+  if (sauceBody) sauceBody.classList.remove('collapsed'); if (sauceChev) sauceChev.classList.add('open');
+  var ingBody = document.getElementById('pizza-ingredients-body'); var ingChev = document.getElementById('pizza-ingredients-chevron');
+  if (ingBody) ingBody.classList.remove('collapsed'); if (ingChev) ingChev.classList.add('open');
+  buildRecipeFromData(selectedRecipe, lastCalcData);
+  updateRecipeMiniOutline();
+  collapseSection('dough', 'Your dough recipe is ready, make this before baking');
+  showSection('recipe');
   document.getElementById('pizza-output-section').style.display = 'block';
+  setTimeout(function() { scrollToEl(document.getElementById('pizza-ingredients-card')); }, 50);
   document.getElementById('jump-to-pizza-link').style.display = 'flex';
-  setTimeout(() => document.getElementById('pizza-output-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  var dlBtn = document.getElementById('download-pizza-btn');
+  if (dlBtn) dlBtn.classList.add('visible');
+  saveSession('recipe');
+}
+
+function buildRecipeFromData(recipeId, d) {
+  var recipe = RECIPES[recipeId];
+  if (!recipe) return;
+  if (recipe.type === 'pizza-round') buildCheeseRecipe(d);
 }
 
 // ── CHEESE PIZZA RECIPE ──
 function buildCheeseRecipe(d) {
+  const R = RECIPES.cheese;
   const balls = d.balls;
   const size = parseInt(sel.size);
 
-  // Sauce amounts per pizza by size (grams)
-  const sauceTomato = { 10: 90, 12: 120, 14: 160, 16: 210 };
-  const sauceOil    = { 10: 4,  12: 5,   14: 6,   16: 8   };
-  const sauceOregano = { 10: 0.5, 12: 0.6, 14: 0.8, 16: 1 };
-  const sauceBasil   = { 10: 0.5, 12: 0.6, 14: 0.8, 16: 1 };
-
-  const tomatoTotal  = Math.round(sauceTomato[size] * balls);
-  const oilTotal     = Math.round(sauceOil[size] * balls * 10) / 10;
-  const oreganoTotal = Math.round(sauceOregano[size] * balls * 10) / 10;
-  const basilTotal   = Math.round(sauceBasil[size] * balls * 10) / 10;
+  const tomatoTotal  = Math.round(R.sauce.tomato[size] * balls);
+  const oilTotal     = Math.round(R.sauce.oil[size] * balls * 10) / 10;
+  const oreganoTotal = Math.round(R.sauce.oregano[size] * balls * 10) / 10;
+  const basilTotal   = Math.round(R.sauce.basil[size] * balls * 10) / 10;
   const garlicCloves = balls;
 
-  // Cheese amounts per pizza by size (grams)
-  const cheeseAmounts = { 10: 110, 12: 140, 14: 185, 16: 240 };
-  const cheeseTotal = Math.round(cheeseAmounts[size] * balls);
+  const cheeseTotal = Math.round(R.cheese.standard.amounts[size] * balls);
 
   // Format weight for sauce/cheese using same toggle
   function sf(g) {
@@ -1969,18 +3350,22 @@ function buildCheeseRecipe(d) {
     return isImp ? (g * 0.035274).toFixed(2) + ' oz' : g.toFixed(1) + 'g';
   }
 
-  // Sauce rows
-  document.getElementById('sauce-ingredient-rows').innerHTML = `
+  const sauceRowsHTML = `
     <div class="output-row"><span class="output-row-label">San Marzano tomatoes (whole, canned)</span><span class="output-row-value highlight">${sf(tomatoTotal)}</span></div>
     <div class="output-row"><span class="output-row-label">Raw garlic, finely minced</span><span class="output-row-value highlight">${garlicCloves} clove${garlicCloves > 1 ? 's' : ''}</span></div>
     <div class="output-row"><span class="output-row-label">Olive oil (extra virgin)</span><span class="output-row-value highlight">${sg(oilTotal)}</span></div>
     <div class="output-row"><span class="output-row-label">Dried oregano</span><span class="output-row-value highlight">${sg(oreganoTotal)}</span></div>
     <div class="output-row"><span class="output-row-label">Fresh or dried basil</span><span class="output-row-value highlight">${balls > 1 ? balls + ' small pinches' : '2-3 fresh leaves or 1 small pinch dried'}</span></div>`;
 
-  // Cheese rows
-  document.getElementById('cheese-ingredient-rows').innerHTML = `
+  document.getElementById('sauce-ingredient-rows').innerHTML = sauceRowsHTML;
+  document.getElementById('static-sauce-rows').innerHTML = sauceRowsHTML;
+
+  const cheeseRowsHTML = `
     <div class="output-row"><span class="output-row-label">Low moisture whole milk mozzarella, grated</span><span class="output-row-value highlight">${sf(cheeseTotal)}</span></div>
     <div class="output-row"><span class="output-row-label">Pecorino Romano or Parmesan (optional)</span><span class="output-row-value highlight">To taste</span></div>`;
+
+  document.getElementById('cheese-ingredient-rows').innerHTML = cheeseRowsHTML;
+  document.getElementById('static-cheese-rows').innerHTML = cheeseRowsHTML;
 
   // Store nutrition data for the nutrition card
   currentPizzaNutritionData = d;
@@ -2096,22 +3481,18 @@ function renderNutrition() {
   const size = parseInt(sel.size);
   const balls = d.balls;
 
-  // Sauce macros per pizza by size
-  const sauceMacros = {
-    10: { cal:54,  p:1,  c:6,  f:4  },
-    12: { cal:70,  p:2,  c:7,  f:5  },
-    14: { cal:87,  p:2,  c:9,  f:6  },
-    16: { cal:114, p:3,  c:11, f:8  }
-  };
+  // Recipe nutrition data (data-driven from RECIPES)
+  const R = RECIPES.cheese;
+  const sauceMacros = R.sauceMacros;
 
   // Cheese amounts
-  const cheeseAmountsStd = { 10:110, 12:140, 14:185, 16:240 };
-  const cheeseAmountsLt  = { 10:72,  12:91,  14:120, 16:156 };
+  const cheeseAmountsStd = R.cheese.standard.amounts;
+  const cheeseAmountsLt  = R.cheese.lighter.amounts;
   const cheeseAmt = isLighter ? cheeseAmountsLt[size] : cheeseAmountsStd[size];
 
   // Calorie/macro rates per 100g
-  const cheeseRateStd = { cal:300, p:20, c:2.2, f:23.6 }; // whole milk low moisture
-  const cheeseRateLt  = { cal:250, p:25, c:2.2, f:16   }; // part skim low moisture
+  const cheeseRateStd = R.cheese.standard.rate;
+  const cheeseRateLt  = R.cheese.lighter.rate;
 
   const rate = isLighter ? cheeseRateLt : cheeseRateStd;
   const cheeseCal = Math.round(cheeseAmt * rate.cal / 100);
@@ -2123,9 +3504,10 @@ function renderNutrition() {
     : cheeseAmt + 'g whole milk mozz';
 
   // Oil drizzle
-  const oilCal = isLighter ? 0 : 44;
-  const oilF   = isLighter ? 0 : 5;
-  const oilSub = isLighter ? 'Removed' : 'Crust edge only';
+  const oilData = isLighter ? R.oil.lighter : R.oil.standard;
+  const oilCal = oilData.calPerPizza;
+  const oilF   = oilData.fPerPizza;
+  const oilSub = oilData.sub;
 
   // Dough macros from calculator data
   const doughCal = d.totalCal;
@@ -2155,10 +3537,10 @@ function renderNutrition() {
   const grandF   = doughF   + sauceF   + totalCheeseF + totalOilF;
 
   // Savings vs standard
-  const stdCheeseCal = Math.round(cheeseAmountsStd[size] * 300 / 100) * balls;
-  const stdOilCal    = 44 * balls;
+  const stdCheeseCal = Math.round(cheeseAmountsStd[size] * cheeseRateStd.cal / 100) * balls;
+  const stdOilCal    = R.oil.standard.calPerPizza * balls;
   const stdGrand     = doughCal + sauceCal + stdCheeseCal + stdOilCal;
-  const stdF         = doughF + sauceF + Math.round(cheeseAmountsStd[size] * 23.6 / 100) * balls + 5 * balls;
+  const stdF         = doughF + sauceF + Math.round(cheeseAmountsStd[size] * cheeseRateStd.f / 100) * balls + R.oil.standard.fPerPizza * balls;
   const savingsCal   = stdGrand - grandCal;
   const savingsF     = stdF - grandF;
 
@@ -2207,19 +3589,148 @@ function renderNutrition() {
   }
 
   // Update cheese ingredient rows to reflect lighter/standard
-  const cheeseRows = document.getElementById('cheese-ingredient-rows');
-  if (cheeseRows) {
-    cheeseRows.innerHTML = `
+  const cheeseRowsHTML = `
       <div class="output-row"><span class="output-row-label">
         ${isLighter ? 'Low moisture <strong>part skim</strong> mozzarella, grated' : 'Low moisture <strong>whole milk</strong> mozzarella, grated'}
       </span><span class="output-row-value highlight">${fw(cheeseAmt * balls)}</span></div>
       <div class="output-row"><span class="output-row-label">Pecorino Romano or Parmesan (optional)</span><span class="output-row-value highlight">To taste</span></div>`;
-  }
+  const cheeseRows = document.getElementById('cheese-ingredient-rows');
+  if (cheeseRows) cheeseRows.innerHTML = cheeseRowsHTML;
+  const staticCheeseRows = document.getElementById('static-cheese-rows');
+  if (staticCheeseRows) staticCheeseRows.innerHTML = cheeseRowsHTML;
 
   // Update title
   document.getElementById('nutrition-title').textContent =
     'Calorie & Macro Breakdown, ' + (isLighter ? 'Lighter' : 'Standard');
 }
+
+
+// == RECIPES (data-driven) ==
+var RECIPES = {
+  cheese: {
+    id: 'cheese', type: 'pizza-round', name: 'Plain Cheese Pizza',
+    desc: 'Classic NY slice with San Marzano tomatoes, whole milk mozzarella, and a hand-crushed raw sauce',
+    prepTime: '~15 min additional prep', hasHealthier: false,
+    sauce: {
+      tomato:  {10:90,  12:120, 14:160, 16:210},
+      oil:     {10:4,   12:5,   14:6,   16:8},
+      oregano: {10:0.5, 12:0.6, 14:0.8, 16:1},
+      basil:   {10:0.5, 12:0.6, 14:0.8, 16:1}
+    },
+    sauceMacros: {
+      10: { cal:54,  p:1, c:6,  f:4 },
+      12: { cal:70,  p:2, c:7,  f:5 },
+      14: { cal:87,  p:2, c:9,  f:6 },
+      16: { cal:114, p:3, c:11, f:8 }
+    },
+    cheese: {
+      standard: { amounts: {10:110, 12:140, 14:185, 16:240}, rate: { cal:300, p:20, c:2.2, f:23.6 }, label: 'Low moisture whole milk mozzarella, grated' },
+      lighter:  { amounts: {10:72,  12:91,  14:120, 16:156}, rate: { cal:250, p:25, c:2.2, f:16   }, label: 'Low moisture part skim mozzarella, grated' }
+    },
+    oil: {
+      standard: { calPerPizza: 44, fPerPizza: 5, sub: 'Crust edge only' },
+      lighter:  { calPerPizza: 0,  fPerPizza: 0, sub: 'Removed' }
+    }
+  }
+};
+
+// == DOWNLOAD PIZZA RECIPE ==
+function downloadPizzaRecipe() {
+  var config = document.getElementById('pizza-print-config');
+  if (config && lastCalcData) {
+    var recipe = RECIPES[selectedRecipe];
+    config.textContent = [recipe ? recipe.name : '', sel.size + '"', lastCalcData.balls + ' ball' + (lastCalcData.balls > 1 ? 's' : ''), crustLabel(), surfaceLabel()].filter(Boolean).join(' \u00B7 ');
+  }
+  document.body.classList.add('print-pizza-only');
+  window.print();
+  document.body.classList.remove('print-pizza-only');
+}
+
+// == SESSION SAVE / RESTORE ==
+var SESSION_KEY = 'markodough_ny_style_session';
+
+function saveSession(stage) {
+  try { var data = { stage: stage, savedAt: new Date().toISOString(), sel: Object.assign({}, sel), lastCalcData: lastCalcData, selectedRecipe: selectedRecipe, selectedVersion: selectedVersion }; localStorage.setItem(SESSION_KEY, JSON.stringify(data)); }
+  catch(e) { console.warn('Could not save session:', e); }
+}
+
+function loadSession() {
+  try { var raw = localStorage.getItem(SESSION_KEY); if (!raw) return null; return JSON.parse(raw); } catch(e) { return null; }
+}
+
+function clearSession() {
+  try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+  document.getElementById('restore-banner').classList.remove('visible');
+}
+
+function checkForSavedSession() {
+  var session = loadSession();
+  if (!session || !session.lastCalcData) return;
+  var banner = document.getElementById('restore-banner');
+  var dateEl = document.getElementById('restore-banner-date');
+  var saved = new Date(session.savedAt);
+  var diffHrs = Math.round((new Date() - saved) / 36e5);
+  var timeStr = diffHrs < 1 ? 'less than an hour ago' : diffHrs < 24 ? diffHrs + ' hour' + (diffHrs > 1 ? 's' : '') + ' ago' : Math.round(diffHrs / 24) + ' day' + (Math.round(diffHrs / 24) > 1 ? 's' : '') + ' ago';
+  dateEl.textContent = 'Last saved ' + timeStr;
+  banner.classList.add('visible');
+}
+
+function restoreSession() {
+  var session = loadSession();
+  if (!session) return;
+  Object.assign(sel, session.sel);
+  lastCalcData = session.lastCalcData;
+  selectedRecipe = session.selectedRecipe;
+  selectedVersion = session.selectedVersion || 'standard';
+  document.getElementById('restore-banner').classList.remove('visible');
+
+  if (sel.mixer) document.querySelectorAll('#mixer-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Stand Mixer' && sel.mixer === 'stand') || (b.textContent.trim() === 'Hand Mix' && sel.mixer === 'hand')) b.classList.add('sel'); });
+  if (sel.surface) document.querySelectorAll('#surface-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Pizza Steel' && sel.surface === 'steel') || (b.textContent.trim() === 'Pizza Stone' && sel.surface === 'stone') || (b.textContent.trim() === 'Baking Sheet' && sel.surface === 'sheet')) b.classList.add('sel'); });
+  if (sel.peel) document.querySelectorAll('#peel-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Wood Peel' && sel.peel === 'wood') || (b.textContent.trim() === 'Metal Peel' && sel.peel === 'metal') || (b.textContent.trim() === 'No Peel' && sel.peel === 'none')) b.classList.add('sel'); });
+  if (sel.pref) selectPref(sel.pref);
+  if (sel.size) document.querySelectorAll('#size-group .btn-opt').forEach(function(b) { if (b.textContent.trim() === sel.size + '"') b.classList.add('sel'); });
+  if (sel.balls) document.querySelectorAll('#balls-group .btn-opt').forEach(function(b) { if (b.textContent.trim() === String(sel.balls)) b.classList.add('sel'); });
+  if (sel.crust) document.querySelectorAll('#crust-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Thin' && sel.crust === 'thin') || (b.textContent.trim() === 'NY Style' && sel.crust === 'ny') || (b.textContent.trim() === 'Doughy' && sel.crust === 'doughy')) b.classList.add('sel'); });
+  if (sel.ferm) document.querySelectorAll('#ferm-group .btn-opt').forEach(function(b) { if (b.textContent.trim() === sel.ferm + ' Hours') b.classList.add('sel'); });
+  if (sel.flour) { document.getElementById('flour-select').value = sel.flour; updateFlourNote(); }
+  if (sel.yeast) { document.getElementById('yeast-select').value = sel.yeast; updateYeastNote(); }
+  if (sel.sweet) document.querySelectorAll('#sweet-group .btn-opt').forEach(function(b) { b.classList.remove('sel'); if ((b.textContent.trim() === 'Honey' && sel.sweet === 'honey') || (b.textContent.trim() === 'Sugar' && sel.sweet === 'sugar')) b.classList.add('sel'); });
+
+  completeStepSilent(1); if (sel.pref) completeStepSilent(2); if (sel.size) completeStepSilent(3); completeStepSilent(4);
+  var btn = document.getElementById('calc-btn'); if (btn) { btn.disabled = false; btn.textContent = 'Calculate My Dough Recipe \u2192'; }
+  renderOutput(lastCalcData);
+  var calcSummary = [mixerLabel(), surfaceLabel(), sel.size + '"', lastCalcData.balls + ' ball' + (lastCalcData.balls > 1 ? 's' : ''), crustLabel(), sel.ferm + ' hrs'].filter(Boolean).join(' \u00B7 ');
+  collapseSection('calculator', calcSummary);
+
+  if (session.stage === 'recipe' && selectedRecipe && RECIPES[selectedRecipe]) {
+    showSection('dough'); collapseSection('dough', 'Your dough recipe is ready, make this before baking'); showSection('recipe'); renderRecipeSelector();
+    setTimeout(function() {
+      selectRecipe(selectedRecipe);
+      buildRecipeFromData(selectedRecipe, lastCalcData);
+      document.getElementById('pizza-output-section').style.display = 'block'; document.getElementById('jump-to-pizza-link').style.display = 'flex';
+      var dlBtn = document.getElementById('download-pizza-btn'); if (dlBtn) dlBtn.classList.add('visible');
+      setTimeout(function() { scrollToEl(document.getElementById('section-recipe')); }, 100);
+    }, 150);
+  } else { showSection('dough'); setTimeout(function() { scrollToEl(document.getElementById('section-dough')); }, 100); }
+}
+
+function completeStepSilent(n) {
+  var num = document.getElementById('step' + n + '-num');
+  var body = document.getElementById('step' + n + '-body');
+  var chevron = document.getElementById('step' + n + '-chevron');
+  var summary = document.getElementById('step' + n + '-summary');
+  if (!num) return;
+  num.classList.remove('active'); num.classList.add('done'); num.textContent = '\u2713';
+  if (body) body.classList.remove('open'); if (chevron) chevron.classList.remove('open');
+  if (n === 1 && summary) summary.textContent = mixerLabel() + ' \u00B7 ' + surfaceLabel() + ' \u00B7 ' + peelLabel();
+  if (n === 2 && summary) summary.textContent = sel.pref === 'poolish' ? 'Poolish' : 'Sourdough Starter Discard';
+  if (n === 3 && summary) summary.textContent = sel.size + '" \u00B7 ' + sel.balls + ' ball' + (parseInt(sel.balls) > 1 ? 's' : '') + ' \u00B7 ' + crustLabel() + ' \u00B7 ' + sel.ferm + ' hrs';
+  if (n === 4 && summary) summary.textContent = flourLabel() + ' \u00B7 ' + yeastLabel() + ' \u00B7 ' + (sel.sweet === 'sugar' ? 'Sugar' : 'Honey');
+  if (n < 4) { var nt = document.getElementById('step' + (n+1) + '-trigger'); var nn = document.getElementById('step' + (n+1) + '-num'); if (nt) nt.disabled = false; if (nn) nn.classList.add('active'); }
+}
+
+document.addEventListener('DOMContentLoaded', checkForSavedSession);
+
 </script>
 </body>
 </html>
