@@ -1,0 +1,3530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markodough - Detroit-Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F5EFE0;
+    --parchment-mid: #EDE3CE;
+    --parchment-dark: #DDD0B8;
+    --brown-dark: #3B2A1A;
+    --brown-mid: #4A3A22;
+    --brown-light: #6B5A42;
+    --orange: #C8622A;
+    --orange-light: #F5E8DF;
+    --green: #5E8A42;
+    --green-light: #EFF6E8;
+    --border: #C8B898;
+    --border-light: #A8B898;
+    --text-dark: #2C1F0E;
+    --text-mid: #4A3A22;
+    --text-muted: #8A7A6A;
+    --disabled-bg: #C8B898;
+    --disabled-text: #8A7A6A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #E8E0CC;
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--brown-dark);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--orange);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--parchment);
+    letter-spacing: 0.01em;
+  }
+
+  .logo span { color: var(--orange); }
+
+  .nav-links { display: flex; gap: 20px; }
+  .nav-links a {
+    font-size: 12px;
+    color: var(--orange);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 0.75; }
+  .nav-links a.nav-active { color: var(--parchment); opacity: 1; }
+
+  /* ── PAGE WRAPPER ── */
+  .page { max-width: 680px; margin: 0 auto; padding: 0 16px 60px; }
+
+  /* ── DESKTOP TWO-COLUMN LAYOUT ── */
+  @media (min-width: 768px) {
+    .page { max-width: 100%; padding: 0 32px 60px; }
+
+    .hero-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      max-width: 100%;
+      margin: 0 0 0 0;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .two-col-wrap {
+      display: grid;
+      grid-template-columns: 38% minmax(0, 1fr);
+      gap: 24px;
+      max-width: 1200px;
+      margin: 20px auto 0;
+      align-items: start;
+    }
+
+    .col-left {
+      position: sticky;
+      top: 68px;
+      padding-right: 4px;
+    }
+
+    .col-right { min-width: 0; }
+
+    .col-left .section-card { margin-bottom: 0; }
+
+    /* Desktop: BYGS body scrollable independently */
+    #bygs-body {
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    #bygs-body::-webkit-scrollbar { width: 4px; }
+    #bygs-body::-webkit-scrollbar-track { background: transparent; }
+    #bygs-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--parchment-mid);
+    border-radius: 0 0 12px 12px;
+    padding: 28px 24px 24px;
+    margin-bottom: 20px;
+    border: 0.5px solid var(--border);
+    border-top: none;
+  }
+
+  .hero-tag {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--orange);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 16px 20px;
+    border-bottom: 2px solid var(--orange);
+  }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+
+  .section-body { padding: 18px 20px; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--green-light);
+  }
+
+  .callout-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin-bottom: 5px;
+  }
+
+  .callout p {
+    font-size: 14px;
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  .warning-callout {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--orange-light);
+  }
+
+  .warning-callout .callout-title { color: var(--orange); }
+  .warning-callout p { font-size: 14px; color: var(--text-dark); line-height: 1.6; }
+
+  /* ── INFO ROWS ── */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--orange);
+    gap: 12px;
+  }
+
+  .info-row:last-child { border-bottom: none; }
+
+  .info-row-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+    flex: 1;
+  }
+
+  .info-row-detail {
+    font-size: 13px;
+    color: var(--green);
+    font-style: italic;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .info-row-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+
+  .subsection-title {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 700;
+    margin: 18px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .subsection-title:first-child { margin-top: 0; }
+
+  /* ── ACCORDION ── */
+  .accord {
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 16px;
+    background: var(--parchment);
+  }
+
+  .accord-item { border-bottom: 1px solid var(--border); }
+  .accord-item:last-child { border-bottom: none; }
+
+  .accord-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+
+  .accord-trigger:hover:not([disabled]) { background: var(--parchment-mid); }
+  .accord-trigger[disabled] { cursor: not-allowed; opacity: 0.55; }
+
+  .accord-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--border);
+    color: var(--text-muted);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .accord-num.active { background: var(--orange); color: var(--text-dark); }
+  .accord-num.done { background: var(--green); color: #fff; }
+
+  .accord-trigger-text { flex: 1; }
+  .accord-step-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); font-weight: 600; }
+  .accord-step-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--text-dark); }
+  .accord-step-summary { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+
+  .accord-chevron {
+    font-size: 20px;
+    color: var(--orange);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .accord-chevron.open { transform: rotate(90deg); }
+
+  .accord-body {
+    display: none;
+    padding: 16px;
+    background: var(--parchment-mid);
+    border-top: 1px solid var(--border);
+  }
+
+  .accord-body.open { display: block; }
+
+  /* ── FIELD LABELS ── */
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 7px;
+    margin-top: 14px;
+  }
+
+  .field-label:first-child { margin-top: 0; }
+
+  /* ── BUTTON GROUPS ── */
+  .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+
+  .btn-opt {
+    padding: 9px 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--parchment);
+    font-size: 13px;
+    color: var(--text-dark);
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 500;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .btn-opt:hover { border-color: var(--orange); }
+  .btn-opt.sel { background: var(--orange); color: var(--text-dark); border-color: var(--orange); font-weight: 700; }
+
+  /* ── PREFERMENT CARDS ── */
+  .pref-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .pref-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--parchment);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .pref-card:hover { border-color: var(--orange); }
+  .pref-card.sel { border-color: var(--orange); border-width: 2px; background: var(--orange-light); }
+
+  .pref-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+  }
+
+  .pref-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: 0.06em;
+    margin-bottom: 5px;
+  }
+
+  .pref-card p { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+  /* ── DROPDOWNS ── */
+  .styled-select {
+    width: 100%;
+    padding: 9px 32px 9px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--parchment);
+    font-size: 13px;
+    color: var(--text-dark);
+    font-family: 'Source Sans 3', sans-serif;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23C8622A' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    margin-bottom: 4px;
+    cursor: pointer;
+  }
+
+  /* ── DYNAMIC NOTE ── */
+  .dynamic-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    padding: 9px 12px;
+    background: var(--parchment);
+    border-radius: 6px;
+    border: 0.5px solid var(--border);
+    display: none;
+    line-height: 1.5;
+  }
+
+  .dynamic-note.visible { display: block; }
+
+  /* ── NEXT STEP BTN ── */
+  .next-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+  }
+
+  .next-btn:hover { opacity: 0.88; }
+  .next-btn.green { background: var(--green); color: #fff; }
+
+  /* ── CALCULATE BUTTON ── */
+  .calc-btn-wrap { margin-bottom: 16px; }
+
+  .calc-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+  }
+
+  .calc-btn:hover:not([disabled]) { opacity: 0.88; }
+  .calc-btn:disabled {
+    background: var(--disabled-bg);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+  }
+
+  /* ── OUTPUT TOGGLE BAR ── */
+  .output-toggle-bar {
+    background: var(--parchment);
+    border-radius: 10px;
+    border: 0.5px solid var(--border);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .output-toggle-bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    flex-shrink: 0;
+  }
+
+  .toggle-pair {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+
+  .toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .toggle-slider:before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+
+  .toggle input:checked + .toggle-slider { background: var(--orange); }
+  .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+  .toggle-pair-label { font-size: 12px; color: var(--text-muted); min-width: 90px; }
+
+  /* ── OUTPUT SECTION ── */
+  #output-section { display: block; }
+
+  .output-card {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .output-header {
+    padding: 14px 20px;
+    background: var(--brown-dark);
+    border-bottom: 2px solid var(--orange);
+  }
+
+  .output-header-tag { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); font-weight: 600; margin-bottom: 3px; }
+  .output-header-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--parchment); }
+
+  .output-body { padding: 16px 20px; }
+
+  .output-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--orange);
+    font-size: 14px;
+    gap: 12px;
+  }
+
+  .output-row:last-child { border-bottom: none; }
+  .output-row-label { color: var(--text-mid); font-weight: 500; }
+  .output-row-value { font-weight: 700; color: var(--text-dark); text-align: right; }
+  .output-row-value.highlight { color: var(--orange); font-size: 15px; }
+
+  .output-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0 4px;
+    font-size: 15px;
+    border-top: 2px solid var(--orange);
+    margin-top: 6px;
+    gap: 12px;
+  }
+
+  .output-total-label { font-weight: 700; color: var(--text-dark); }
+  .output-total-value { font-weight: 700; color: var(--orange); font-size: 18px; text-align: right; }
+
+  /* ── CALORIE GRID ── */
+  .calorie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+
+  .calorie-card {
+    background: var(--parchment-mid);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    border: 0.5px solid var(--border);
+  }
+
+  .calorie-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: var(--orange); }
+  .calorie-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ── FERMENTATION NOTE ── */
+  .ferm-note {
+    background: var(--parchment-mid);
+    border-radius: 8px;
+    padding: 14px;
+    border-left: 3px solid var(--orange);
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* ── METHOD STEPS ── */
+  .method-step {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--orange);
+  }
+
+  .method-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .method-step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .method-step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .method-step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .method-step p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+
+  .before-step-callout {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+    background: var(--orange-light);
+  }
+
+  .before-step-callout .callout-title { color: var(--orange); font-size: 11px; margin-bottom: 3px; }
+  .before-step-callout p { font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+
+  .ingredient-callout {
+    border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+    background: var(--green-light);
+  }
+
+  .ingredient-callout .callout-title { color: var(--green); font-size: 11px; margin-bottom: 3px; }
+  .ingredient-callout p { font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+
+  .timer-badge {
+    display: inline-block;
+    background: var(--green-light);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+
+  /* ── PRINT BTN ── */
+  .print-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--brown-dark);
+    color: var(--parchment);
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+  }
+
+  .print-btn:hover { opacity: 0.85; }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    nav, .calc-btn-wrap, .print-btn, #calculator-section, .output-toggle-bar, .col-left { display: none !important; }
+    body { background: white; }
+    .page { max-width: 100%; padding: 0; }
+    .two-col-wrap { display: block !important; }
+    .col-right { display: block !important; width: 100% !important; }
+    .output-card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 12px; }
+    .method-step { break-inside: avoid; }
+    .hero { border: 1px solid #ccc; border-radius: 0; }
+    .hero-wrap { max-width: 100%; }
+    #output-section { display: block !important; }
+  }
+
+  .mt8 { margin-top: 8px; }
+
+  /* ── DOUGH INGREDIENTS LIST IN METHOD STEPS ── */
+  .dough-ing-section {
+    background: var(--parchment-mid);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 4px;
+    border: 0.5px solid var(--border);
+  }
+
+  .dough-ing-header {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .dough-ing-header-note {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+
+  .dough-ing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--orange);
+    font-size: 13px;
+  }
+
+  .dough-ing-row:last-of-type { border-bottom: none; }
+
+  .dough-ing-name { color: var(--text-mid); font-weight: 500; }
+  .dough-ing-val { font-weight: 700; color: var(--orange); }
+
+  .dough-ing-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0 2px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    border-top: 2px solid var(--orange);
+    margin-top: 4px;
+  }
+
+  .dough-ing-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* ── METHOD STEP ACCORDION ── */
+  .method-step-accord {
+    border-bottom: 1px solid var(--orange);
+    overflow: hidden;
+  }
+
+  .method-step-accord:last-child { border-bottom: none; }
+
+  .method-step-accord-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity 0.15s;
+  }
+
+  .method-step-accord-trigger:hover { opacity: 0.8; }
+
+  .method-step-accord-body {
+    display: none;
+    padding-bottom: 14px;
+  }
+
+  .method-step-accord-body.open { display: block; }
+
+  .method-step-accord-chevron {
+    font-size: 16px;
+    color: var(--orange);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .method-step-accord-chevron.open { transform: rotate(90deg); }
+
+  /* ── BAKING REMINDER CALLOUT ── */
+  .baking-reminder {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    background: var(--orange-light);
+  }
+
+  .baking-reminder .callout-title { color: var(--orange); font-size: 12px; margin-bottom: 6px; }
+  .baking-reminder p { font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+  .hydration-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .hydration-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    line-height: 1.4;
+    position: relative;
+    min-width: 0;
+    font-size: 14px;
+  }
+
+  .hydration-range {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .btn-opt.sel .hydration-range { color: var(--text-dark); }
+
+  .hydration-rec-badge {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.02em;
+    margin-top: 3px;
+  }
+
+  .btn-opt.sel .hydration-rec-badge { color: var(--text-dark); }
+
+  .hydration-desc {
+    display: none;
+    background: var(--parchment);
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    padding: 10px 12px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  .hydration-desc.visible { display: block; }
+
+  .hydration-desc-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  .hydration-desc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hydration-desc ul li {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .hydration-desc ul li:before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  .hydration-warning {
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    margin-top: 8px;
+    background: var(--orange-light);
+    font-size: 12px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    display: none;
+  }
+
+  .hydration-warning.visible { display: block; }
+  .hydration-warning strong { color: var(--orange); }
+  .output-card-header-btn {
+    width: 100%;
+    background: var(--brown-dark);
+    border: none;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .output-card-header-btn:hover { opacity: 0.92; }
+
+  .output-card-header-left { text-align: left; }
+  .output-card-chevron { font-size: 18px; color: var(--orange); transition: transform 0.25s; flex-shrink: 0; }
+  .output-card-chevron.open { transform: rotate(90deg); }
+  .output-card-body { display: block; }
+  .output-card-body.collapsed { display: none; }
+
+  /* ── SECTION MINI OUTLINE (Option C - accordion rows) ── */
+  .section-mini-outline {
+    display: none;
+    background: #F5EFE0;
+  }
+
+  .section-mini-outline.visible { display: block; }
+
+  .mini-outline-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid #C8B898;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .mini-outline-row:last-child { border-bottom: none; }
+  .mini-outline-row:hover { background: #EDE3CE; }
+
+  .mini-row-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: #C8B898;
+    color: #8A7A6A;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .mini-row-num.done { background: #5E8A42; color: #fff; }
+  .mini-row-num.active { background: #C8622A; color: #2C1F0E; }
+
+  .mini-row-text { flex: 1; }
+
+  .mini-row-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5E8A42;
+    font-weight: 600;
+    margin-bottom: 1px;
+  }
+
+  .mini-row-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2C1F0E;
+  }
+
+  .mini-row-summary {
+    font-size: 11px;
+    color: #8A7A6A;
+    font-style: italic;
+    margin-top: 1px;
+  }
+
+  .mini-row-summary.active { color: #C8622A; font-style: italic; }
+
+  .mini-row-chev {
+    font-size: 16px;
+    color: #C8622A;
+    flex-shrink: 0;
+  }
+
+  /* ── FLUSH INNER CARDS ── */
+  .inner-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 12px;
+  }
+
+  .inner-card-group .output-card {
+    border-radius: 0;
+    border-bottom-width: 0;
+    margin-bottom: 0;
+  }
+
+  .inner-card-group .output-card:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .inner-card-group .output-card:last-child {
+    border-radius: 0 0 8px 8px;
+    border-bottom-width: 0.5px;
+  }
+
+  .inner-card-group .output-card:only-child {
+    border-radius: 8px;
+    border-bottom-width: 0.5px;
+  }
+
+  /* ── DOUGH SECTION NEXT BTN ── */
+  .dough-next-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+    margin-top: 16px;
+  }
+
+  .dough-next-btn:hover { opacity: 0.88; }
+
+  /* ── TOP LEVEL SECTIONS ── */
+  .top-section {
+    background: var(--parchment);
+    border-radius: 12px;
+    border: 0.5px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .top-section-header {
+    width: 100%;
+    background: var(--brown-dark);
+    border: none;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .top-section-header:hover { opacity: 0.92; }
+
+  .top-section-header-left { flex: 1; }
+  .top-section-tag { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #C8922A; font-weight: 700; margin-bottom: 3px; }
+  .top-section-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--parchment); }
+  .top-section-summary { font-size: 11px; color: #A8B898; font-style: italic; margin-top: 3px; }
+  .top-section-chevron { font-size: 20px; color: var(--orange); transition: transform 0.25s; flex-shrink: 0; line-height: 1; }
+  .top-section-chevron.open { transform: rotate(90deg); }
+
+  .top-section-step-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--orange);
+    border: 2px solid #E8823A;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 900;
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .top-section-body { display: none; }
+  .top-section-body.open { display: block; }
+
+  /* ── BEFORE YOU GET STARTED TOGGLE ── */
+  .bygs-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 2px solid var(--orange);
+    gap: 12px;
+  }
+
+  .bygs-toggle:hover { opacity: 0.85; }
+
+  .bygs-chevron {
+    font-size: 20px;
+    color: var(--orange);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .bygs-chevron.open { transform: rotate(90deg); }
+
+  /* BYGS collapse utility */
+  .bygs-hidden { display: none !important; }
+
+  /* ── DOUGH SUMMARY BAR ── */
+  .dough-summary-bar {
+    background: var(--green);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: none;
+  }
+
+  .dough-summary-bar.visible { display: flex; }
+
+  .dough-summary-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .dough-summary-expand {
+    font-size: 12px;
+    color: #fff;
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+  }
+
+
+  .pizza-next-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: opacity 0.2s;
+    margin-top: 16px;
+  }
+
+  .pizza-next-btn:hover { opacity: 0.88; }
+  .choose-recipe-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--brown-dark);
+    color: var(--parchment);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+  }
+
+  .choose-recipe-btn:hover { opacity: 0.85; }
+
+  /* ── VERSION CARDS ── */
+  .version-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-mid);
+    margin: 12px 0 8px;
+  }
+
+  .version-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .version-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: var(--parchment);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .version-card:hover { border-color: var(--orange); }
+
+  .version-card.sel-standard {
+    border-color: var(--orange);
+    border-width: 2px;
+    background: var(--orange-light);
+  }
+
+  .version-card.sel-healthier {
+    border-color: var(--green);
+    border-width: 2px;
+    background: var(--green-light);
+  }
+
+  .version-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .version-card.sel-standard .version-card-name { color: var(--orange); }
+  .version-card.sel-healthier .version-card-name { color: var(--green); }
+
+  .version-card-detail {
+    font-size: 11px;
+    color: var(--text-mid);
+    line-height: 1.4;
+  }
+
+  .version-card-savings {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--green);
+    margin-top: 5px;
+  }
+
+  /* ── RECIPE CARD ── */
+  .recipe-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--parchment-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 8px;
+  }
+
+  .recipe-card:hover { border-color: var(--orange); }
+  .recipe-card.sel { border-color: var(--orange); border-width: 2px; background: var(--orange-light); }
+
+  .recipe-card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .recipe-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .recipe-card-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .recipe-card-time {
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .recipe-card-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .recipe-card.sel .recipe-card-check { display: flex; }
+
+  /* ── PIZZA OUTPUT ── */
+  .subsection-title { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); font-weight: 700; margin: 18px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border-light); }
+  .method-step-p { font-size: 14px; color: var(--text-mid); line-height: 1.6; margin-left: 40px; }
+
+  /* ── NUTRITION CARD ── */
+  .nutrition-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .nutrition-tog-group { display: flex; gap: 6px; }
+  .nutrition-tog-btn { padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--parchment); color: var(--text-dark); cursor: pointer; font-family: 'Source Sans 3', sans-serif; transition: all 0.15s; }
+  .nutrition-tog-btn.active-orange { background: var(--orange); color: var(--text-dark); border-color: var(--orange); }
+  .nutrition-slice-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-mid); font-weight: 600; }
+  .nutrition-slice-row select { font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--parchment); color: var(--text-dark); font-family: 'Source Sans 3', sans-serif; cursor: pointer; }
+  .nutrition-savings { background: var(--green-light); border: 1px solid var(--green); color: #3B6D11; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; margin-bottom: 14px; display: none; }
+  .nutrition-section-label { font-size: 11px; color: var(--text-muted); font-style: italic; margin-bottom: 8px; }
+  .nutrition-comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .nutrition-comp-card { background: var(--parchment-mid); border-radius: 8px; padding: 12px; border: 0.5px solid var(--border); }
+  .nutrition-comp-label { font-size: 11px; color: var(--text-mid); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .nutrition-comp-cal { font-size: 20px; font-weight: 700; color: var(--orange); font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 4px; }
+  .nutrition-comp-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .nutrition-macro-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .npill-p { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: var(--green-light); color: #3B6D11; }
+  .npill-c { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #FFF8EE; color: #854F0B; }
+  .npill-f { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: var(--orange-light); color: #712B13; }
+  .nutrition-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .nutrition-summary-card { background: var(--brown-dark); border-radius: 8px; padding: 14px; }
+  .nutrition-summary-label { font-size: 10px; color: #A8B898; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .nutrition-summary-cal { font-size: 24px; font-weight: 700; color: var(--orange); font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 8px; }
+  .nutrition-summary-macros { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tpill-p { background: #27500A; color: #C0DD97; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+  .tpill-c { background: #633806; color: #FAC775; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+  .tpill-f { background: #712B13; color: #F5C4B3; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+  .nutrition-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; }
+  /* ══════════════════════════════════════
+     MOBILE STYLES - max-width: 767px
+  ══════════════════════════════════════ */
+  @media (max-width: 767px) {
+
+    /* ── NAV ── */
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--brown-dark);
+      border-bottom: 2px solid var(--orange);
+      flex-direction: column;
+      gap: 0;
+      z-index: 99;
+    }
+
+    .nav-links.open { display: flex; }
+
+    .nav-links a {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--brown-light);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links a:last-child { border-bottom: none; }
+
+    .nav-hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--orange);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* ── OUTPUT TOGGLE BAR ── */
+    .output-toggle-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+    }
+
+    .toggle-pair-label { min-width: unset; }
+
+    #jump-to-pizza-link { margin-left: 0; }
+
+    /* ── OUTPUT / SECTION BODY PADDING ── */
+    .output-body { padding: 14px 16px; }
+    .section-body { padding: 14px 16px; }
+    .accord-body { padding: 14px 16px; }
+
+    /* ── NUTRITION COMP GRID - 2 col is fine, just tighter padding ── */
+    .nutrition-comp-card { padding: 10px; }
+    .nutrition-comp-cal { font-size: 18px; }
+
+    /* ── NUTRITION SUMMARY GRID ── */
+    .nutrition-summary-card { padding: 12px; }
+    .nutrition-summary-cal { font-size: 20px; }
+
+    /* ── NUTRITION CONTROLS - stack slice row ── */
+    .nutrition-controls { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+    /* ── CALORIE GRID - fine at 2 col, reduce number size ── */
+    .calorie-num { font-size: 22px; }
+
+    /* ── VERSION CARDS - stack on mobile ── */
+    .version-cards { grid-template-columns: 1fr; }
+
+    /* ── TOP SECTION HEADER - tighten for step badge + text + chevron ── */
+    .top-section-header { padding: 14px 16px; }
+    .top-section-title { font-size: 16px; }
+    .top-section-summary { font-size: 10px; }
+
+    /* ── STEP BADGE - slightly smaller on mobile ── */
+    .top-section-step-badge {
+      width: 32px;
+      height: 32px;
+      font-size: 15px;
+    }
+
+    /* ── OUTPUT CARD HEADER ── */
+    .output-card-header-btn { padding: 12px 16px; }
+    .output-header-title { font-size: 16px; }
+
+    /* ── HERO ── */
+    .hero { padding: 20px 16px 18px; }
+    .hero h1 { font-size: 24px; }
+
+    /* ── FOOTER - stack vertically ── */
+    footer > div > div:first-child {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    footer > div > div:first-child > div:last-child {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  /* ── HAMBURGER HIDDEN ON DESKTOP ── */
+  @media (min-width: 768px) {
+    .nav-hamburger { display: none; }
+  }
+  /* ── RESTORE BANNER ── */
+  .restore-banner {
+    background: var(--brown-mid);
+    border: 1.5px solid var(--orange);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .restore-banner.visible { display: block; }
+
+  .restore-banner-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .restore-banner-text {
+    font-size: 13px;
+    color: var(--parchment);
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .restore-banner-text span {
+    color: #A8B898;
+    font-weight: 400;
+    font-size: 12px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .restore-btn {
+    padding: 9px 18px;
+    background: var(--orange);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .restore-btn:hover { opacity: 0.88; }
+
+  .restore-fresh-link {
+    font-size: 11px;
+    color: #A8B898;
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Source Sans 3', sans-serif;
+    padding: 0;
+    margin-top: 8px;
+    display: block;
+  }
+
+  .restore-fresh-link:hover { color: var(--parchment); }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    nav, .breadcrumb-bar, .restore-banner, .calc-btn-wrap,
+    .print-btn, #calculator-section, .output-toggle-bar,
+    .col-left, .choose-recipe-btn, .dough-next-btn,
+    .pizza-next-btn, .next-btn, #jump-to-pizza-link,
+    .top-section-chevron, .output-card-chevron,
+    .accord-chevron, .bygs-chevron, .top-section-step-badge,
+    #section-calculator, .section-mini-outline,
+    .dough-summary-bar, .output-card-header-btn > .output-card-chevron { display: none !important; }
+
+    body { background: white; font-size: 12px; }
+    .page { max-width: 100%; padding: 0; }
+    .two-col-wrap { display: block !important; }
+    .col-right { display: block !important; width: 100% !important; }
+
+    /* Show all collapsed cards for print */
+    .output-card-body.collapsed,
+    .top-section-body,
+    .accord-body,
+    #bygs-body,
+    .pizza-seq-body,
+    [id^="pizza-body-"],
+    [id^="ocb-"] { display: block !important; }
+
+    .output-card {
+      border: 1px solid #ccc;
+      break-inside: avoid;
+      margin-bottom: 10px;
+      box-shadow: none;
+    }
+
+    .output-card-header-btn {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .output-header { background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .method-step { break-inside: avoid; }
+    .method-step-accord-body { display: block !important; }
+
+    .hero { border: 1px solid #ccc; border-radius: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero-wrap { max-width: 100%; }
+
+    #output-section { display: block !important; }
+    #pizza-output-section { display: block !important; }
+    #section-dough, #section-recipe { display: block !important; }
+
+    /* Nutrition - print as simple rows not grid */
+    .nutrition-comp-grid { display: block !important; }
+    .nutrition-comp-card {
+      display: inline-block;
+      width: 48%;
+      margin-bottom: 6px;
+      border: 1px solid #ccc;
+      break-inside: avoid;
+    }
+    .nutrition-summary-grid { display: block !important; }
+    .nutrition-summary-card {
+      display: inline-block;
+      width: 48%;
+      background: #2C1F0E !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      margin-bottom: 6px;
+    }
+
+    /* Inner card groups - remove flush borders for print */
+    .inner-card-group .output-card {
+      border-radius: 6px !important;
+      border-bottom-width: 1px !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* Page title */
+    .hero h1 { color: #C8622A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    @page { margin: 1.5cm; }
+  }
+  /* ── DOWNLOAD PIZZA RECIPE BUTTON ── */
+  .download-pizza-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--brown-dark);
+    color: var(--parchment);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+    display: none;
+  }
+
+  .download-pizza-btn.visible { display: block; }
+  .download-pizza-btn:hover { opacity: 0.85; }
+
+  /* ── PRINT PIZZA ONLY ── */
+  @media print {
+    body.print-pizza-only nav,
+    body.print-pizza-only .breadcrumb-bar,
+    body.print-pizza-only .restore-banner,
+    body.print-pizza-only .hero-wrap,
+    body.print-pizza-only #section-calculator,
+    body.print-pizza-only #section-dough,
+    body.print-pizza-only .choose-recipe-btn,
+    body.print-pizza-only #choose-recipe-section,
+    body.print-pizza-only .print-btn,
+    body.print-pizza-only .download-pizza-btn,
+    body.print-pizza-only .pizza-next-btn,
+    body.print-pizza-only .dough-next-btn,
+    body.print-pizza-only #jump-to-pizza-link,
+    body.print-pizza-only .output-card-chevron,
+    body.print-pizza-only .top-section-chevron,
+    body.print-pizza-only .dough-summary-bar,
+    body.print-pizza-only #pizza-ingredients-card { display: none !important; }
+
+    body.print-pizza-only .page { max-width: 100%; padding: 0; }
+    body.print-pizza-only #section-recipe { display: block !important; }
+    body.print-pizza-only .top-section-body { display: block !important; }
+    body.print-pizza-only #pizza-output-section { display: block !important; }
+    body.print-pizza-only [id^="pizza-body-"] { display: block !important; }
+    body.print-pizza-only .output-card-body.collapsed { display: block !important; }
+    body.print-pizza-only .two-col-wrap { display: block !important; }
+    body.print-pizza-only .col-left { display: none !important; }
+    body.print-pizza-only .col-right { width: 100% !important; }
+
+    /* Print header */
+    body.print-pizza-only #pizza-print-header { display: block !important; }
+
+    body.print-pizza-only .output-card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 10px; box-shadow: none; }
+    body.print-pizza-only .output-card-header-btn { pointer-events: none; }
+    body.print-pizza-only .output-header { background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body.print-pizza-only .method-step { break-inside: avoid; }
+    body.print-pizza-only .inner-card-group .output-card { border-radius: 6px !important; border-bottom-width: 1px !important; margin-bottom: 8px !important; }
+    body.print-pizza-only .nutrition-comp-grid { display: block !important; }
+    body.print-pizza-only .nutrition-comp-card { display: inline-block; width: 48%; margin-bottom: 6px; border: 1px solid #ccc; break-inside: avoid; }
+    body.print-pizza-only .nutrition-summary-grid { display: block !important; }
+    body.print-pizza-only .nutrition-summary-card { display: inline-block; width: 48%; background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin-bottom: 6px; }
+
+    @page { margin: 1.5cm; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Marko<span>dough</span></div>
+  <div class="nav-links" id="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="../doughs/index.html" class="nav-active">Doughs</a>
+    <a href="../recipes/index.html">Recipes</a>
+    <a href="../calculators/index.html">Calculators</a>
+    <a href="../learn/index.html">Learn</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div style="background:var(--brown-mid);padding:8px 24px;border-bottom:1px solid var(--brown-light);" class="breadcrumb-bar">
+  <div style="max-width:1200px;margin:0 auto;">
+    <a href="index.html" style="font-size:12px;color:#A8B898;text-decoration:none;letter-spacing:0.04em;">← Doughs</a>
+    <span style="font-size:12px;color:var(--brown-light);margin:0 8px;">/</span>
+    <span style="font-size:12px;color:var(--parchment);font-weight:600;">Detroit-Style</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- RESTORE BANNER -->
+  <div class="restore-banner" id="restore-banner">
+    <div class="restore-banner-top">
+      <div class="restore-banner-text">
+        You have a saved session
+        <span id="restore-banner-date"></span>
+      </div>
+      <button class="restore-btn" onclick="restoreSession()">Continue where you left off →</button>
+    </div>
+    <button class="restore-fresh-link" onclick="clearSession()">Start fresh</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-wrap">
+  <div class="hero">
+    <div class="hero-tag">Pizza Dough Calculator</div>
+    <h1>Detroit-Style<br>Pizza Dough</h1>
+    <p>Thick, airy, and fried crisp in a steel pan, with cheese caramelized into the edges and sauce striped on top. Pick your pan, dial in the crust, and choose a direct dough or an overnight poolish for a lighter, more flavorful crumb.</p>
+  </div>
+  </div><!-- end hero-wrap -->
+
+  <div class="two-col-wrap">
+  <div class="col-left">
+  <!-- BEFORE YOU GET STARTED -->
+  <div class="section-card">
+    <button class="bygs-toggle" id="bygs-toggle" onclick="toggleBYGS()">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--orange);border:2px solid #E8823A;color:var(--text-dark);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0;font-family:'Playfair Display',serif;">1</div>
+        <div>
+          <div class="section-tag" style="color:#C8922A;font-weight:700;">Step 1, Read Before You Begin</div>
+          <div class="section-title">Before You Get Started</div>
+        </div>
+      </div>
+      <div class="bygs-chevron open" id="bygs-chevron">›</div>
+    </button>
+    <div class="section-body" id="bygs-body">
+
+      <div class="callout">
+        <div class="callout-title">✓ The pan is the heart of the style</div>
+        <p>Detroit-style pizza is defined by its deep steel pan. The pan conducts heat to fry the bottom crisp, and its tall walls let the cheese melt down the sides and caramelize against the steel. That cheese edge is called frico, and it is the signature of the style. Your LloydPans are exactly the right tool for this.</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">✓ Cheese to the edges, sauce on top</div>
+        <p>Two things make a Detroit pizza look and taste like one. Cheese is pushed all the way to the pan walls so it caramelizes into the frico border. Sauce goes on top in stripes, after the bake. Put the sauce under the cheese and you lose the whole identity.</p>
+      </div>
+
+      <div class="warning-callout">
+        <div class="callout-title">⚠ Plan your timing</div>
+        <p>A same-day direct dough takes about 4 to 5 hours start to finish. A cold ferment or an overnight poolish adds a day or more, but builds noticeably better flavor. Decide which path you want before you start, you will choose in Step 2 and Step 3.</p>
+      </div>
+
+      <div class="subsection-title">What Is a Poolish, and Why Use One?</div>
+      <div class="callout" style="margin-bottom:10px;">
+        <div class="callout-title">A small overnight preferment that builds flavor</div>
+        <p>A poolish is equal parts flour and water plus a tiny pinch of yeast, fermented 12 to 16 hours before you mix the main dough. It develops flavor and extensibility that a same-day dough cannot match, and gives a lighter, airier crumb. This calculator supports a straightforward Direct dough or a Poolish, and either one can be baked same-day or cold fermented.</p>
+      </div>
+
+      <div class="subsection-title">Must-Have Ingredients</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Bread Flour (12 to 13% protein)</div>
+          <div class="info-row-note">Detroit dough is high hydration and needs the gluten strength of bread flour. King Arthur Bread Flour is ideal. All-purpose is supported, but the calculator drops hydration to suit it and the crumb will be a little less open.</div>
+        </div>
+        <div class="info-row-detail">Bread flour recommended</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Cheese, to the edges</div>
+          <div class="info-row-note">Wisconsin brick is traditional. Muenster is the closest easy substitute, and low-moisture whole-milk mozzarella is the easiest to find. You pick your cheese in the recipe section. Always avoid pre-shredded, the anti-caking coating ruins the melt.</div>
+        </div>
+        <div class="info-row-detail">Brick or substitutes</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Thick Cooked Tomato Sauce</div>
+          <div class="info-row-note">A cooked, slightly sweet tomato sauce, thick enough to sit in stripes rather than run. You can make it from San Marzano tomatoes or reduce a good jarred sauce. Options are in the recipe section.</div>
+        </div>
+        <div class="info-row-detail">Thick, cooked</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Pepperoni</div>
+          <div class="info-row-note">Cup-and-char pepperoni is excellent if you can find it. You can place half under the cheese and half on top.</div>
+        </div>
+        <div class="info-row-detail">Optional topping</div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Neutral Oil for the Pan</div>
+          <div class="info-row-note">A thin layer in the pan before the dough goes in. This helps release and fries the bottom crust. The oil lives in the pan, not in the dough.</div>
+        </div>
+        <div class="info-row-detail">For the pan</div>
+      </div>
+
+      <div class="subsection-title">Tools</div>
+
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dark);background:var(--parchment-dark);padding:5px 10px;border-radius:4px;margin-bottom:6px;display:inline-block;">Essential</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Detroit-Style Pan (8x10 or 10x14)</div>
+          <div class="info-row-note">A deep steel or hard-anodized pan. Your LloydPans use a PSTK coating, so no seasoning is needed and they release well. The dark finish bakes hotter and faster than bare metal, so watch the edges and be ready to pull a minute early.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Kitchen Scale</div>
+          <div class="info-row-note">Detroit dough uses small amounts of yeast, sometimes under 1g. Weigh everything. Volume measurements will not give consistent results.</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dark);background:var(--parchment-dark);padding:5px 10px;border-radius:4px;margin:14px 0 6px;display:inline-block;">Strongly Recommended</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Metal Spatula or Thin Knife</div>
+          <div class="info-row-note">For releasing the frico edge after baking. Run it around the pan walls to free the caramelized cheese, then lift the pizza out.</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Wire Cooling Rack</div>
+          <div class="info-row-note">Move the pizza onto a rack right after baking so the bottom stays crisp instead of steaming in the pan.</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dark);background:var(--parchment-dark);padding:5px 10px;border-radius:4px;margin:14px 0 6px;display:inline-block;">Recommended</div>
+
+      <div class="info-row">
+        <div>
+          <div class="info-row-name">Stand Mixer with Dough Hook</div>
+          <div class="info-row-note">Helpful for the high-hydration, sticky dough. Hand mixing works too, it just takes more patience and a wetter feel.</div>
+        </div>
+      </div>
+
+      <button class="next-btn" onclick="scrollToCalculator()" style="margin-top:20px;">Next: Build Your Recipe →</button>
+
+    </div>
+  </div>
+
+  </div><!-- end col-left -->
+  <div class="col-right">
+  <!-- CALCULATOR -->
+  <!-- SECTION 2: BUILD YOUR RECIPE -->
+  <div class="top-section" id="section-calculator">
+    <button class="top-section-header" onclick="toggleTopSection('calculator')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">2</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 2</div>
+          <div class="top-section-title">Build Your Recipe</div>
+          <div class="top-section-summary" id="calculator-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron" id="chev-section-calculator">›</div>
+    </button>
+    <div class="top-section-body" id="body-section-calculator">
+  <div id="calculator-section">
+
+    <div class="accord">
+
+      <!-- STEP 1: EQUIPMENT -->
+      <div class="accord-item" id="step1-item">
+        <button class="accord-trigger" id="step1-trigger" onclick="toggleStep(1)">
+          <div class="accord-num active" id="step1-num">1</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 1 of 4</div>
+            <div class="accord-step-title">Equipment</div>
+            <div class="accord-step-summary" id="step1-summary"></div>
+          </div>
+          <div class="accord-chevron open" id="step1-chevron">›</div>
+        </button>
+        <div class="accord-body open" id="step1-body">
+          <div class="field-label">Mixer type</div>
+          <div class="btn-group" id="mixer-group">
+            <div class="btn-opt" onclick="selectOpt(this,'mixer','stand')">Stand Mixer</div>
+            <div class="btn-opt" onclick="selectOpt(this,'mixer','hand')">Hand Mix</div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-top:4px;margin-bottom:10px;">This dough is wet and sticky. A stand mixer makes it easier, but hand mixing with slap and fold works well too.</div>
+
+          <div class="field-label">What will you set the pan on?</div>
+          <div class="btn-group" id="surface-group">
+            <div class="btn-opt" onclick="selectOpt(this,'surface','rack')">Oven Rack</div>
+            <div class="btn-opt" onclick="selectOpt(this,'surface','steel')">Pizza Steel</div>
+            <div class="btn-opt" onclick="selectOpt(this,'surface','stone')">Pizza Stone</div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-top:4px;margin-bottom:10px;">The pan always bakes in the pan. A preheated steel or stone underneath drives more bottom heat for a crisper base, so the bake temperature adjusts to match.</div>
+
+          <button class="next-btn" onclick="completeStep(1)">Next: Preferment →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: PREFERMENT -->
+      <div class="accord-item" id="step2-item">
+        <button class="accord-trigger" id="step2-trigger" onclick="toggleStep(2)" disabled>
+          <div class="accord-num" id="step2-num">2</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 2 of 4</div>
+            <div class="accord-step-title">Preferment</div>
+            <div class="accord-step-summary" id="step2-summary"></div>
+          </div>
+          <div class="accord-chevron" id="step2-chevron">›</div>
+        </button>
+        <div class="accord-body" id="step2-body">
+          <div class="pref-cards" style="grid-template-columns:1fr;">
+            <div class="pref-card" id="pref-direct" onclick="selectPreferment('direct')">
+              <div class="pref-card-title">Direct (Traditional)</div>
+              <div class="pref-badge">★ Recommended for beginners</div>
+              <p>All ingredients mixed in one step. No preferment. Simplest path. Can be baked same-day or cold fermented for more flavor.</p>
+            </div>
+            <div class="pref-card" id="pref-poolish" onclick="selectPreferment('poolish')">
+              <div class="pref-card-title">Poolish</div>
+              <div class="pref-badge">Intermediate · Better flavor</div>
+              <p>Equal parts flour and water plus a pinch of yeast, fermented 12 to 16 hours before mixing. Lighter, airier crumb with a sweeter, more complex flavor. Can also be combined with a cold ferment.</p>
+            </div>
+          </div>
+          <button class="next-btn" onclick="completeStep(2)">Next: Dough Configuration →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: DOUGH CONFIGURATION -->
+      <div class="accord-item" id="step3-item">
+        <button class="accord-trigger" id="step3-trigger" onclick="toggleStep(3)" disabled>
+          <div class="accord-num" id="step3-num">3</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 3 of 4</div>
+            <div class="accord-step-title">Dough Configuration</div>
+            <div class="accord-step-summary" id="step3-summary"></div>
+          </div>
+          <div class="accord-chevron" id="step3-chevron">›</div>
+        </button>
+        <div class="accord-body" id="step3-body">
+          <div class="field-label">Pan size</div>
+          <div class="btn-group" id="pan-group">
+            <div class="btn-opt" onclick="selectPan(this,'8x10')">8 x 10"<br><span style="font-size:11px;font-weight:400;color:var(--text-muted);">Small</span></div>
+            <div class="btn-opt" onclick="selectPan(this,'10x14')">10 x 14"<br><span style="font-size:11px;font-weight:400;color:var(--text-muted);">Large</span></div>
+          </div>
+
+          <div class="field-label">Crust thickness</div>
+          <div class="btn-group" id="crust-group">
+            <div class="btn-opt" onclick="selectOpt(this,'crust','standard')">Standard</div>
+            <div class="btn-opt" onclick="selectOpt(this,'crust','thick')">Thick</div>
+          </div>
+
+          <div class="field-label">Number of pizzas</div>
+          <div class="btn-group" id="qty-group">
+            <div style="font-size:12px;color:var(--text-muted);font-style:italic;padding:4px 0;">Select a pan size first</div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);font-style:italic;margin-top:4px;margin-bottom:10px;" id="qty-note"></div>
+
+          <div class="field-label">Hydration</div>
+          <div class="btn-group" id="hydration-group">
+            <div class="btn-opt" onclick="selectOpt(this,'hydration','0.65')">65%<br><span style="font-size:11px;font-weight:400;color:var(--text-muted);">Firmer</span></div>
+            <div class="btn-opt" onclick="selectOpt(this,'hydration','0.70')">70%<br><span style="font-size:11px;font-weight:400;color:var(--text-muted);">Recommended</span></div>
+            <div class="btn-opt" onclick="selectOpt(this,'hydration','0.75')">75%<br><span style="font-size:11px;font-weight:400;color:var(--text-muted);">Airier</span></div>
+          </div>
+
+          <div class="field-label">Fermentation</div>
+          <div class="btn-group" id="ferm-group">
+            <div class="btn-opt" onclick="selectOpt(this,'ferm','sameday')">Same-day<br><span style="font-size:11px;font-weight:400;color:var(--text-muted);">~4–5 hrs</span></div>
+            <div class="btn-opt" onclick="selectOpt(this,'ferm','cold')">Cold ferment<br><span style="font-size:11px;font-weight:400;color:var(--text-muted);">24–72 hrs</span></div>
+          </div>
+          <div class="dynamic-note" id="ferm-method-note" style="display:none;"></div>
+
+          <button class="next-btn" onclick="completeStep(3)">Next: Ingredient Options →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: INGREDIENT OPTIONS -->
+      <div class="accord-item" id="step4-item">
+        <button class="accord-trigger" id="step4-trigger" onclick="toggleStep(4)" disabled>
+          <div class="accord-num" id="step4-num">4</div>
+          <div class="accord-trigger-text">
+            <div class="accord-step-label">Step 4 of 4</div>
+            <div class="accord-step-title">Ingredient Options</div>
+            <div class="accord-step-summary" id="step4-summary"></div>
+          </div>
+          <div class="accord-chevron" id="step4-chevron">›</div>
+        </button>
+        <div class="accord-body" id="step4-body">
+          <div class="field-label">Flour type</div>
+          <select class="styled-select" id="flour-select" onchange="updateFlourNote()">
+            <option value="bread">Bread Flour, 12 to 13% protein (recommended)</option>
+            <option value="ap">All Purpose Flour</option>
+          </select>
+          <div class="dynamic-note" id="flour-note"></div>
+
+          <div class="field-label">Yeast type</div>
+          <select class="styled-select" id="yeast-select" onchange="updateYeastNote()">
+            <option value="instant">Instant Yeast (recommended)</option>
+            <option value="ady">Active Dry Yeast</option>
+          </select>
+          <div class="dynamic-note" id="yeast-note"></div>
+
+          <button class="next-btn green" onclick="completeStep(4)" style="margin-top:16px;">All done, ready to calculate ✓</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="calc-btn-wrap">
+      <button class="calc-btn" id="calc-btn" onclick="calculate()" disabled>Complete all steps to calculate →</button>
+    </div>
+  </div><!-- end calculator-section -->
+  </div><!-- end body-section-calculator -->
+  </div><!-- end section-calculator -->
+
+
+  <!-- SECTION 3: PREP YOUR DOUGH -->
+  <div class="top-section" id="section-dough" style="display:none;">
+    <button class="top-section-header" onclick="toggleTopSection('dough')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">3</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 3</div>
+          <div class="top-section-title">Prep Your Dough</div>
+          <div class="top-section-summary" id="dough-section-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron open" id="chev-section-dough">›</div>
+    </button>
+    <!-- Mini outline shown when section collapsed -->
+    <div class="section-mini-outline" id="dough-mini-outline">
+      <div class="mini-outline-row" id="mini-row-plan" onclick="expandDoughToCard('plan')">
+        <div class="mini-row-num" id="mini-num-plan">1</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 1</div>
+          <div class="mini-row-title">Plan</div>
+          <div class="mini-row-summary" id="mini-sum-plan">Timing and fermentation notes</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-ingredients" onclick="expandDoughToCard('ingredients')">
+        <div class="mini-row-num" id="mini-num-ingredients">2</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 2</div>
+          <div class="mini-row-title">Your Ingredients</div>
+          <div class="mini-row-summary" id="mini-sum-ingredients">Preferment and main dough amounts</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-steps" onclick="expandDoughToCard('steps')">
+        <div class="mini-row-num" id="mini-num-steps">3</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 3</div>
+          <div class="mini-row-title">Method Steps</div>
+          <div class="mini-row-summary" id="mini-sum-steps">Mix, fold, ferment</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+    </div>
+    <div class="top-section-body open" id="body-section-dough">
+  <!-- OUTPUT -->
+  <div id="output-section">
+
+    <!-- UNIT TOGGLE BAR -->
+    <div class="output-toggle-bar">
+      <div class="output-toggle-bar-label">Display units:</div>
+      <div class="toggle-pair">
+        <span class="toggle-pair-label" id="unit-label">Metric (g)</span>
+        <label class="toggle">
+          <input type="checkbox" id="unit-toggle" onchange="refreshOutput()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span id="unit-label-right" style="font-size:13px;color:var(--text-dark);font-weight:500;">Imperial (oz)</span>
+      </div>
+      <div class="toggle-pair">
+        <span class="toggle-pair-label" id="temp-label">Fahrenheit (°F)</span>
+        <label class="toggle">
+          <input type="checkbox" id="temp-toggle" onchange="refreshOutput()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span id="temp-label-right" style="font-size:13px;color:var(--text-dark);font-weight:500;">Celsius (°C)</span>
+      </div>
+      <a href="#choose-recipe-section" id="jump-to-pizza-link" style="display:none;margin-left:auto;font-size:12px;font-weight:700;color:var(--orange);text-decoration:none;letter-spacing:0.04em;white-space:nowrap;">Jump to Pizza ↓</a>
+    </div>
+
+    <!-- THREE INNER CARDS - FLUSH GROUP WITH SEQUENTIAL FLOW -->
+    <div class="inner-card-group">
+
+    <!-- CARD 1: PLAN - starts open -->
+    <div class="output-card" id="oc-plan">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('plan')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Preparation Timing</div>
+          <div class="output-header-title">Plan Ahead</div>
+        </div>
+        <div class="output-card-chevron open" id="chev-plan">›</div>
+      </button>
+      <div class="output-body output-card-body" id="ocb-plan">
+        <div class="subsection-title" style="margin-top:0;">Estimated Time</div>
+        <div class="output-row"><span class="output-row-label">Poolish prep (night before, if used)</span><span class="output-row-value">5 min active · 12–16 hrs passive</span></div>
+        <div class="output-row"><span class="output-row-label">Autolyse</span><span class="output-row-value">5 min active · 20–30 min passive</span></div>
+        <div class="output-row"><span class="output-row-label">Mixing</span><span class="output-row-value" id="mix-time-out">-</span></div>
+        <div class="output-row"><span class="output-row-label">Stretch and folds</span><span class="output-row-value">10 min active · 1–2 hrs passive</span></div>
+        <div class="output-row"><span class="output-row-label">Fermentation</span><span class="output-row-value" id="ferm-time-out">-</span></div>
+        <div class="output-row"><span class="output-row-label">Bake day (recipe section)</span><span class="output-row-value">shape, proof, bake</span></div>
+        <div class="output-total-row">
+          <span class="output-total-label">Total active time</span>
+          <span class="output-total-value" id="active-time-out">-</span>
+        </div>
+        <div class="output-total-row" style="border-top:none;padding-top:2px;">
+          <span class="output-total-label">Total elapsed time</span>
+          <span class="output-total-value" id="elapsed-time-out">-</span>
+        </div>
+        <div class="subsection-title" style="margin-top:18px;" id="ferm-note-title">Fermentation Note</div>
+        <div class="ferm-note" id="ferm-note-text">-</div>
+        <button class="dough-next-btn" onclick="openDoughCard('ingredients')">Next: Your Ingredients →</button>
+      </div>
+    </div>
+
+    <!-- CARD 2: YOUR INGREDIENTS - starts collapsed -->
+    <div class="output-card" id="oc-ingredients">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('ingredients')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Ingredients</div>
+          <div class="output-header-title">Your Ingredients</div>
+        </div>
+        <div class="output-card-chevron" id="chev-ingredients">›</div>
+      </button>
+      <div class="output-body output-card-body collapsed" id="ocb-ingredients">
+        <div class="warning-callout" id="poolish-storage-callout">
+          <div class="callout-title">⚠ Storage - Room Temperature Only</div>
+          <p id="poolish-storage-note"></p>
+        </div>
+        <div class="subsection-title" style="margin-top:0;" id="poolish-header-tag">Make the night before</div>
+        <div id="poolish-rows"></div>
+        <div class="callout mt8" id="poolish-ready-callout">
+          <div class="callout-title" id="poolish-ready-title">✓ Poolish is ready when</div>
+          <p id="poolish-ready-text">It has doubled in size, looks bubbly throughout, smells slightly tangy and yeasty, and is domed or just starting to fall. A fully collapsed poolish is over-fermented, still usable, but reduce your main yeast by 25%.</p>
+        </div>
+        <div class="subsection-title" style="margin-top:18px;">Main Dough Mix</div>
+        <div id="flour-output-note" class="dynamic-note"></div>
+        <div id="yeast-output-note" class="dynamic-note"></div>
+        <div id="ingredient-rows"></div>
+        <div class="output-total-row" id="total-dough-row">
+          <span class="output-total-label">Total dough weight</span>
+          <span class="output-total-value" id="total-dough-out">-</span>
+        </div>
+        <div class="output-total-row" style="border-top:none;padding-top:2px;">
+          <span class="output-total-label" id="per-ball-label-out">Per ball</span>
+          <span class="output-total-value" id="per-ball-out">-</span>
+        </div>
+        <div class="subsection-title" style="margin-top:18px;">Dough Calories</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Dough only, does not include sauce, cheese, or toppings.</p>
+        <div class="calorie-grid">
+          <div class="calorie-card">
+            <div class="calorie-num" id="cal-batch-out">-</div>
+            <div class="calorie-label">Total batch calories</div>
+          </div>
+          <div class="calorie-card">
+            <div class="calorie-num" id="cal-ball-out">-</div>
+            <div class="calorie-label">Calories per pan</div>
+          </div>
+        </div>
+        <button class="dough-next-btn" onclick="openDoughCard('steps')">Next: Method Steps →</button>
+      </div>
+    </div>
+
+    <!-- CARD 3: METHOD STEPS - starts collapsed -->
+    <div class="output-card" id="oc-steps">
+      <button class="output-card-header-btn" onclick="toggleOutputCard('steps')">
+        <div class="output-card-header-left">
+          <div class="output-header-tag">Instructions</div>
+          <div class="output-header-title">Method Steps</div>
+        </div>
+        <div class="output-card-chevron" id="chev-steps">›</div>
+      </button>
+      <div class="output-body output-card-body collapsed" id="ocb-steps"></div>
+    </div>
+
+    </div><!-- end inner-card-group -->
+
+    <button class="print-btn" onclick="window.print()">⎙ Print This Recipe</button>
+
+    <!-- CHOOSE YOUR RECIPE BUTTON -->
+    <button class="choose-recipe-btn" onclick="showRecipeSelector()">Choose Your Recipe →</button>
+
+  </div><!-- end output -->
+  </div><!-- end body-section-dough -->
+  </div><!-- end section-dough -->
+
+  <!-- SECTION 4: RECIPE -->
+  <div class="top-section" id="section-recipe" style="display:none;">
+    <button class="top-section-header" onclick="toggleTopSection('recipe')">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <div class="top-section-step-badge">4</div>
+        <div class="top-section-header-left">
+          <div class="top-section-tag">Step 4</div>
+          <div class="top-section-title">Recipe</div>
+          <div class="top-section-summary" id="recipe-section-summary"></div>
+        </div>
+      </div>
+      <div class="top-section-chevron open" id="chev-section-recipe">›</div>
+    </button>
+    <!-- Mini outline shown when section collapsed -->
+    <div class="section-mini-outline" id="recipe-mini-outline">
+      <div class="mini-outline-row" id="mini-row-recipe-choose" onclick="expandRecipeToCard('choose')">
+        <div class="mini-row-num" id="mini-num-recipe-choose">1</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 1</div>
+          <div class="mini-row-title">Choose Your Recipe</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-choose">Classic Pepperoni</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-sauce" onclick="expandRecipeToCard('sauce')">
+        <div class="mini-row-num" id="mini-num-recipe-sauce">2</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 2</div>
+          <div class="mini-row-title">Sauce</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-sauce">Classic cooked tomato sauce</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-cheese" onclick="expandRecipeToCard('cheese')">
+        <div class="mini-row-num" id="mini-num-recipe-cheese">3</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 3</div>
+          <div class="mini-row-title">Cheese</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-cheese">Choose your cheese</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-baking" onclick="expandRecipeToCard('baking')">
+        <div class="mini-row-num" id="mini-num-recipe-baking">4</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 4</div>
+          <div class="mini-row-title">Baking Instructions</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-baking">Par-bake then bake</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+      <div class="mini-outline-row" id="mini-row-recipe-nutrition" onclick="expandRecipeToCard('nutrition')">
+        <div class="mini-row-num" id="mini-num-recipe-nutrition">5</div>
+        <div class="mini-row-text">
+          <div class="mini-row-label">Section 5</div>
+          <div class="mini-row-title">Calorie &amp; Macro Breakdown</div>
+          <div class="mini-row-summary" id="mini-sum-recipe-nutrition">Calories and macros per slice</div>
+        </div>
+        <div class="mini-row-chev">›</div>
+      </div>
+    </div>
+    <div class="top-section-body open" id="body-section-recipe">
+
+    <!-- DOUGH SUMMARY BAR -->
+    <div class="dough-summary-bar" id="dough-summary-bar">
+      <div class="dough-summary-text">✓ Dough recipe ready, make this first before your pizza</div>
+      <button class="dough-summary-expand" onclick="expandDoughOutput()">View dough ↑</button>
+    </div>
+
+    <!-- CHOOSE YOUR RECIPE SECTION -->
+    <div id="choose-recipe-section">
+      <div class="section-header" style="background:var(--parchment-mid);border-radius:12px 12px 0 0;border:0.5px solid var(--border);border-bottom:none;padding:14px 20px;">
+        <div class="section-tag">What are you making?</div>
+        <div class="section-title">Choose Your Recipe</div>
+      </div>
+      <div style="background:var(--parchment);border-radius:0 0 12px 12px;border:0.5px solid var(--border);border-top:none;padding:16px;margin-bottom:16px;">
+        <div id="recipe-card-list">
+          <!-- Populated dynamically by renderRecipeSelector() -->
+        </div>
+        <button class="next-btn" id="build-recipe-btn" style="margin-top:12px;background:var(--disabled-bg);color:var(--disabled-text);cursor:not-allowed;" disabled onclick="buildRecipe()">Build This Recipe →</button>
+        <div style="font-size:11px;color:var(--text-muted);font-style:italic;text-align:center;margin-top:6px;" id="build-recipe-note">Select a recipe above to continue</div>
+      </div>
+    </div>
+
+    <!-- PIZZA OUTPUT -->
+    <div id="pizza-output-section" style="display:none;">
+
+      <!-- PRINT HEADER - only visible when printing pizza recipe -->
+      <div id="pizza-print-header" style="display:none;margin-bottom:16px;">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#C8622A;">Detroit-Style Pizza</div>
+        <div id="pizza-print-config" style="font-size:13px;color:#4A3A22;margin-top:6px;"></div>
+      </div>
+
+      <div class="inner-card-group">
+
+      <!-- STATIC INGREDIENTS LIST -->
+      <div class="output-card" id="pizza-ingredients-card">
+        <button class="output-card-header-btn" onclick="togglePizzaIngredients()">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Reference</div>
+            <div class="output-header-title">All Ingredients at a Glance</div>
+          </div>
+          <div class="output-card-chevron open" id="pizza-ingredients-chevron">›</div>
+        </button>
+        <div class="output-body output-card-body" id="pizza-ingredients-body">
+          <div class="subsection-title" style="margin-top:0;">Sauce</div>
+          <div id="static-sauce-rows"></div>
+          <div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:4px;">Sauce is spooned on top after baking</div>
+          <div class="subsection-title">Cheese</div>
+          <div id="static-cheese-rows"></div>
+          <div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:4px;">Grated Parmesan optional, to taste</div>
+          <button class="dough-next-btn" style="margin-top:16px;" onclick="openPizzaCard('prebake')">Go to Bake Day Prep →</button>
+        </div>
+      </div>
+
+      <!-- PRE-BAKE CHECKLIST -->
+      <div class="output-card" id="pizza-card-prebake">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('prebake')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Do This First</div>
+            <div class="output-header-title">Bake Day Prep</div>
+          </div>
+          <div class="output-card-chevron open" id="pizza-chev-prebake">›</div>
+        </button>
+        <div class="output-body output-card-body" id="pizza-body-prebake">
+          <div class="callout">
+            <div class="callout-title">✓ This is bake day, work through these in order</div>
+            <p>Your dough is already made. The steps below take you from the dough to a pan ready for the oven, then into the bake. The oven setup at the end depends on the baking surface you chose.</p>
+          </div>
+          <div id="prebake-oven-steps"></div>
+          <button class="dough-next-btn" onclick="openPizzaCard('sauce')">Next: Make Your Sauce →</button>
+        </div>
+      </div>
+
+      <!-- SAUCE -->
+      <div class="output-card" id="pizza-card-sauce">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('sauce')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Step 2, Make this first</div>
+            <div class="output-header-title">Sauce</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-sauce">›</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-sauce">
+          <div class="callout" style="margin-bottom:14px;">
+            <div class="callout-title">✓ Cooked sauce, spooned on top after the bake</div>
+            <p>Detroit sauce is a thick cooked tomato sauce striped over the pizza after it comes out of the oven. Make it while the dough proofs or the oven heats.</p>
+          </div>
+          <div id="sauce-ingredient-rows"></div>
+          <div style="margin-top:16px;" id="sauce-method-body"></div>
+          <button class="dough-next-btn" onclick="openPizzaCard('cheese')">Next: Cheese →</button>
+        </div>
+      </div>
+
+      <!-- CHEESE -->
+      <div class="output-card" id="pizza-card-cheese">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('cheese')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Step 3</div>
+            <div class="output-header-title">Cheese</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-cheese">›</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-cheese">
+          <div class="callout" style="margin-bottom:14px;" id="cheese-method-callout">
+            <div class="callout-title">✓ Push the cheese all the way to the edges</div>
+            <p>The cheese touching the hot pan walls caramelizes into the frico border that defines Detroit style. Use cubed or shredded cheese (never pre-shredded, the coating ruins the melt) and push it right up to the corners.</p>
+          </div>
+          <div id="cheese-ingredient-rows"></div>
+          <div id="cheese-method-body"></div>
+          <button class="dough-next-btn" onclick="openPizzaCard('baking')">Next: Baking Instructions →</button>
+        </div>
+      </div>
+
+      <!-- BAKING -->
+      <div class="output-card" id="pizza-card-baking">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('baking')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Step 4</div>
+            <div class="output-header-title" id="baking-title">Baking Instructions</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-baking">›</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-baking">
+          <div id="baking-steps-body"></div>
+          <button class="dough-next-btn" onclick="openPizzaCard('nutrition')">Next: Calorie &amp; Macro Breakdown →</button>
+        </div>
+      </div>
+
+      <!-- NUTRITION -->
+      <div class="output-card" id="pizza-card-nutrition">
+        <button class="output-card-header-btn" onclick="togglePizzaCard('nutrition')">
+          <div class="output-card-header-left">
+            <div class="output-header-tag">Reference</div>
+            <div class="output-header-title" id="nutrition-title">Calorie &amp; Macro Breakdown</div>
+          </div>
+          <div class="output-card-chevron" id="pizza-chev-nutrition">›</div>
+        </button>
+        <div class="output-body output-card-body collapsed" id="pizza-body-nutrition">
+          <div class="nutrition-controls">
+            <div class="nutrition-slice-row">
+              Slices:
+              <select id="pizza-slice-count" onchange="renderNutrition()">
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8" selected>8</option>
+              </select>
+            </div>
+          </div>
+          <div class="nutrition-savings" id="nutrition-savings-badge">Per pizza (one pan). Pan oil absorbed is an estimate. Cuts default to 8 for the 10x14 and 4 for the 8x10.</div>
+          <div class="nutrition-section-label">Per component, one pizza</div>
+          <div class="nutrition-comp-grid">
+            <div class="nutrition-comp-card">
+              <div class="nutrition-comp-label">Dough</div>
+              <div class="nutrition-comp-cal" id="n-dough-cal">-</div>
+              <div class="nutrition-comp-sub">Lean dough, per pan</div>
+              <div class="nutrition-macro-row">
+                <span class="npill-p" id="n-dough-p">P -</span>
+                <span class="npill-c" id="n-dough-c">C -</span>
+                <span class="npill-f" id="n-dough-f">F -</span>
+              </div>
+            </div>
+            <div class="nutrition-comp-card">
+              <div class="nutrition-comp-label">Sauce</div>
+              <div class="nutrition-comp-cal" id="n-sauce-cal">-</div>
+              <div class="nutrition-comp-sub">Cooked tomato sauce</div>
+              <div class="nutrition-macro-row">
+                <span class="npill-p" id="n-sauce-p">P -</span>
+                <span class="npill-c" id="n-sauce-c">C -</span>
+                <span class="npill-f" id="n-sauce-f">F -</span>
+              </div>
+            </div>
+            <div class="nutrition-comp-card">
+              <div class="nutrition-comp-label">Cheese</div>
+              <div class="nutrition-comp-cal" id="n-cheese-cal">-</div>
+              <div class="nutrition-comp-sub" id="n-cheese-sub">-</div>
+              <div class="nutrition-macro-row">
+                <span class="npill-p" id="n-cheese-p">P -</span>
+                <span class="npill-c" id="n-cheese-c">C -</span>
+                <span class="npill-f" id="n-cheese-f">F -</span>
+              </div>
+            </div>
+            <div class="nutrition-comp-card">
+              <div class="nutrition-comp-label">Pan oil</div>
+              <div class="nutrition-comp-cal" id="n-oil-cal">-</div>
+              <div class="nutrition-comp-sub" id="n-oil-sub">-</div>
+              <div class="nutrition-macro-row">
+                <span class="npill-p">P 0g</span>
+                <span class="npill-c">C 0g</span>
+                <span class="npill-f" id="n-oil-f">F -</span>
+              </div>
+            </div>
+            <div class="nutrition-comp-card" id="n-toppings-card">
+              <div class="nutrition-comp-label" id="n-toppings-label">Pepperoni</div>
+              <div class="nutrition-comp-cal" id="n-toppings-cal">-</div>
+              <div class="nutrition-comp-sub" id="n-toppings-sub">-</div>
+              <div class="nutrition-macro-row">
+                <span class="npill-p" id="n-toppings-p">P -</span>
+                <span class="npill-c" id="n-toppings-c">C -</span>
+                <span class="npill-f" id="n-toppings-f">F -</span>
+              </div>
+            </div>
+          </div>
+          <div style="height:1px;background:var(--orange);margin:14px 0;"></div>
+          <div class="nutrition-summary-grid">
+            <div class="nutrition-summary-card">
+              <div class="nutrition-summary-label">Total pizza</div>
+              <div class="nutrition-summary-cal" id="n-total-cal">-</div>
+              <div class="nutrition-summary-macros">
+                <span class="tpill-p" id="n-total-p">P -</span>
+                <span class="tpill-c" id="n-total-c">C -</span>
+                <span class="tpill-f" id="n-total-f">F -</span>
+              </div>
+            </div>
+            <div class="nutrition-summary-card">
+              <div class="nutrition-summary-label" id="n-slice-label">Per slice (8)</div>
+              <div class="nutrition-summary-cal" id="n-slice-cal">-</div>
+              <div class="nutrition-summary-macros">
+                <span class="tpill-p" id="n-slice-p">P -</span>
+                <span class="tpill-c" id="n-slice-c">C -</span>
+                <span class="tpill-f" id="n-slice-f">F -</span>
+              </div>
+            </div>
+          </div>
+          <div class="nutrition-disclaimer">Estimates based on USDA FoodData Central. Values may vary ±10%.</div>
+        </div>
+      </div>
+
+      </div><!-- end inner-card-group -->
+
+      <button class="download-pizza-btn" id="download-pizza-btn" onclick="downloadPizzaRecipe()">⬇ Download Pizza Recipe as PDF</button>
+
+    </div><!-- end pizza output -->
+
+  </div><!-- end body-section-recipe -->
+  </div><!-- end section-recipe -->
+  </div><!-- end col-right -->
+  </div><!-- end two-col-wrap -->
+
+</div><!-- end page -->
+
+<script>
+// ===================== MARKODOUGH DETROIT-STYLE APP =====================
+const DOUGH_TYPE = 'detroit';
+
+const RECIPE_COMPATIBILITY = {
+  'ny-style':    ['pizza-round'],
+  'neapolitan':  ['pizza-round'],
+  'detroit':     ['pizza-pan'],
+  'sicilian':    ['pizza-pan'],
+  'hoagie-roll': ['sandwich'],
+  'sesame-roll': ['sandwich']
+};
+
+const sel = {};
+let lastCalcData = null;
+
+function panMaxQty(pan) { return pan === '8x10' ? 6 : 4; }
+
+function selectOpt(el, group, val) {
+  const grp = document.getElementById(group + '-group');
+  if (grp) grp.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  sel[group] = val;
+}
+
+function selectPreferment(type) {
+  ['direct','poolish'].forEach(m => {
+    const el = document.getElementById('pref-' + m);
+    if (el) el.classList.toggle('sel', m === type);
+  });
+  sel.preferment = type;
+}
+
+function rebuildQtyButtons(pan) {
+  var grp = document.getElementById('qty-group');
+  var note = document.getElementById('qty-note');
+  if (!grp) return;
+  var max = panMaxQty(pan);
+  var html = '';
+  for (var i = 1; i <= max; i++) {
+    html += '<div class="btn-opt" onclick="selectOpt(this,\'qty\',\'' + i + '\')">' + i + '</div>';
+  }
+  grp.innerHTML = html;
+  if (sel.qty && parseInt(sel.qty) > max) { sel.qty = null; }
+  if (sel.qty) {
+    grp.querySelectorAll('.btn-opt').forEach(function(b){ if (b.textContent.trim() === String(sel.qty)) b.classList.add('sel'); });
+  }
+  if (note) note.textContent = pan === '8x10'
+    ? 'Small pans bake easily in batches, up to 6.'
+    : 'Large pans, up to 4 per batch.';
+}
+
+function selectPan(el, pan) {
+  var grp = document.getElementById('pan-group');
+  if (grp) grp.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  sel.pan = pan;
+  rebuildQtyButtons(pan);
+}
+
+function toggleStep(n) {
+  const body = document.getElementById('step' + n + '-body');
+  const chevron = document.getElementById('step' + n + '-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open', body.classList.contains('open'));
+}
+
+// ── DEV QUICK FILL ──
+(function() {
+  if (new URLSearchParams(window.location.search).get('dev') !== '1') return;
+  const btn = document.createElement('button');
+  btn.textContent = '⚡ Dev: Quick Fill';
+  btn.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:9999;padding:10px 16px;background:#5E8A42;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Source Sans 3,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+  btn.onclick = devQuickFill;
+  document.body.appendChild(btn);
+})();
+
+function devQuickFill() {
+  var mixerBtn = document.querySelector('#mixer-group .btn-opt');
+  if (mixerBtn) { mixerBtn.classList.add('sel'); sel.mixer = 'stand'; }
+  var surfBtns = document.querySelectorAll('#surface-group .btn-opt');
+  if (surfBtns[1]) { surfBtns[1].classList.add('sel'); sel.surface = 'steel'; }
+  completeStep(1);
+  selectPreferment('direct');
+  completeStep(2);
+  var panBtns = document.querySelectorAll('#pan-group .btn-opt');
+  if (panBtns[1]) selectPan(panBtns[1], '10x14');
+  document.querySelectorAll('#crust-group .btn-opt').forEach((b,i) => { if (i===0) { b.classList.add('sel'); sel.crust = 'standard'; }});
+  var qBtns = document.querySelectorAll('#qty-group .btn-opt');
+  if (qBtns[0]) { qBtns[0].classList.add('sel'); sel.qty = '1'; }
+  document.querySelectorAll('#hydration-group .btn-opt').forEach((b,i) => { if (i===1) { b.classList.add('sel'); sel.hydration = '0.70'; }});
+  document.querySelectorAll('#ferm-group .btn-opt').forEach((b,i) => { if (i===1) { b.classList.add('sel'); sel.ferm = 'cold'; }});
+  completeStep(3);
+  document.getElementById('flour-select').value = 'bread';
+  document.getElementById('yeast-select').value = 'instant';
+  completeStep(4);
+  setTimeout(() => calculate(), 100);
+}
+
+function scrollToEl(el, extraOffset) {
+  if (!el) return;
+  var navH = 72;
+  var top = el.getBoundingClientRect().top + window.pageYOffset - navH - (extraOffset || 0);
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+function scrollToCalculator() {
+  var body = document.getElementById('body-section-calculator');
+  var chev = document.getElementById('chev-section-calculator');
+  if (body && !body.classList.contains('open')) { body.classList.add('open'); chev.classList.add('open'); }
+  scrollToEl(document.getElementById('section-calculator'));
+}
+
+function toggleNav() {
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
+}
+
+function toggleBYGS() {
+  var body = document.getElementById('bygs-body');
+  var chev = document.getElementById('bygs-chevron');
+  body.classList.toggle('bygs-hidden');
+  chev.classList.toggle('open', !body.classList.contains('bygs-hidden'));
+}
+
+function toggleTopSection(id) {
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var outline = document.getElementById(id + '-mini-outline');
+  if (!body) return;
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+  if (outline) {
+    outline.classList.toggle('visible', isOpen);
+    if (isOpen && id === 'dough') updateMiniOutline(lastCalcData);
+    if (isOpen && id === 'recipe') updateRecipeMiniOutline();
+  }
+}
+
+function collapseSection(id, summaryText) {
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var summary = document.getElementById(id === 'calculator' ? 'calculator-summary' : id + '-section-summary');
+  var outline = document.getElementById(id + '-mini-outline');
+  if (body) body.classList.remove('open');
+  if (chev) chev.classList.remove('open');
+  if (outline) outline.classList.add('visible');
+  if (summary && summaryText) summary.textContent = summaryText;
+}
+
+function showSection(id) {
+  var section = document.getElementById('section-' + id);
+  var body = document.getElementById('body-section-' + id);
+  var chev = document.getElementById('chev-section-' + id);
+  var outline = document.getElementById(id + '-mini-outline');
+  if (section) section.style.display = 'block';
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  setTimeout(function() { scrollToEl(section); }, 50);
+}
+
+// ── DOUGH SECTION PROGRESS ──
+var doughProgress = { plan: false, ingredients: false, steps: false };
+var doughOrder = ['plan', 'ingredients', 'steps'];
+
+function updateMiniOutline(d) {
+  var summaries = {
+    plan: '~' + (sel.mixer === 'stand' ? '30' : '45') + ' min active · ' + fermLabel(),
+    ingredients: d ? Math.round(d.totalFlour) + 'g flour · ' + Math.round(d.totalWater) + 'g water' : 'Flour, water, salt, yeast',
+    steps: (sel.preferment === 'poolish' ? 'Poolish' : 'Direct') + ' method'
+  };
+  doughOrder.forEach(function(id, idx) {
+    var num = document.getElementById('mini-num-' + id);
+    var sum = document.getElementById('mini-sum-' + id);
+    var done = doughProgress[id];
+    var isNext = !done && doughOrder.slice(0, idx).every(function(prev) { return doughProgress[prev]; });
+    if (num) { num.classList.remove('done','active'); if (done) { num.classList.add('done'); num.textContent = '✓'; } else if (isNext) { num.classList.add('active'); num.textContent = idx + 1; } else { num.textContent = idx + 1; } }
+    if (sum) { sum.classList.remove('active'); if (done) { sum.textContent = summaries[id]; } else if (isNext) { sum.textContent = 'Up next'; sum.classList.add('active'); } else { sum.textContent = summaries[id]; } }
+  });
+}
+
+function expandDoughToCard(id) {
+  var body = document.getElementById('body-section-dough');
+  var chev = document.getElementById('chev-section-dough');
+  var outline = document.getElementById('dough-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  var cardBody = document.getElementById('ocb-' + id);
+  var cardChev = document.getElementById('chev-' + id);
+  var card = document.getElementById('oc-' + id);
+  if (cardBody) cardBody.classList.remove('collapsed');
+  if (cardChev) cardChev.classList.add('open');
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function openDoughCard(id) {
+  var prevIdx = doughOrder.indexOf(id) - 1;
+  if (prevIdx >= 0) { doughProgress[doughOrder[prevIdx]] = true; }
+  var body = document.getElementById('ocb-' + id);
+  var chev = document.getElementById('chev-' + id);
+  var card = document.getElementById('oc-' + id);
+  if (!body) return;
+  body.classList.remove('collapsed');
+  if (chev) chev.classList.add('open');
+  updateMiniOutline(lastCalcData);
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function toggleOutputCard(id) {
+  var body = document.getElementById('ocb-' + id);
+  var chev = document.getElementById('chev-' + id);
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function expandDoughOutput() {
+  doughProgress.plan = false; doughProgress.ingredients = false; doughProgress.steps = false;
+  var body = document.getElementById('body-section-dough');
+  var chev = document.getElementById('chev-section-dough');
+  var section = document.getElementById('section-dough');
+  var outline = document.getElementById('dough-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  ['ingredients','steps'].forEach(function(id) { var b = document.getElementById('ocb-'+id); var c = document.getElementById('chev-'+id); if (b) b.classList.add('collapsed'); if (c) c.classList.remove('open'); });
+  var planBody = document.getElementById('ocb-plan');
+  var planChev = document.getElementById('chev-plan');
+  if (planBody) planBody.classList.remove('collapsed');
+  if (planChev) planChev.classList.add('open');
+  setTimeout(function() { scrollToEl(section); }, 50);
+}
+
+// ── RECIPE SECTION PROGRESS ──
+var recipeProgress = { choose: false, prebake: false, sauce: false, cheese: false, baking: false, nutrition: false };
+var recipeOrder = ['choose', 'prebake', 'sauce', 'cheese', 'baking', 'nutrition'];
+
+function updateRecipeMiniOutline() {
+  var summaries = {
+    choose: selectedRecipe && RECIPES[selectedRecipe] ? RECIPES[selectedRecipe].name : 'Select a recipe',
+    sauce: 'Classic cooked tomato sauce',
+    cheese: cheeseLabel(),
+    baking: 'Par-bake then bake at ' + bakeTempLabel(),
+    nutrition: 'Calories and macros per slice'
+  };
+  recipeOrder.forEach(function(id, idx) {
+    var num = document.getElementById('mini-num-recipe-' + id);
+    var sum = document.getElementById('mini-sum-recipe-' + id);
+    var done = recipeProgress[id];
+    var isNext = !done && recipeOrder.slice(0, idx).every(function(prev) { return recipeProgress[prev]; });
+    if (num) { num.classList.remove('done','active'); if (done) { num.classList.add('done'); num.textContent = '✓'; } else if (isNext) { num.classList.add('active'); num.textContent = idx+1; } else { num.textContent = idx+1; } }
+    if (sum) { sum.classList.remove('active'); if (done) { sum.textContent = summaries[id]; } else if (isNext) { sum.textContent = 'Up next'; sum.classList.add('active'); } else { sum.textContent = summaries[id]; } }
+  });
+}
+
+function expandRecipeToCard(id) {
+  var body = document.getElementById('body-section-recipe');
+  var chev = document.getElementById('chev-section-recipe');
+  var outline = document.getElementById('recipe-mini-outline');
+  if (body) body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  if (outline) outline.classList.remove('visible');
+  if (id === 'choose') { setTimeout(function() { scrollToEl(document.getElementById('choose-recipe-section')); }, 50); return; }
+  var cardBody = document.getElementById('pizza-body-' + id);
+  var cardChev = document.getElementById('pizza-chev-' + id);
+  var card = document.getElementById('pizza-card-' + id);
+  if (cardBody) cardBody.classList.remove('collapsed');
+  if (cardChev) cardChev.classList.add('open');
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+function togglePizzaIngredients() {
+  var body = document.getElementById('pizza-ingredients-body');
+  var chev = document.getElementById('pizza-ingredients-chevron');
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function togglePizzaCard(id) {
+  var body = document.getElementById('pizza-body-' + id);
+  var chev = document.getElementById('pizza-chev-' + id);
+  if (!body) return;
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open', !body.classList.contains('collapsed'));
+}
+
+function openPizzaCard(id) {
+  var prevIdx = recipeOrder.indexOf(id) - 1;
+  if (prevIdx >= 0) { recipeProgress[recipeOrder[prevIdx]] = true; }
+  var body = document.getElementById('pizza-body-' + id);
+  var chev = document.getElementById('pizza-chev-' + id);
+  var card = document.getElementById('pizza-card-' + id);
+  if (!body) return;
+  body.classList.remove('collapsed');
+  if (chev) chev.classList.add('open');
+  updateRecipeMiniOutline();
+  setTimeout(function() { scrollToEl(card); }, 50);
+}
+
+// ── COMPLETE STEP ──
+function completeStep(n) {
+  if (n === 1) {
+    if (!sel.mixer) { alert('Please select a mixer type.'); return; }
+    if (!sel.surface) { alert('Please select what you will set the pan on.'); return; }
+  }
+  if (n === 2 && !sel.preferment) { alert('Please select a preferment option.'); return; }
+  if (n === 3 && (!sel.pan || !sel.crust || !sel.qty || !sel.hydration || !sel.ferm)) { alert('Please complete all dough configuration fields.'); return; }
+
+  var num = document.getElementById('step' + n + '-num');
+  var body = document.getElementById('step' + n + '-body');
+  var chevron = document.getElementById('step' + n + '-chevron');
+  var summary = document.getElementById('step' + n + '-summary');
+  num.classList.remove('active'); num.classList.add('done'); num.textContent = '✓';
+  body.classList.remove('open'); chevron.classList.remove('open');
+
+  if (n === 1) summary.textContent = mixerLabel() + ' · ' + surfaceLabel();
+  if (n === 2) summary.textContent = prefermentLabel();
+  if (n === 3) summary.textContent = panLabel() + ' · ' + crustLabel() + ' · ' + sel.qty + ' pizza' + (parseInt(sel.qty) > 1 ? 's' : '') + ' · ' + hydrationLabel() + ' · ' + fermLabel();
+  if (n === 4) { sel.flour = document.getElementById('flour-select').value; sel.yeast = document.getElementById('yeast-select').value; summary.textContent = flourLabel() + ' · ' + yeastLabel(); }
+
+  if (n < 4) {
+    var nt = document.getElementById('step' + (n+1) + '-trigger');
+    var nn = document.getElementById('step' + (n+1) + '-num');
+    var nb = document.getElementById('step' + (n+1) + '-body');
+    var nc = document.getElementById('step' + (n+1) + '-chevron');
+    nt.disabled = false; nn.classList.add('active'); nb.classList.add('open'); nc.classList.add('open');
+  }
+  if (n === 4) { var btn = document.getElementById('calc-btn'); btn.disabled = false; btn.textContent = 'Calculate My Dough Recipe →'; }
+}
+
+// ── LABEL HELPERS ──
+function mixerLabel() { return sel.mixer === 'stand' ? 'Stand Mixer' : 'Hand Mix'; }
+function surfaceLabel() { return sel.surface === 'steel' ? 'Pizza steel' : sel.surface === 'stone' ? 'Pizza stone' : 'Oven rack'; }
+function panLabel() { return sel.pan === '8x10' ? '8 x 10"' : '10 x 14"'; }
+function crustLabel() { return sel.crust === 'thick' ? 'Thick' : 'Standard'; }
+function prefermentLabel() { return sel.preferment === 'poolish' ? 'Poolish' : 'Direct (Traditional)'; }
+function hydrationLabel() { return sel.hydration ? Math.round(parseFloat(sel.hydration) * 100) + '%' : ''; }
+function fermLabel() { return sel.ferm === 'cold' ? 'Cold ferment (24 to 72 hrs)' : 'Same-day (~4 to 5 hrs)'; }
+function flourLabel() { return sel.flour === 'ap' ? 'All Purpose Flour' : 'Bread Flour'; }
+function yeastLabel() { return sel.yeast === 'ady' ? 'Active Dry Yeast' : 'Instant Yeast'; }
+function bakeTempF() { return sel.surface === 'steel' ? 450 : 500; }
+function bakeTempLabel() { return ft(bakeTempF()); }
+function finalBakeTime() { return sel.surface === 'steel' ? '13 to 16 minutes' : '10 to 15 minutes'; }
+function watchFromMin() { return sel.surface === 'steel' ? '8' : '10'; }
+
+// ── FLOUR / YEAST NOTES ──
+function updateFlourNote() {
+  var v = document.getElementById('flour-select').value;
+  var note = document.getElementById('flour-note');
+  if (v === 'ap') { note.textContent = 'All purpose flour cannot hold the higher hydration cleanly, so the calculator drops hydration by 5%. The crumb will be a little less open. Bread flour is recommended for Detroit style.'; note.classList.add('visible'); }
+  else { note.classList.remove('visible'); }
+}
+
+function updateYeastNote() {
+  var v = document.getElementById('yeast-select').value;
+  var note = document.getElementById('yeast-note');
+  if (v === 'ady') { note.textContent = 'Active dry yeast must be proofed before use. Dissolve in warm water (105 to 110°F) for 5 to 10 minutes until foamy.'; note.classList.add('visible'); }
+  else { note.classList.remove('visible'); }
+}
+
+// ── FORMAT HELPERS ──
+function fw(g, dec) {
+  var isImp = document.getElementById('unit-toggle').checked;
+  if (isImp) return (g * 0.035274).toFixed(dec !== undefined ? dec : 2) + ' oz';
+  if (dec !== undefined) return g.toFixed(dec) + 'g';
+  return Math.round(g) + 'g';
+}
+function ft(f) {
+  var isCel = document.getElementById('temp-toggle').checked;
+  return isCel ? Math.round((f - 32) * 5 / 9) + '°C' : f + '°F';
+}
+
+// ── COMPUTE DATA (validated engine) ──
+function computeData() {
+  var isPoolish = sel.preferment === 'poolish';
+  var isAP = sel.flour === 'ap';
+  var isADY = sel.yeast === 'ady';
+
+  var areas = { '8x10': 80, '10x14': 140 };
+  var area = areas[sel.pan] || 140;
+  var tc = sel.crust === 'thick' ? 4.3 : 3.7;
+  var qty = parseInt(sel.qty) || 1;
+  var perPanDough = Math.round(area * tc);
+  var totalDough = perPanDough * qty;
+
+  var hydration = parseFloat(sel.hydration);
+  if (isAP) hydration = Math.round((hydration - 0.05) * 100) / 100;
+
+  var saltPct = 0.02;
+  var mainYeastPct;
+  if (!isPoolish) { mainYeastPct = sel.ferm === 'sameday' ? 0.009 : 0.0037; }
+  else { mainYeastPct = sel.ferm === 'sameday' ? 0.006 : 0.0025; }
+  if (isADY) mainYeastPct *= 1.25;
+
+  var divisor = 1 + hydration + saltPct + mainYeastPct;
+  var totalFlour = Math.round(totalDough / divisor);
+  var totalWater = Math.round(totalFlour * hydration);
+  var salt = Math.round(totalFlour * saltPct * 10) / 10;
+  var mainYeast = Math.round(totalFlour * mainYeastPct * 100) / 100;
+
+  var prefFlour = 0, prefWater = 0, prefYeast = 0, prefTotal = 0;
+  var remainingFlour = totalFlour, remainingWater = totalWater;
+  if (isPoolish) {
+    prefFlour = Math.round(totalFlour * 0.35);
+    prefWater = prefFlour;
+    prefYeast = isADY ? 0.3 : 0.2;
+    prefTotal = Math.round(prefFlour + prefWater + prefYeast);
+    remainingFlour = totalFlour - prefFlour;
+    remainingWater = totalWater - prefWater;
+  }
+
+  var actualTotal = !isPoolish
+    ? Math.round(totalFlour + totalWater + salt + mainYeast)
+    : Math.round(prefTotal + remainingFlour + remainingWater + mainYeast + salt);
+
+  var calFlour = totalFlour * 3.6;
+  var calYeast = (mainYeast + (isPoolish ? prefYeast : 0)) * 2.5;
+  var totalCal = Math.round(calFlour + calYeast);
+
+  return { qty: qty, perPanDough: perPanDough, isPoolish: isPoolish, isAP: isAP, isADY: isADY,
+    totalDough: totalDough, totalFlour: totalFlour, totalWater: totalWater, hydration: hydration,
+    salt: salt, mainYeast: mainYeast, prefFlour: prefFlour, prefWater: prefWater, prefYeast: prefYeast,
+    prefTotal: prefTotal, remainingFlour: remainingFlour, remainingWater: remainingWater,
+    actualTotal: actualTotal, totalCal: totalCal, ferm: sel.ferm };
+}
+
+// ── RENDER OUTPUT ──
+function renderOutput(d) {
+  document.getElementById('mix-time-out').textContent = sel.mixer === 'stand' ? '8–12 min active' : '15–20 min active';
+  document.getElementById('ferm-time-out').textContent = fermLabel();
+  document.getElementById('active-time-out').textContent = sel.mixer === 'stand' ? '~30 min' : '~45 min';
+
+  var elapsed;
+  if (d.isPoolish) elapsed = d.ferm === 'cold' ? '~38 to 90 hrs for the dough, plus bake day' : '~16 to 21 hrs for the dough, plus bake day';
+  else elapsed = d.ferm === 'cold' ? '~26 to 75 hrs for the dough, plus bake day' : '~3 to 4 hrs for the dough, plus bake day';
+  document.getElementById('elapsed-time-out').textContent = elapsed;
+
+  var poolishHeader = document.getElementById('poolish-header-tag');
+  var poolishStorage = document.getElementById('poolish-storage-note');
+  var poolishReady = document.getElementById('poolish-ready-callout');
+  var poolishRows = document.getElementById('poolish-rows');
+  var poolishStorageCallout = document.getElementById('poolish-storage-callout');
+  var poolishReadyText = document.getElementById('poolish-ready-text');
+
+  if (!d.isPoolish) {
+    if (poolishStorageCallout) poolishStorageCallout.style.display = 'none';
+    if (poolishReady) poolishReady.style.display = 'none';
+    if (poolishHeader) poolishHeader.textContent = 'No preferment needed';
+    if (poolishRows) poolishRows.innerHTML = '<div class="callout"><div class="callout-title">No preferment required</div><p>You are using the direct method. All ingredients are mixed in one step after the autolyse. Proceed straight to the method steps when you are ready to mix.</p></div>';
+  } else {
+    if (poolishStorageCallout) poolishStorageCallout.style.display = 'block';
+    if (poolishStorage) poolishStorage.textContent = 'Leave your poolish at room temperature for 12 to 16 hours. Do not refrigerate. Cover loosely.';
+    if (poolishReady) poolishReady.style.display = 'block';
+    if (poolishReadyText) poolishReadyText.textContent = 'It has doubled, looks bubbly throughout, smells yeasty and slightly tangy, and is domed or just starting to fall. A fully collapsed poolish is over fermented but still usable, reduce your main yeast by 25%.';
+    if (poolishHeader) poolishHeader.textContent = 'Make the night before';
+    if (poolishRows) poolishRows.innerHTML =
+      '<div class="output-row"><span class="output-row-label">Bread flour</span><span class="output-row-value highlight">' + fw(d.prefFlour) + '</span></div>' +
+      '<div class="output-row"><span class="output-row-label">Water, room temperature</span><span class="output-row-value highlight">' + fw(d.prefWater) + '</span></div>' +
+      '<div class="output-row"><span class="output-row-label">' + (d.isADY ? 'Active dry yeast' : 'Instant yeast') + '</span><span class="output-row-value highlight">' + d.prefYeast.toFixed(1) + 'g (a small pinch)</span></div>' +
+      '<div class="output-total-row"><span class="output-total-label">Total poolish weight</span><span class="output-total-value">' + fw(d.prefTotal) + '</span></div>';
+  }
+
+  var flourNoteEl = document.getElementById('flour-output-note');
+  if (d.isAP) { flourNoteEl.textContent = 'All purpose flour: hydration dropped 5% to suit it. The crumb will be a little less open than with bread flour.'; flourNoteEl.style.display = 'block'; }
+  else { flourNoteEl.style.display = 'none'; }
+
+  var yeastNoteEl = document.getElementById('yeast-output-note');
+  if (d.isADY) { yeastNoteEl.textContent = 'Active dry yeast: proof in warm water (' + ft(105) + ' to ' + ft(110) + ') for 5 to 10 min before use.'; yeastNoteEl.style.display = 'block'; }
+  else { yeastNoteEl.style.display = 'none'; }
+
+  var waterLabel = sel.mixer === 'stand' ? 'Water (fridge-cold)' : 'Water (cool, room temp)';
+
+  var ingredientHTML = '';
+  if (!d.isPoolish) {
+    ingredientHTML =
+      '<div class="output-row"><span class="output-row-label">Bread flour</span><span class="output-row-value highlight">' + fw(d.totalFlour) + '</span></div>' +
+      '<div class="output-row"><span class="output-row-label">' + waterLabel + '</span><span class="output-row-value highlight">' + fw(d.totalWater) + '</span></div>' +
+      '<div class="output-row"><span class="output-row-label">' + (d.isADY ? 'Active dry yeast (proofed)' : 'Instant yeast') + '</span><span class="output-row-value highlight">' + d.mainYeast.toFixed(2) + 'g</span></div>' +
+      '<div class="output-row"><span class="output-row-label">Salt</span><span class="output-row-value highlight">' + fw(d.salt, 1) + '</span></div>';
+  } else {
+    ingredientHTML =
+      '<div class="output-row"><span class="output-row-label">Poolish (from above)</span><span class="output-row-value highlight">' + fw(d.prefTotal) + '</span></div>' +
+      '<div class="output-row"><span class="output-row-label">Bread flour (remaining)</span><span class="output-row-value highlight">' + fw(d.remainingFlour) + '</span></div>' +
+      '<div class="output-row"><span class="output-row-label">' + waterLabel + '</span><span class="output-row-value highlight">' + fw(d.remainingWater) + '</span></div>' +
+      '<div class="output-row"><span class="output-row-label">' + (d.isADY ? 'Active dry yeast (proofed)' : 'Instant yeast') + '</span><span class="output-row-value highlight">' + d.mainYeast.toFixed(2) + 'g</span></div>' +
+      '<div class="output-row"><span class="output-row-label">Salt</span><span class="output-row-value highlight">' + fw(d.salt, 1) + '</span></div>';
+  }
+  document.getElementById('ingredient-rows').innerHTML = ingredientHTML;
+  document.getElementById('total-dough-out').textContent = fw(d.actualTotal);
+  document.getElementById('per-ball-label-out').textContent = 'Per pan (' + d.qty + ' x ' + panLabel() + ')';
+  document.getElementById('per-ball-out').textContent = fw(d.perPanDough);
+  document.getElementById('cal-batch-out').textContent = d.totalCal.toLocaleString() + ' kcal';
+  document.getElementById('cal-ball-out').textContent = Math.round(d.totalCal / d.qty).toLocaleString() + ' kcal';
+
+  document.getElementById('ferm-note-title').textContent = fermLabel();
+  var fermNotes = {
+    sameday: 'Same-day dough. Mix, build strength with folds, then bulk rise and move to the recipe section to bake the same day.',
+    cold: 'Cold ferment. After building strength, refrigerate 24 to 72 hours. On bake day, the recipe section starts by tempering the dough. Builds noticeably more flavor.'
+  };
+  document.getElementById('ferm-note-text').textContent = fermNotes[d.ferm];
+
+  document.getElementById('ocb-steps').innerHTML = buildMethodSteps(d);
+}
+
+function refreshOutput() { if (lastCalcData) { renderOutput(lastCalcData); if (selectedRecipe && RECIPES[selectedRecipe] && document.getElementById('pizza-output-section').style.display === 'block') buildPizzaPanRecipe(RECIPES[selectedRecipe], lastCalcData); } }
+
+// ── CALCULATE ──
+function calculate() {
+  var d = computeData();
+  lastCalcData = d;
+  renderOutput(d);
+  doughProgress = { plan: false, ingredients: false, steps: false };
+  showSection('dough');
+  var calcSummary = [mixerLabel(), panLabel(), sel.qty + 'x', prefermentLabel(), fermLabel()].filter(Boolean).join(' · ');
+  collapseSection('calculator', calcSummary);
+  saveSession('dough');
+  setTimeout(function() { scrollToEl(document.getElementById('section-dough')); }, 60);
+}
+
+// ── METHOD STEPS (dough only; bake-day work lives in the recipe section) ──
+function buildMethodSteps(d) {
+  var isStand = sel.mixer === 'stand';
+  var waterDesc = isStand ? 'fridge-cold water' : 'cool, room-temperature water';
+  var steps = [];
+  var n = 1;
+
+  if (d.isPoolish) {
+    steps.push({ num: n++, title: 'Confirm Your Poolish Is Ready',
+      ingredients: 'Poolish: ' + fw(d.prefFlour) + ' flour + ' + fw(d.prefWater) + ' water + ' + d.prefYeast.toFixed(1) + 'g yeast',
+      before: 'Your poolish should have been at room temperature for 12 to 16 hours.',
+      body: '<p>Ready when doubled, bubbly, and smelling yeasty. Domed or just starting to fall is the peak. Fully collapsed is still usable, reduce the main yeast by 25%.</p>'
+    });
+  }
+
+  steps.push({ num: n++, title: 'Autolyse',
+    ingredients: d.isPoolish
+      ? 'Bread flour: ' + fw(d.remainingFlour) + ' · ' + waterDesc.charAt(0).toUpperCase()+waterDesc.slice(1) + ': ' + fw(d.remainingWater)
+      : 'Bread flour: ' + fw(d.totalFlour) + ' · ' + waterDesc.charAt(0).toUpperCase()+waterDesc.slice(1) + ': ' + fw(d.totalWater),
+    before: isStand ? 'Use fridge-cold water. The mixer adds friction heat, and cold water keeps the dough from finishing too warm.' : 'Cool room-temperature water is fine for hand mixing, there is little friction heat.',
+    body: '<p>Mix the ' + (d.isPoolish ? 'remaining flour and water' : 'flour and water') + ' just until no dry flour remains, then cover and rest 20 to 30 minutes. This hydrates the flour and starts gluten development, so the wet dough is easier to handle and more extensible.</p>',
+    timer: '20–30 min rest'
+  });
+
+  steps.push({ num: n++, title: 'Mix the Dough',
+    ingredients: (d.isPoolish ? 'Poolish: ' + fw(d.prefTotal) + ' · ' : '') + 'Yeast: ' + d.mainYeast.toFixed(2) + 'g · Salt: ' + fw(d.salt,1),
+    before: 'Add the yeast first, then the salt about 30 seconds later. Never add them together.',
+    body: d.isPoolish
+      ? ('<p>Add the poolish to the autolysed dough, then the yeast, then the salt. ' + (isStand ? 'Mix on medium-low 6 to 8 minutes until smooth and elastic.' : 'Turn onto the counter and slap and fold with wet hands until the dough turns smooth and elastic, about 5 to 8 minutes. If it tears, rest 10 to 15 minutes and continue.') + '</p>')
+      : ('<p>Add the yeast to the autolysed dough, then the salt. ' + (isStand ? 'Mix on medium-low 6 to 8 minutes until smooth and elastic.' : 'Turn onto the counter and slap and fold with wet hands: lift one side, slap it down, fold it over itself, and repeat rhythmically for about 5 to 8 minutes until it goes from sticky to smooth and elastic. If it tears, rest 10 to 15 minutes and continue.') + '</p>'),
+    timer: isStand ? '6–8 min mixing' : '5–8 min slap and fold'
+  });
+
+  steps.push({ num: n++, title: 'Build Strength with Stretch and Folds',
+    ingredients: 'None, wet hands',
+    before: 'Keep the dough covered between folds.',
+    body: isStand
+      ? '<p>Your mixer already built most of the gluten, so the folds just add a little strength and even things out. Do 1 to 2 light sets of stretch and folds in the first hour: with wet hands, grab one side, stretch up, and fold over the center, rotating around the bowl.</p>'
+      : '<p>Over the next 1 to 2 hours, do 3 to 4 sets of stretch and folds about 30 minutes apart. With wet hands, grab one side, stretch it up, and fold it over the center, rotating around the bowl. The dough firms up and becomes smooth and elastic.</p>',
+    timer: isStand ? '1–2 light sets, first hour' : '1–2 hrs, folds every 30 min'
+  });
+
+  if (d.ferm === 'cold') {
+    steps.push({ num: n++, title: 'Cold Ferment',
+      ingredients: 'Covered container',
+      before: 'This is where the flavor develops.',
+      body: '<p>Cover the dough and refrigerate 24 to 72 hours. Longer means more flavor. That is the end of the dough work. When you are ready to bake, head to the recipe section, which starts by tempering the dough.</p>',
+      timer: '24–72 hrs cold'
+    });
+  } else {
+    steps.push({ num: n++, title: 'Bulk Rise',
+      ingredients: 'Covered container',
+      before: 'Somewhere warm and draft-free.',
+      body: '<p>Cover and let the dough rise at room temperature until puffy and about 50% larger, roughly 1 to 2 hours. That is the end of the dough work. Head to the recipe section to shape, proof in the pan, and bake.</p>',
+      timer: 'about 1–2 hrs'
+    });
+  }
+
+  steps.push({ num: n++, title: 'Dough Is Made',
+    ingredients: 'None, planning reminder',
+    before: 'Everything from here happens on bake day.',
+    body: '<p>Your dough is ready. Shaping into the pan, proofing, topping, and baking all happen on bake day in the recipe section below. Choose your recipe there when you are ready to bake.</p>'
+  });
+
+  return steps.map(function(s, idx) {
+    var isFirst = idx === 0;
+    var isLast = idx === steps.length - 1;
+    var nextStep = !isLast ? steps[idx + 1] : null;
+    return '<div class="method-step-accord" id="dough-step-wrap-' + s.num + '">'
+      + '<button class="method-step-accord-trigger" onclick="toggleMethodStep(' + s.num + ')">'
+      + '<div class="method-step-num">' + s.num + '</div>'
+      + '<div class="method-step-title">' + s.title + '</div>'
+      + '<div class="method-step-accord-chevron ' + (isFirst ? 'open' : '') + '" id="method-chev-' + s.num + '">›</div>'
+      + '</button>'
+      + '<div class="method-step-accord-body ' + (isFirst ? 'open' : '') + '" id="method-body-' + s.num + '">'
+      + '<div class="ingredient-callout"><div class="callout-title">Ingredients this step</div><p>' + s.ingredients + '</p></div>'
+      + '<div class="before-step-callout"><div class="callout-title">Before you begin</div><p>' + s.before + '</p></div>'
+      + s.body
+      + (s.timer ? '<div class="timer-badge">⏱ ' + s.timer + '</div>' : '')
+      + (!isLast ? '<button class="pizza-next-btn" style="margin-top:14px;" onclick="openMethodStep(' + nextStep.num + ')">Next: ' + nextStep.title + ' →</button>' : '')
+      + '</div></div>';
+  }).join('');
+}
+
+function toggleMethodStep(num) {
+  var body = document.getElementById('method-body-' + num);
+  var chev = document.getElementById('method-chev-' + num);
+  if (!body) return;
+  body.classList.toggle('open');
+  chev.classList.toggle('open', body.classList.contains('open'));
+}
+
+function openMethodStep(num) {
+  var body = document.getElementById('method-body-' + num);
+  var chev = document.getElementById('method-chev-' + num);
+  var wrap = document.getElementById('dough-step-wrap-' + num);
+  if (!body) return;
+  body.classList.add('open');
+  if (chev) chev.classList.add('open');
+  setTimeout(function() { scrollToEl(wrap); }, 50);
+}
+
+// ===================== RECIPES =====================
+var CHEESE_OPTIONS = {
+  brick:        { label: 'Wisconsin brick (traditional)', note: 'The original. Buttery, melts low, browns hard into the frico.', perOz: [105, 0.8, 6.6, 8.4] },
+  muenster:     { label: 'Muenster (closest substitute)', note: 'Same family as brick, mild and creamy, widely available.', perOz: [104, 0.3, 6.6, 8.5] },
+  blend402020:  { label: 'Muenster + Monterey Jack + mild white cheddar (40/40/20)', note: 'The recommended brick mimic when you cannot find brick. Good melt with a little sharpness.', perOz: [107, 0.4, 6.7, 8.6] }
+};
+
+var RECIPES = {
+  'detroit-classic': {
+    id: 'detroit-classic', type: 'pizza-pan', name: 'Classic Pepperoni',
+    desc: 'The Detroit standard. Cheese to the caramelized edges, pepperoni, and racing stripes of sauce on top after the bake.',
+    prepTime: '~20 min additional prep', hasHealthier: false,
+    cheeseAmt: { '8x10': 'about 6 to 8 oz (170 to 225 g)', '10x14': 'about 10 to 12 oz (285 to 340 g)' },
+    pepperoniAmt: { '8x10': 'about 2 oz (55 g)', '10x14': 'about 3 to 4 oz (85 to 115 g)' },
+    sauceAmt: { '8x10': 'about 1/3 cup', '10x14': 'about 1/2 cup' }
+  }
+};
+
+var selectedRecipe = null;
+var selectedVersion = null;
+var selectedCheese = 'brick';
+
+function showRecipeSelector() {
+  collapseSection('dough', 'Your dough recipe is ready, make this before baking');
+  showSection('recipe');
+  document.getElementById('pizza-output-section').style.display = 'none';
+  renderRecipeSelector();
+}
+
+function renderRecipeSelector() {
+  var compatibleTypes = RECIPE_COMPATIBILITY[DOUGH_TYPE] || [];
+  var compatible = Object.values(RECIPES).filter(function(r) { return compatibleTypes.includes(r.type); });
+  var list = document.getElementById('recipe-card-list');
+  if (!list) return;
+  list.innerHTML = compatible.map(function(recipe) {
+    return '<div class="recipe-card" id="recipe-card-' + recipe.id + '" onclick="selectRecipe(\'' + recipe.id + '\')"><div class="recipe-card-inner"><div><div class="recipe-card-title">' + recipe.name + '</div><div class="recipe-card-desc">' + recipe.desc + '</div><div class="recipe-card-time">' + recipe.prepTime + '</div></div><div class="recipe-card-check" id="recipe-check-' + recipe.id + '">✓</div></div></div>';
+  }).join('');
+  selectedRecipe = null;
+  var btn = document.getElementById('build-recipe-btn');
+  if (btn) { btn.disabled = true; btn.style.background = ''; btn.style.color = ''; btn.style.cursor = ''; }
+  var note = document.getElementById('build-recipe-note');
+  if (note) { note.textContent = 'Select a recipe above to continue'; note.style.display = 'block'; }
+}
+
+function selectRecipe(id) {
+  Object.values(RECIPES).forEach(function(r) {
+    var card = document.getElementById('recipe-card-' + r.id);
+    var check = document.getElementById('recipe-check-' + r.id);
+    if (card) card.classList.remove('sel');
+    if (check) check.style.display = 'none';
+  });
+  var card = document.getElementById('recipe-card-' + id);
+  var check = document.getElementById('recipe-check-' + id);
+  if (card) card.classList.add('sel');
+  if (check) check.style.display = 'flex';
+  selectedRecipe = id;
+  selectedVersion = 'standard';
+  enableBuildBtn();
+}
+
+function selectVersion() { /* Detroit has one version; retained for restore safety */ }
+
+function enableBuildBtn() {
+  var btn = document.getElementById('build-recipe-btn');
+  var note = document.getElementById('build-recipe-note');
+  if (btn) { btn.disabled = false; btn.style.background = ''; btn.style.color = ''; btn.style.cursor = ''; }
+  if (note) note.style.display = 'none';
+}
+
+function cheeseLabel() { return (CHEESE_OPTIONS[selectedCheese] || CHEESE_OPTIONS.brick).label.replace(/ \(.*\)/, ''); }
+
+function buildRecipe() {
+  if (!selectedRecipe) { alert('Please select a recipe.'); return; }
+  if (!lastCalcData) { alert('Please calculate your dough first.'); return; }
+  recipeOrder.forEach(function(id) { recipeProgress[id] = false; });
+  recipeProgress.choose = true;
+  ['sauce','cheese','baking','nutrition'].forEach(function(id) { var body = document.getElementById('pizza-body-' + id); var chev = document.getElementById('pizza-chev-' + id); if (body) body.classList.add('collapsed'); if (chev) chev.classList.remove('open'); });
+  var prebakeBody = document.getElementById('pizza-body-prebake'); var prebakeChev = document.getElementById('pizza-chev-prebake');
+  if (prebakeBody) prebakeBody.classList.remove('collapsed'); if (prebakeChev) prebakeChev.classList.add('open');
+  var ingBody = document.getElementById('pizza-ingredients-body'); var ingChev = document.getElementById('pizza-ingredients-chevron');
+  if (ingBody) ingBody.classList.remove('collapsed'); if (ingChev) ingChev.classList.add('open');
+  buildRecipeFromData(selectedRecipe, lastCalcData);
+  updateRecipeMiniOutline();
+  collapseSection('dough', 'Your dough recipe is ready, make this before baking');
+  showSection('recipe');
+  document.getElementById('pizza-output-section').style.display = 'block';
+  setTimeout(function() { scrollToEl(document.getElementById('pizza-ingredients-card')); }, 50);
+  document.getElementById('jump-to-pizza-link').style.display = 'flex';
+  var dlBtn = document.getElementById('download-pizza-btn');
+  if (dlBtn) dlBtn.classList.add('visible');
+  saveSession('recipe');
+}
+
+function buildRecipeFromData(recipeId, d) {
+  var recipe = RECIPES[recipeId];
+  if (!recipe) { console.warn('Recipe not found:', recipeId); return; }
+  if (recipe.type === 'pizza-pan') { buildPizzaPanRecipe(recipe, d); return; }
+  console.warn('Unknown recipe type:', recipe.type);
+}
+
+function selectCheese(opt) {
+  selectedCheese = opt;
+  if (RECIPES[selectedRecipe]) buildPizzaPanRecipe(RECIPES[selectedRecipe], lastCalcData);
+  updateRecipeMiniOutline();
+  saveSession(document.getElementById('pizza-output-section').style.display === 'block' ? 'recipe' : 'dough');
+}
+
+function buildPizzaPanRecipe(recipe, d) {
+  var pan = sel.pan;
+  var qty = d ? d.qty : 1;
+  var panOilAmt = pan === '8x10' ? 'about 1 tbsp' : 'about 1.5 tbsp';
+
+  // ── BAKE DAY PREP (into prebake card) ──
+  var prep = [];
+  prep.push(['Temper the dough', (d && d.ferm === 'cold')
+    ? 'You cold fermented, so pull the dough from the fridge 2 to 3 hours before baking. Cold dough is stiff and tears. Same-day dough is already at room temperature.'
+    : 'Your same-day dough is ready to shape. (If you had cold fermented, you would pull it out 2 to 3 hours ahead to warm up.)']);
+  prep.push(['Oil the pan', 'Coat the bottom and walls of your ' + panLabel() + ' pan with ' + panOilAmt + ' of neutral oil. This fries the bottom crust and helps release.']);
+  prep.push(['First press', 'Place the dough in the pan and press it toward the edges with oiled fingertips. It will spring back and not reach the corners yet. That is expected.']);
+  prep.push(['Rest and press to the corners', 'Cover and rest 15 to 20 minutes, then press again toward the corners. Repeat until the dough fills the pan and stays put, usually two or three presses.']);
+  prep.push(['Final proof in the pan', 'Let the dough proof in the pan until puffy and risen about a third of the way up the walls, roughly 1 to 2 hours. When it is jiggly and pillowy, it is ready.']);
+  var preheat = sel.surface === 'steel'
+    ? 'Put your steel on a lower rack and preheat to ' + ft(450) + ' for 45 to 60 minutes, so the steel is fully hot. The pan will bake directly on the steel for a crisper bottom.'
+    : sel.surface === 'stone'
+    ? 'Put your stone on a lower rack and preheat to ' + ft(500) + ' for 45 to 60 minutes. The pan bakes directly on the stone for a bit more bottom heat.'
+    : 'Preheat the oven to ' + ft(500) + ' with a rack in the lower third. The pan bakes directly on the rack.';
+  prep.push(['Preheat the oven', preheat]);
+
+  var prebakeEl = document.getElementById('prebake-oven-steps');
+  if (prebakeEl) prebakeEl.innerHTML = prep.map(function(s, i) {
+    return '<div class="method-step" style="border-bottom:1px solid var(--border);padding-bottom:12px;' + (i > 0 ? 'margin-top:12px;' : '') + '">'
+      + '<div class="method-step-header"><div class="method-step-num">' + (i+1) + '</div><div class="method-step-title">' + s[0] + '</div></div>'
+      + '<p class="method-step-p">' + s[1] + '</p></div>';
+  }).join('');
+
+  // ── SAUCE (Classic Cooked only) ──
+  var sauceRowsHTML =
+    '<div class="output-row"><span class="output-row-label">Crushed tomatoes (28 oz can)</span><span class="output-row-value highlight">1 can</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Tomato paste</span><span class="output-row-value highlight">6 oz</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Olive oil</span><span class="output-row-value highlight">2 tbsp</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Garlic, minced</span><span class="output-row-value highlight">3 cloves</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Dried oregano</span><span class="output-row-value highlight">1 tbsp</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Dried basil</span><span class="output-row-value highlight">1 tsp</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Onion powder</span><span class="output-row-value highlight">1 tsp</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Sugar (to taste)</span><span class="output-row-value highlight">1 to 2 tsp</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Salt</span><span class="output-row-value highlight">1 tsp +</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Red pepper flakes</span><span class="output-row-value highlight">pinch</span></div>'
+    + '<div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:6px;">Makes about 3 cups. Use ' + recipe.sauceAmt[pan] + ' per pan' + (qty > 1 ? ' (x' + qty + ')' : '') + '. Sauce goes on top after baking.</div>';
+  document.getElementById('sauce-ingredient-rows').innerHTML = sauceRowsHTML;
+  var sauceMethodEl = document.getElementById('sauce-method-body');
+  if (sauceMethodEl) sauceMethodEl.innerHTML =
+    '<div class="subsection-title" style="margin-top:0;">Method</div>'
+    + '<div class="method-step" style="border-bottom:none;padding-bottom:0;"><div class="method-step-header"><div class="method-step-num">1</div><div class="method-step-title">Bloom the aromatics</div></div><p class="method-step-p">Warm the olive oil over medium-low, add the garlic, and cook 30 to 60 seconds until fragrant but not browned. Stir in the tomato paste and cook 1 to 2 minutes to deepen it.</p></div>'
+    + '<div class="method-step" style="border-bottom:none;padding-bottom:0;margin-top:10px;"><div class="method-step-header"><div class="method-step-num">2</div><div class="method-step-title">Simmer</div></div><p class="method-step-p">Add the crushed tomatoes, oregano, basil, onion powder, salt, sugar, and pepper flakes. Simmer gently 25 to 30 minutes, stirring now and then, until thick enough to sit on a spoon without running.</p></div>'
+    + '<div class="method-step" style="border-bottom:none;padding-bottom:0;margin-top:10px;"><div class="method-step-header"><div class="method-step-num">3</div><div class="method-step-title">Finish</div></div><p class="method-step-p">Taste and adjust salt and sugar. Cool slightly. After the pizza bakes, spoon it on top in 2 to 3 stripes.</p></div>'
+    + '<div class="callout" style="margin-top:12px;"><div class="callout-title">Make extra, freeze the rest</div><p>This keeps about 5 days refrigerated and freezes well. Freeze the leftover in portions so a future pizza is one step shorter and nothing goes to waste.</p></div>'
+    + '<div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:10px;">Other ways to do it: a quick 5-minute warm-through of good crushed tomatoes, a long 1-hour simmer for deeper flavor, or reducing a good jarred sauce until thick.</div>';
+
+  // ── CHEESE (3-option selector) ──
+  var cheeseBtns = Object.keys(CHEESE_OPTIONS).map(function(key) {
+    var on = key === selectedCheese;
+    return '<div class="btn-opt' + (on ? ' sel' : '') + '" style="text-align:left;line-height:1.3;" onclick="selectCheese(\'' + key + '\')">' + CHEESE_OPTIONS[key].label + '</div>';
+  }).join('');
+  var cheeseSelectorHTML = '<div class="field-label" style="margin-top:0;">Choose your cheese</div>'
+    + '<div class="btn-group" id="cheese-select-group" style="flex-direction:column;align-items:stretch;">' + cheeseBtns + '</div>'
+    + '<div class="dynamic-note visible" style="margin-bottom:12px;">' + (CHEESE_OPTIONS[selectedCheese] || CHEESE_OPTIONS.brick).note + '</div>';
+  var cheeseRowsHTML = cheeseSelectorHTML
+    + '<div class="output-row"><span class="output-row-label">' + (CHEESE_OPTIONS[selectedCheese] || CHEESE_OPTIONS.brick).label + ', cubed or shredded</span><span class="output-row-value highlight">' + recipe.cheeseAmt[pan] + '</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Pepperoni</span><span class="output-row-value highlight">' + recipe.pepperoniAmt[pan] + '</span></div>'
+    + '<div style="font-size:11px;font-style:italic;color:var(--text-muted);margin-top:4px;">Amounts are per pan' + (qty > 1 ? ', multiply by ' + qty : '') + '. Cube the firm cheeses for pockets of melt, and push it all to the pan walls. Brick plus low-moisture mozzarella 50/50 is also common.</div>';
+  document.getElementById('cheese-ingredient-rows').innerHTML = cheeseRowsHTML;
+
+  var cheeseMethodEl = document.getElementById('cheese-method-body');
+  if (cheeseMethodEl) cheeseMethodEl.innerHTML =
+    '<div class="method-step" style="border-bottom:none;margin-bottom:0;padding-bottom:0;margin-top:4px;">'
+    + '<div class="method-step-header"><div class="method-step-num">1</div><div class="method-step-title">Cheese to the edges</div></div>'
+    + '<p class="method-step-p">After the par-bake, spread the cheese over the dough and push it all the way to the pan walls, especially the corners. The cheese touching the hot steel is what caramelizes into the frico border. Do not leave a bare rim.</p></div>'
+    + '<div class="method-step" style="border-bottom:none;margin-bottom:0;padding-bottom:0;margin-top:12px;">'
+    + '<div class="method-step-header"><div class="method-step-num">2</div><div class="method-step-title">Add the pepperoni</div></div>'
+    + '<p class="method-step-p">Lay the pepperoni over the cheese. Cup-and-char pepperoni is excellent here. You can put half under the cheese and half on top if you like.</p></div>';
+
+  // ── Static "at a glance" rows ──
+  document.getElementById('static-sauce-rows').innerHTML =
+    '<div class="output-row"><span class="output-row-label">Classic cooked tomato sauce</span><span class="output-row-value highlight">' + recipe.sauceAmt[pan] + ' per pan</span></div>';
+  document.getElementById('static-cheese-rows').innerHTML =
+    '<div class="output-row"><span class="output-row-label">' + (CHEESE_OPTIONS[selectedCheese] || CHEESE_OPTIONS.brick).label + '</span><span class="output-row-value highlight">' + recipe.cheeseAmt[pan] + '</span></div>'
+    + '<div class="output-row"><span class="output-row-label">Pepperoni</span><span class="output-row-value highlight">' + recipe.pepperoniAmt[pan] + '</span></div>';
+
+  // ── Baking ──
+  document.getElementById('baking-steps-body').innerHTML = buildBakingSteps();
+  document.getElementById('baking-title').textContent = 'Baking Instructions';
+
+  // ── Nutrition ──
+  var sliceSel = document.getElementById('pizza-slice-count');
+  if (sliceSel) sliceSel.value = String(pan === '8x10' ? 4 : 8);
+  renderNutrition();
+}
+
+// ── BAKING STEPS (Detroit par-bake, surface-aware) ──
+function buildBakingSteps() {
+  var onSurface = sel.surface === 'steel' ? ' on the hot steel' : sel.surface === 'stone' ? ' on the hot stone' : '';
+  var steps = [
+    { num: 1, title: 'Par-bake the bare dough', body: 'Place the proofed dough (no toppings yet) in the ' + bakeTempLabel() + ' oven' + onSurface + ' and par-bake 6 to 8 minutes, until just set and barely golden. This builds the structure for the fried bottom.' },
+    { num: 2, title: 'Add cheese to the edges and pepperoni', body: 'Pull the pan, spread the cheese all the way to the pan walls, and lay on the pepperoni. The cheese against the steel is what forms the frico edge.' },
+    { num: 3, title: 'Final bake', body: 'Return to the oven at ' + bakeTempLabel() + ' for ' + finalBakeTime() + ', until the cheese edges are deeply browned and almost look too dark. That is the flavor. Watch from about minute ' + watchFromMin() + '.' },
+    { num: 4, title: 'Release, rest, and stripe the sauce', body: 'Run a knife around the pan to release the frico edge, lift the pizza onto a rack, and rest 1 to 2 minutes. Spoon the warm sauce on top in 2 to 3 stripes, then slice.' }
+  ];
+  var html = steps.map(function(s) {
+    return '<div class="method-step" style="border-bottom:1px solid var(--border);padding-bottom:12px;' + (s.num > 1 ? 'margin-top:12px;' : '') + '">'
+      + '<div class="method-step-header"><div class="method-step-num">' + s.num + '</div><div class="method-step-title">' + s.title + '</div></div>'
+      + '<p class="method-step-p">' + s.body + '</p></div>';
+  }).join('');
+  html += '<div class="callout" style="margin-top:12px;"><div class="callout-title">Optional: char the top</div>'
+    + '<p>For a darker top, switch on the broiler and move the pan up to a top rack for 1 to 2 minutes near the end, watching closely. Leave your steel or stone where it is, moving a screaming-hot stone or steel is unsafe.</p></div>'
+    + '<div class="callout" style="margin-top:10px;"><div class="callout-title">Sauce on top, after the bake</div>'
+    + '<p>This is the most authentic order. Some pizzerias stripe the sauce on before the final bake instead. Both are done.</p></div>';
+  return html;
+}
+
+// ── NUTRITION (per selected cheese, USDA-grounded) ──
+var NUTR = {
+  flourPerG: [3.6, 0.725, 0.12, 0.017],   // kcal, carb, protein, fat per gram
+  oilPerG:   [8.84, 0, 0, 1.0],
+  pepPerOz:  [140, 0.34, 5.4, 13.0],
+  sauceServ: { '10x14': [113, 16, 3, 5], '8x10': [75, 11, 2, 3] },
+  panOilG:   { '10x14': 20, '8x10': 13.5 },
+  cheeseOz:  { '10x14': 11, '8x10': 7 },
+  pepOz:     { '10x14': 3.5, '8x10': 2 }
+};
+var OZ_G = 28.35;
+
+function setNutritionMode() { renderNutrition(); }
+
+function nScale(per, mult) { return per.map(function(v) { return v * mult; }); }
+function nAdd() { var a = [0,0,0,0]; for (var i = 0; i < arguments.length; i++) { for (var j = 0; j < 4; j++) a[j] += arguments[i][j]; } return a; }
+
+function renderNutrition() {
+  var d = lastCalcData;
+  if (!d) return;
+  var pan = sel.pan;
+  var perPanFlour = d.totalFlour / d.qty;
+  var dough = nScale(NUTR.flourPerG, perPanFlour);
+  var panOil = nScale(NUTR.oilPerG, NUTR.panOilG[pan]);
+  var sauce = NUTR.sauceServ[pan];
+  var cheesePerOz = (CHEESE_OPTIONS[selectedCheese] || CHEESE_OPTIONS.brick).perOz;
+  var cheese = nScale(cheesePerOz, NUTR.cheeseOz[pan]);
+  var pep = nScale(NUTR.pepPerOz, NUTR.pepOz[pan]);
+  var total = nAdd(dough, panOil, sauce, cheese, pep);
+
+  var sliceSel = document.getElementById('pizza-slice-count');
+  var slices = sliceSel ? parseInt(sliceSel.value) : (pan === '8x10' ? 4 : 8);
+  if (!slices || slices < 1) slices = pan === '8x10' ? 4 : 8;
+  var per = total.map(function(v) { return v / slices; });
+
+  function setC(id, kcal) { var e = document.getElementById(id); if (e) e.textContent = Math.round(kcal) + ' cal'; }
+  function setM(prefix, m) {
+    var p = document.getElementById(prefix + '-p'); if (p) p.textContent = 'P ' + Math.round(m[2]) + 'g';
+    var c = document.getElementById(prefix + '-c'); if (c) c.textContent = 'C ' + Math.round(m[1]) + 'g';
+    var f = document.getElementById(prefix + '-f'); if (f) f.textContent = 'F ' + Math.round(m[3]) + 'g';
+  }
+  setC('n-dough-cal', dough[0]); setM('n-dough', dough);
+  setC('n-sauce-cal', sauce[0]); setM('n-sauce', sauce);
+  setC('n-cheese-cal', cheese[0]); setM('n-cheese', cheese);
+  var cheeseSub = document.getElementById('n-cheese-sub'); if (cheeseSub) cheeseSub.textContent = cheeseLabel() + ' · ' + NUTR.cheeseOz[pan] + ' oz';
+  setC('n-oil-cal', panOil[0]); var oilF = document.getElementById('n-oil-f'); if (oilF) oilF.textContent = 'F ' + Math.round(panOil[3]) + 'g';
+  var oilSub = document.getElementById('n-oil-sub'); if (oilSub) oilSub.textContent = (pan === '8x10' ? '~1 tbsp' : '~1.5 tbsp') + ' absorbed (est.)';
+  var pepCard = document.getElementById('n-toppings-card'); if (pepCard) pepCard.style.display = '';
+  setC('n-toppings-cal', pep[0]); setM('n-toppings', pep);
+  var pepSub = document.getElementById('n-toppings-sub'); if (pepSub) pepSub.textContent = 'Pepperoni · ' + NUTR.pepOz[pan] + ' oz';
+  var pepLabel = document.getElementById('n-toppings-label'); if (pepLabel) pepLabel.textContent = 'Pepperoni';
+
+  setC('n-total-cal', total[0]); setM('n-total', total);
+  var slabel = document.getElementById('n-slice-label'); if (slabel) slabel.textContent = 'Per slice (' + slices + ')';
+  setC('n-slice-cal', per[0]); setM('n-slice', per);
+
+  var title = document.getElementById('nutrition-title'); if (title) title.textContent = 'Calorie & Macro Breakdown';
+}
+
+// ── DOWNLOAD PIZZA RECIPE ──
+function downloadPizzaRecipe() {
+  var config = document.getElementById('pizza-print-config');
+  if (config && lastCalcData) {
+    var recipe = RECIPES[selectedRecipe];
+    config.textContent = [recipe ? recipe.name : '', panLabel(), lastCalcData.qty + ' pizza' + (lastCalcData.qty > 1 ? 's' : ''), prefermentLabel(), cheeseLabel()].filter(Boolean).join(' · ');
+  }
+  document.body.classList.add('print-pizza-only');
+  window.print();
+  document.body.classList.remove('print-pizza-only');
+}
+
+// ── SESSION SAVE / RESTORE ──
+var SESSION_KEY = 'markodough_detroit_session';
+
+function saveSession(stage) {
+  try { var data = { stage: stage, savedAt: new Date().toISOString(), sel: Object.assign({}, sel), lastCalcData: lastCalcData, selectedRecipe: selectedRecipe, selectedCheese: selectedCheese }; localStorage.setItem(SESSION_KEY, JSON.stringify(data)); }
+  catch(e) { console.warn('Could not save session:', e); }
+}
+
+function loadSession() {
+  try { var raw = localStorage.getItem(SESSION_KEY); if (!raw) return null; return JSON.parse(raw); } catch(e) { return null; }
+}
+
+function clearSession() { localStorage.removeItem(SESSION_KEY); document.getElementById('restore-banner').classList.remove('visible'); }
+
+function checkForSavedSession() {
+  var session = loadSession();
+  if (!session || !session.lastCalcData) return;
+  var banner = document.getElementById('restore-banner');
+  var dateEl = document.getElementById('restore-banner-date');
+  var saved = new Date(session.savedAt);
+  var diffHrs = Math.round((new Date() - saved) / 36e5);
+  var timeStr = diffHrs < 1 ? 'less than an hour ago' : diffHrs < 24 ? diffHrs + ' hour' + (diffHrs > 1 ? 's' : '') + ' ago' : Math.round(diffHrs / 24) + ' day' + (Math.round(diffHrs / 24) > 1 ? 's' : '') + ' ago';
+  dateEl.textContent = 'Last saved ' + timeStr;
+  banner.classList.add('visible');
+}
+
+function restoreSession() {
+  var session = loadSession();
+  if (!session) return;
+  Object.assign(sel, session.sel);
+  lastCalcData = session.lastCalcData;
+  selectedRecipe = session.selectedRecipe;
+  selectedCheese = session.selectedCheese || 'brick';
+  document.getElementById('restore-banner').classList.remove('visible');
+
+  if (sel.mixer) document.querySelectorAll('#mixer-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Stand Mixer' && sel.mixer === 'stand') || (b.textContent.trim() === 'Hand Mix' && sel.mixer === 'hand')) b.classList.add('sel'); });
+  if (sel.surface) document.querySelectorAll('#surface-group .btn-opt').forEach(function(b) { var t = b.textContent.trim(); if ((t === 'Oven Rack' && sel.surface === 'rack') || (t === 'Pizza Steel' && sel.surface === 'steel') || (t === 'Pizza Stone' && sel.surface === 'stone')) b.classList.add('sel'); });
+  if (sel.preferment) selectPreferment(sel.preferment);
+  if (sel.pan) { document.querySelectorAll('#pan-group .btn-opt').forEach(function(b) { if (b.textContent.indexOf(sel.pan === '8x10' ? '8 x 10' : '10 x 14') === 0) b.classList.add('sel'); }); rebuildQtyButtons(sel.pan); }
+  if (sel.crust) document.querySelectorAll('#crust-group .btn-opt').forEach(function(b) { if ((b.textContent.trim() === 'Standard' && sel.crust === 'standard') || (b.textContent.trim() === 'Thick' && sel.crust === 'thick')) b.classList.add('sel'); });
+  if (sel.qty) document.querySelectorAll('#qty-group .btn-opt').forEach(function(b) { if (b.textContent.trim() === String(sel.qty)) b.classList.add('sel'); });
+  if (sel.hydration) document.querySelectorAll('#hydration-group .btn-opt').forEach(function(b) { if (b.textContent.indexOf(Math.round(parseFloat(sel.hydration)*100) + '%') === 0) b.classList.add('sel'); });
+  if (sel.ferm) document.querySelectorAll('#ferm-group .btn-opt').forEach(function(b) { if ((b.textContent.indexOf('Same-day') === 0 && sel.ferm === 'sameday') || (b.textContent.indexOf('Cold') === 0 && sel.ferm === 'cold')) b.classList.add('sel'); });
+  if (sel.flour) { document.getElementById('flour-select').value = sel.flour; updateFlourNote(); }
+  if (sel.yeast) { document.getElementById('yeast-select').value = sel.yeast; updateYeastNote(); }
+
+  completeStepSilent(1); if (sel.preferment) completeStepSilent(2); if (sel.pan) completeStepSilent(3); completeStepSilent(4);
+  var btn = document.getElementById('calc-btn'); if (btn) { btn.disabled = false; btn.textContent = 'Calculate My Dough Recipe →'; }
+  renderOutput(lastCalcData);
+  var calcSummary = [mixerLabel(), panLabel(), sel.qty + 'x', prefermentLabel(), fermLabel()].filter(Boolean).join(' · ');
+  collapseSection('calculator', calcSummary);
+
+  if (session.stage === 'recipe' && selectedRecipe && RECIPES[selectedRecipe]) {
+    showSection('dough'); collapseSection('dough', 'Your dough recipe is ready, make this before baking'); showSection('recipe'); renderRecipeSelector();
+    setTimeout(function() {
+      selectRecipe(selectedRecipe);
+      buildRecipeFromData(selectedRecipe, lastCalcData);
+      document.getElementById('pizza-output-section').style.display = 'block'; document.getElementById('jump-to-pizza-link').style.display = 'flex';
+      var dlBtn = document.getElementById('download-pizza-btn'); if (dlBtn) dlBtn.classList.add('visible');
+      setTimeout(function() { scrollToEl(document.getElementById('section-recipe')); }, 100);
+    }, 150);
+  } else { showSection('dough'); setTimeout(function() { scrollToEl(document.getElementById('section-dough')); }, 100); }
+}
+
+function completeStepSilent(n) {
+  var num = document.getElementById('step' + n + '-num');
+  var body = document.getElementById('step' + n + '-body');
+  var chevron = document.getElementById('step' + n + '-chevron');
+  var summary = document.getElementById('step' + n + '-summary');
+  if (!num) return;
+  num.classList.remove('active'); num.classList.add('done'); num.textContent = '✓';
+  if (body) body.classList.remove('open'); if (chevron) chevron.classList.remove('open');
+  if (n === 1 && summary) summary.textContent = mixerLabel() + ' · ' + surfaceLabel();
+  if (n === 2 && summary) summary.textContent = prefermentLabel();
+  if (n === 3 && summary) summary.textContent = panLabel() + ' · ' + crustLabel() + ' · ' + sel.qty + ' pizza' + (parseInt(sel.qty) > 1 ? 's' : '') + ' · ' + hydrationLabel() + ' · ' + fermLabel();
+  if (n === 4 && summary) summary.textContent = flourLabel() + ' · ' + yeastLabel();
+  if (n < 4) { var nt = document.getElementById('step' + (n+1) + '-trigger'); var nn = document.getElementById('step' + (n+1) + '-num'); if (nt) nt.disabled = false; if (nn) nn.classList.add('active'); }
+}
+
+document.addEventListener('DOMContentLoaded', checkForSavedSession);
+</script>
+
+</body>
+</html>
