@@ -719,19 +719,6 @@
   .print-btn:hover { opacity: 0.85; }
 
   /* ── PRINT STYLES ── */
-  @media print {
-    nav, .calc-btn-wrap, .print-btn, #calculator-section, .output-toggle-bar, .col-left { display: none !important; }
-    body { background: white; }
-    .page { max-width: 100%; padding: 0; }
-    .two-col-wrap { display: block !important; }
-    .col-right { display: block !important; width: 100% !important; }
-    .output-card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 12px; }
-    .method-step { break-inside: avoid; }
-    .hero { border: 1px solid #ccc; border-radius: 0; }
-    .hero-wrap { max-width: 100%; }
-    #output-section { display: block !important; }
-  }
-
   .mt8 { margin-top: 8px; }
 
   /* ── DOUGH INGREDIENTS LIST IN METHOD STEPS ── */
@@ -1651,6 +1638,22 @@
     .hero h1 { color: #C8622A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
     @page { margin: 1.5cm; }
+
+    /* ── PRINT: prevent mid-element page cuts ── */
+    .callout,
+    .before-step-callout,
+    .warning-callout,
+    .ingredient-callout,
+    .dynamic-note,
+    .ferm-note,
+    .info-row { break-inside: avoid; }
+
+    .top-section-header,
+    .section-header,
+    .method-step-header,
+    .callout-title { break-after: avoid; }
+
+    p, li { orphans: 3; widows: 3; }
   }
   /* ── DOWNLOAD PIZZA RECIPE BUTTON ── */
   .download-pizza-btn {
@@ -1717,6 +1720,23 @@
     body.print-pizza-only .nutrition-summary-card { display: inline-block; width: 48%; background: #2C1F0E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin-bottom: 6px; }
 
     @page { margin: 1.5cm; }
+
+    /* ── PRINT (pizza-only): prevent mid-element page cuts ── */
+    body.print-pizza-only .callout,
+    body.print-pizza-only .before-step-callout,
+    body.print-pizza-only .warning-callout,
+    body.print-pizza-only .ingredient-callout,
+    body.print-pizza-only .dynamic-note,
+    body.print-pizza-only .ferm-note,
+    body.print-pizza-only .info-row { break-inside: avoid; }
+
+    body.print-pizza-only .top-section-header,
+    body.print-pizza-only .section-header,
+    body.print-pizza-only .method-step-header,
+    body.print-pizza-only .callout-title { break-after: avoid; }
+
+    body.print-pizza-only p,
+    body.print-pizza-only li { orphans: 3; widows: 3; }
   }
 </style>
 </head>
