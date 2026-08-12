@@ -3236,7 +3236,7 @@ function buildMethodSteps(d) {
   steps.push({ num: (d.isPoolish || d.isBiga) ? base + 2 : base + 1, title: 'Add Yeast and Salt',
     ingredients: d.method === 'direct' ? 'Yeast: ' + d.mainYeast.toFixed(2) + 'g · Salt: ' + fw(d.salt, 1) : 'Salt: ' + fw(d.salt, 1),
     before: 'Add yeast first, then salt 30 seconds later. Never add them together.',
-    body: isStand ? '<p>Add yeast first (30 sec), then salt. Increase to speed 2. Mix 5 to 8 minutes until smooth and passes windowpane test.</p>' : '<p>Add yeast first, then salt 30 seconds later. Knead 8 to 10 minutes until smooth and slightly tacky.</p>',
+    body: isStand ? '<p>Add yeast first (30 sec), then salt. Increase to speed 2. Mix 5 to 8 minutes until smooth and passes windowpane test. Check with the windowpane test: stretch a small piece of dough thin enough to see light through it without tearing. If it tears, mix or knead a couple minutes more.</p>' : '<p>Add yeast first, then salt 30 seconds later. Knead 8 to 10 minutes until smooth and slightly tacky. Check with the windowpane test: stretch a small piece of dough thin enough to see light through it without tearing. If it tears, mix or knead a couple minutes more.</p>',
     timer: isStand ? '5–8 min' : '8–10 min'
   });
 

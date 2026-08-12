@@ -3156,13 +3156,13 @@ function buildMethodSteps(d) {
     {
       num: 2,
       title: 'Mix Flour and Water (Autolyse)',
-      ingredients: `Bread flour (remaining): ${fw(d.remainingFlour)} · Water: ${fw(d.remainingWater)} at ${wTemp}`,
+      ingredients: `Bread flour (remaining): ${fw(d.remainingFlour)} · Water: ${fw(d.remainingWater)} at ${wTemp} · Diastatic malt powder: ${d.malt.toFixed(1)}g`,
       before: isStand
-        ? 'Measure your water straight from the fridge, cold water is required when using a stand mixer. Friction from the dough hook raises dough temperature 10-15°F during mixing.'
-        : 'Room temperature water is fine for hand mixing. Have a large mixing bowl ready.',
+        ? `Measure your water straight from the fridge, cold water is required when using a stand mixer. Friction from the dough hook raises dough temperature 10-15°F during mixing. Note: ${d.malt.toFixed(1)}g of diastatic malt powder is a very small amount, use a scale accurate to 0.1g.`
+        : `Room temperature water is fine for hand mixing. Have a large mixing bowl ready. Note: ${d.malt.toFixed(1)}g of diastatic malt powder is a very small amount, use a scale accurate to 0.1g.`,
       body: isStand
-        ? `<p>Add <strong>${fw(d.remainingFlour)}</strong> bread flour and <strong>${fw(d.remainingWater)}</strong> fridge-cold water (${wTemp}) to the stand mixer bowl. Attach the dough hook. Mix on speed 1 until no dry flour remains, about 1-2 minutes. The dough will look rough and shaggy. Cover the bowl and rest for 30 minutes. This is the autolyse, it hydrates the flour and begins gluten development before any yeast or salt is introduced.</p>`
-        : `<p>Add <strong>${fw(d.remainingFlour)}</strong> bread flour to a large mixing bowl. Pour in <strong>${fw(d.remainingWater)}</strong> room temperature water (${wTemp}). Mix by hand until no dry flour remains. The dough will look rough and shaggy. Cover and rest 30 minutes.</p>`,
+        ? `<p>Add <strong>${fw(d.remainingFlour)}</strong> bread flour and <strong>${fw(d.remainingWater)}</strong> fridge-cold water (${wTemp}) to the stand mixer bowl. Attach the dough hook. Mix on speed 1 until no dry flour remains, about 1-2 minutes. The dough will look rough and shaggy. Cover the bowl and rest for 30 minutes. This is the autolyse, it hydrates the flour and begins gluten development before any yeast or salt is introduced. Add the diastatic malt powder with the flour so it disperses evenly before the water fully hydrates it.</p>`
+        : `<p>Add <strong>${fw(d.remainingFlour)}</strong> bread flour to a large mixing bowl. Pour in <strong>${fw(d.remainingWater)}</strong> room temperature water (${wTemp}). Mix by hand until no dry flour remains. The dough will look rough and shaggy. Cover and rest 30 minutes. Add the diastatic malt powder with the flour so it disperses evenly before the water fully hydrates it.</p>`,
       timer: '⏱ 30 min rest'
     },
     {
@@ -3186,15 +3186,15 @@ function buildMethodSteps(d) {
     {
       num: 4,
       title: 'Add Remaining Ingredients',
-      ingredients: `Salt: ${fw(d.salt, 1)} · ${d.sweetener}: ${fw(d.sweet, 1)} · Olive oil: ${fw(d.oil, 1)} · Diastatic malt powder: ${d.malt.toFixed(1)}g`,
-      before: `Measure all four ingredients separately before starting. Add them in the order listed, do not add all at once. Note: ${d.malt.toFixed(1)}g of diastatic malt powder is a very small amount, use a scale accurate to 0.1g.`,
+      ingredients: `Salt: ${fw(d.salt, 1)} · ${d.sweetener}: ${fw(d.sweet, 1)} · Olive oil: ${fw(d.oil, 1)}`,
+      before: `Measure all three ingredients separately before starting. Add them in the order listed, do not add all at once.`,
       body: isStand
         ? `<p>With the mixer on speed 1, add one at a time with 20-30 seconds between each:</p>
-           <p style="margin-top:8px;">1. <strong>Salt: ${fw(d.salt, 1)}</strong><br>2. <strong>${d.sweetener}: ${fw(d.sweet, 1)}</strong><br>3. <strong>Olive oil: ${fw(d.oil, 1)}</strong><br>4. <strong>Diastatic malt powder: ${d.malt.toFixed(1)}g</strong></p>
-           <p style="margin-top:8px;">Once all are in, increase to speed 2 and mix for 4-5 minutes until smooth, slightly tacky, and pulling away cleanly from the bowl sides. Do not add extra flour.</p>`
+           <p style="margin-top:8px;">1. <strong>Salt: ${fw(d.salt, 1)}</strong><br>2. <strong>${d.sweetener}: ${fw(d.sweet, 1)}</strong><br>3. <strong>Olive oil: ${fw(d.oil, 1)}</strong></p>
+           <p style="margin-top:8px;">Once all are in, increase to speed 2 and mix for 4-5 minutes until smooth, slightly tacky, and pulling away cleanly from the bowl sides. Do not add extra flour. Check with the windowpane test: stretch a small piece of dough thin enough to see light through it without tearing. If it tears, mix or knead a couple minutes more.</p>`
         : `<p>Add one at a time, working each in fully before adding the next:</p>
-           <p style="margin-top:8px;">1. <strong>Salt: ${fw(d.salt, 1)}</strong><br>2. <strong>${d.sweetener}: ${fw(d.sweet, 1)}</strong><br>3. <strong>Olive oil: ${fw(d.oil, 1)}</strong><br>4. <strong>Diastatic malt powder: ${d.malt.toFixed(1)}g</strong></p>
-           <p style="margin-top:8px;">Once all are incorporated, knead for 6-8 minutes until smooth and slightly tacky. Do not add extra flour.</p>`,
+           <p style="margin-top:8px;">1. <strong>Salt: ${fw(d.salt, 1)}</strong><br>2. <strong>${d.sweetener}: ${fw(d.sweet, 1)}</strong><br>3. <strong>Olive oil: ${fw(d.oil, 1)}</strong></p>
+           <p style="margin-top:8px;">Once all are incorporated, knead for 6-8 minutes until smooth and slightly tacky. Do not add extra flour. Check with the windowpane test: stretch a small piece of dough thin enough to see light through it without tearing. If it tears, mix or knead a couple minutes more.</p>`,
       timer: isStand ? '⏱ 5 min mixing' : '⏱ 8 min kneading'
     },
     {
