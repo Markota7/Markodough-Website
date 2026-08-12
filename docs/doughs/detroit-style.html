@@ -1874,8 +1874,8 @@
       </div>
       <div class="info-row">
         <div>
-          <div class="info-row-name">Kitchen Scale</div>
-          <div class="info-row-note">Detroit dough uses small amounts of yeast, sometimes under 1g. Weigh everything. Volume measurements will not give consistent results.</div>
+          <div class="info-row-name">Kitchen Scale (0.1g accuracy)</div>
+          <div class="info-row-note">Detroit dough uses small amounts of yeast, sometimes under 1g. A scale accurate to 0.1g is essential, volume measurements will not give consistent results.</div>
         </div>
       </div>
 
@@ -3133,7 +3133,7 @@ function buildMethodSteps(d) {
   steps.push({ num: n++, title: 'Dough Is Made',
     ingredients: 'None, planning reminder',
     before: 'Everything from here happens on bake day.',
-    body: '<p>Your dough is ready. Shaping into the pan, proofing, topping, and baking all happen on bake day in the recipe section below. Choose your recipe there when you are ready to bake.</p>'
+    body: '<p>Your dough is ready. Shaping into the pan, proofing, topping, and baking all happen on bake day in the recipe section below. Choose your recipe there when you are ready to bake.</p><p style="margin-top:8px;">Leftover pan pizza keeps 2 to 3 days refrigerated, reheat it in the pan (or on a sheet) at ' + ft(450) + ' for 8 to 10 minutes so the fried bottom re-crisps, a wire rack alone will not recreate that crust. Raw dough balls freeze well for up to 3 months: wrap each tightly and thaw overnight in the fridge before shaping into the pan.</p>'
   });
 
   return steps.map(function(s, idx) {
